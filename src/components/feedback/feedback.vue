@@ -1,22 +1,20 @@
 <!--  -->
 <template>
-  <transition name="slide">
-    <div
-      class="feedbackViewPage"
-    >
-      <van-nav-bar
-        fixed
-        title="故障反馈"
-        left-arrow
-        @click-left="onClickLeft"
-      ></van-nav-bar>
-      <div class="topblank"></div>
-      <div class="questionCon">
-        <p>床柜出现故障关不上？请把情况反馈给我们</p>
-        <h4 class="backQues">反馈问题</h4>
-        <div class="selectQues">
-          <!-- 复选 -->
-          <!-- <van-checkbox-group v-model="result">
+    <transition name="slide">
+        <div class="feedbackViewPage">
+            <van-nav-bar
+                fixed
+                title="故障反馈"
+                left-arrow
+                @click-left="onClickLeft"
+            ></van-nav-bar>
+            <div class="topblank"></div>
+            <div class="questionCon">
+                <p>床柜出现故障关不上？请把情况反馈给我们</p>
+                <h4 class="backQues">反馈问题</h4>
+                <div class="selectQues">
+                    <!-- 复选 -->
+                    <!-- <van-checkbox-group v-model="result">
             <van-cell-group>
               <div class="checkText">
                 <van-row gutter="20">
@@ -53,115 +51,103 @@
               </div>
             </van-cell-group>
           </van-checkbox-group> -->
-          <!-- 单选 -->
-          <van-radio-group v-model="resultRadio">
-            <van-cell-group>
-              <div class="">
-                <van-row gutter="20">
-                  <van-col
-                    span="8"
-                    v-for="(itemText, index) in selectQues"
-                    clickable
-                    :key="index"
-                  >
-                    <van-cell
-                      clickable
-                      @click="radioClick(index)"
-                      :class="{ radioActive: index == num }"
-                      ref="radioBtn"
-                    >
-                      <van-radio :name="index">{{itemText.bed}}</van-radio>
-                    </van-cell>
-                  </van-col>
-                </van-row>
-              </div>
-            </van-cell-group>
-          </van-radio-group>
-        </div>
-
-        <h4>其他问题</h4>
-        <div class="textarea">
-          <van-cell-group>
-            <van-field
-              type="textarea"
-              rows="1"
-              v-model="message"
-              placeholder="请简要说明在使用床柜中遇到的问题，以便工作人员进行判断和处理"
-            />
-            <div class="uploader">
-              <!-- 上传多张图片 -->
-              <!-- <div style="width: 502px;">
-                                <uploader :src="'/api/breakdown'"></uploader>
-                            </div> -->
-              <!-- 上传一张图片 -->
-              <div class="upload">
-                <van-uploader
-                  :after-read="onRead"
-                  accept="image/*"
-                  multiple
-                  ref="uploader"
-                >
-                  <img
-                    src="../../../static/img/upload.png"
-                    class="uploadImg"
-                  />
-                  <span>可添加图片</span>
-                </van-uploader>
-                <div class="uploadImgBg">
-                  <img
-                    @click="selectFile"
-                    src="../../../static/img/upload.png"
-                    class="uploadImg"
-                    ref="uploadImg"
-                  />
+                    <!-- 单选 -->
+                    <van-radio-group v-model="resultRadio">
+                        <van-cell-group>
+                            <div class="">
+                                <van-row gutter="20">
+                                    <van-col
+                                        span="8"
+                                        v-for="(itemText, index) in selectQues"
+                                        clickable
+                                        :key="index"
+                                    >
+                                        <van-cell
+                                            clickable
+                                            @click="radioClick(index)"
+                                            :class="{
+                                                radioActive: index == num
+                                            }"
+                                            ref="radioBtn"
+                                        >
+                                            <van-radio :name="index">{{
+                                                itemText.bed
+                                            }}</van-radio>
+                                        </van-cell>
+                                    </van-col>
+                                </van-row>
+                            </div>
+                        </van-cell-group>
+                    </van-radio-group>
                 </div>
 
-              </div>
-
+                <h4>其他问题</h4>
+                <div class="textarea">
+                    <van-cell-group>
+                        <van-field
+                            type="textarea"
+                            rows="1"
+                            v-model="message"
+                            placeholder="请简要说明在使用床柜中遇到的问题，以便工作人员进行判断和处理"
+                        />
+                        <div class="uploader">
+                            <!-- 上传多张图片 -->
+                            <!-- <div style="width: 502px;">
+                                <uploader :src="'/api/breakdown'"></uploader>
+                            </div> -->
+                            <!-- 上传一张图片 -->
+                            <div class="upload">
+                                <van-uploader
+                                    :after-read="onRead"
+                                    accept="image/*"
+                                    multiple
+                                    ref="uploader"
+                                >
+                                    <img
+                                        src="../../../static/img/upload.png"
+                                        class="uploadImg"
+                                    />
+                                    <span>可添加图片</span>
+                                </van-uploader>
+                                <div class="uploadImgBg">
+                                    <img
+                                        @click="selectFile"
+                                        src="../../../static/img/upload.png"
+                                        class="uploadImg"
+                                        ref="uploadImg"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </van-cell-group>
+                </div>
             </div>
-          </van-cell-group>
+            <div class="submitQues">
+                <van-button type="default" @click="submitQues">
+                    提交反馈
+                </van-button>
+                <van-popup v-model="submitStatus">
+                    <div class="result">
+                        <div class="success" v-if="type == 0">
+                            <img
+                                src="../../../static/img/success.png"
+                                slot="right"
+                            />
+                            <p>提交成功</p>
+                        </div>
+                        <div class="failure" v-if="type == 1">
+                            <img
+                                src="../../../static/img/failure.png"
+                                slot="right"
+                            />
+                            <p>支付失败!</p>
+                        </div>
+                    </div>
+                    <div class="bottomQues" @click="backIndex">返回首页</div>
+                </van-popup>
+            </div>
         </div>
-      </div>
-      <div class="submitQues">
-        <van-button
-          type="default"
-          @click="submitQues"
-        >
-          提交反馈
-        </van-button>
-        <van-popup v-model="submitStatus">
-          <div class="result">
-            <div
-              class="success"
-              v-if="type==0"
-            >
-              <img
-                src="../../../static/img/success.png"
-                slot="right"
-              />
-              <p>提交成功</p>
-            </div>
-            <div
-              class="failure"
-              v-if="type==1"
-            >
-              <img
-                src="../../../static/img/failure.png"
-                slot="right"
-              />
-              <p>支付失败!</p>
-            </div>
-          </div>
-          <div
-            class="bottomQues"
-            @click="backIndex"
-          >
-            返回首页
-          </div>
-        </van-popup>
-      </div>
-    </div>
-  </transition>
+    </transition>
 </template>
 
 <script>
@@ -173,134 +159,135 @@ import uploader from "base/upload/upload";
 import { ImagePreview } from "vant";
 
 export default {
-  components: { uploader },
-  data() {
-    // 这里存放数据
-    return {
-      submitStatus: false,
-      list: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-      result: [],
-      resultRadio: '',
-      num: Number,
-      type: Number,
-      checked: true,
-      message: "",
-      fileName: "",
-      selectQues: [
-        { bed: "床柜损坏" },
-        { bed: "床柜损坏" },
-        { bed: "电池没电" },
-        { bed: "床锁损坏" },
-        { bed: "床柜损坏" },
-        { bed: "床柜损坏" },
-        { bed: "电池没电" },
-        { bed: "床锁损坏" },
-        { bed: "其他问题" }
-      ]
-    };
-  },
-  // 监听属性 类似于data概念
-  computed: {
-    ...mapGetters(["feedback", "orderUseState"])
-  },
-  // 监控data中的数据变化
-  watch: {
-    result(newVal, oldVal) {
-      console.log(newVal);
-    },
-    resultRadio(newVal, oldVal) {
-      console.log(newVal);
-    },
-  },
-  // 方法集合
-  methods: {
-    onClickLeft() {
-      this.$router.back();
-    },
-    onRead(item) {
-      this.fileName = item.file;
-      this.$refs.uploadImg.src = item.content;
-      this.$refs.uploader.$el.style.display = "none";
-      this.$refs.uploadImg.style.display = "block";
-    },
-    selectFile() {
-      ImagePreview([this.$refs.uploadImg.src]);
-    },
-    _getData() {
-      console.log("feedback", this.feedback);
-    },
-    submitQues() {
-      var user_id = localStorage.getItem("id") ? localStorage.getItem("id") : '';
-      if (user_id != '') {
-        let param = new FormData(); // 创建form对象
-        param.append("bed_image", this.fileName); // 通过append向form对象添加数据
-        param.append("user_id", user_id); // 添加form表单中其他数据
-        param.append("chaperonage_bed_code", this.orderUseState.res.chaperonage_bed_code); // 添加form表单中其他数据
-        param.append("problem_state", this.resultRadio); // 添加form表单中其他数据
-        param.append("problem_description", this.message); // 添加form表单中其他数据
-        var data = param;
-        let config = {
-          headers: { "Content-Type": "multipart/form-data" }
+    components: { uploader },
+    data() {
+        // 这里存放数据
+        return {
+            submitStatus: false,
+            list: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            result: [],
+            resultRadio: "",
+            num: Number,
+            type: Number,
+            checked: true,
+            message: "",
+            fileName: "",
+            selectQues: [
+                { bed: "床柜损坏" },
+                { bed: "床柜损坏" },
+                { bed: "电池没电" },
+                { bed: "床锁损坏" },
+                { bed: "床柜损坏" },
+                { bed: "床柜损坏" },
+                { bed: "电池没电" },
+                { bed: "床锁损坏" },
+                { bed: "其他问题" }
+            ]
         };
-        axios.post("/breakdown", param, config).then(res => {
-          if ((res.data.error_code) * 1 === ERR_OK) {
-            this.submitStatus = true
-            this.resultRadio = ''
-            this.message = ''
-            this.type = (res.data.error_code) * 1
-            this.setUsedingState({
-              state: false
-            })
-          }
-        });
-      }
     },
-    backIndex() {
-       this.$router.push({
-                path: `/bed`,
+    // 监听属性 类似于data概念
+    computed: {
+        ...mapGetters(["feedback", "orderUseState"])
+    },
+    // 监控data中的数据变化
+    watch: {
+        result(newVal, oldVal) {
+            console.log(newVal);
+        },
+        resultRadio(newVal, oldVal) {
+            console.log(newVal);
+        }
+    },
+    // 方法集合
+    methods: {
+        onClickLeft() {
+            this.$router.back();
+        },
+        onRead(item) {
+            this.fileName = item.file;
+            this.$refs.uploadImg.src = item.content;
+            this.$refs.uploader.$el.style.display = "none";
+            this.$refs.uploadImg.style.display = "block";
+        },
+        selectFile() {
+            ImagePreview([this.$refs.uploadImg.src]);
+        },
+        _getData() {
+            console.log("feedback", this.feedback);
+        },
+        submitQues() {
+            var user_id = localStorage.getItem("id")
+                ? localStorage.getItem("id")
+                : "";
+            if (user_id != "") {
+                let param = new FormData(); // 创建form对象
+                param.append("bed_image", this.fileName); // 通过append向form对象添加数据
+                param.append("user_id", user_id); // 添加form表单中其他数据
+                param.append("chaperonage_bed_code", this.$route.params.code); // 添加form表单中其他数据
+                param.append("problem_state", this.resultRadio); // 添加form表单中其他数据
+                param.append("problem_description", this.message); // 添加form表单中其他数据
+                var data = param;
+                let config = {
+                    headers: { "Content-Type": "multipart/form-data" }
+                };
+                axios.post("/breakdown", param, config).then(res => {
+                    if (res.data.error_code * 1 === ERR_OK) {
+                        this.submitStatus = true;
+                        this.resultRadio = "";
+                        this.message = "";
+                        this.type = res.data.error_code * 1;
+                        this.setUsedingState({
+                            state: false
+                        });
+                    }
+                });
+            }
+        },
+        backIndex() {
+            this.$router.push({
+                path: `/bed`
             });
-      this.setFeedBackState(false)
-      this.setTrueManger(false)
-      this.setOrderUseState(false)
+            this.setFeedBackState(false);
+            this.setTrueManger(false);
+            this.setOrderUseState(false);
+        },
+        radioClick(index) {
+            this.resultRadio = index;
+            this.num = index;
+        },
+        toggle(index) {
+            this.$refs.checkboxes[index].toggle();
+            if (!this.$refs.checkboxes[index].checked) {
+                this.$refs.checkboxBtn[index].$el.style.border =
+                    "1px solid red";
+                this.$refs.checkboxBtn[index].$el.style.color = "red";
+            } else {
+                this.$refs.checkboxBtn[index].$el.style.border = "";
+                this.$refs.checkboxBtn[index].$el.style.color = "";
+            }
+        },
+        ...mapMutations({
+            setFeedBackState: "SET_FEEDBACK",
+            setTrueManger: "SET_BEDMANAGER",
+            setOrderUseState: "SET_ORDER_USE_STATE",
+            setUsedingState: "SET_USEDING_STATE"
+        })
     },
-    radioClick(index) {
-      this.resultRadio = index
-      this.num = index
+    // 生命周期 - 创建完成（可以访问当前this实例）
+    created() {
+        this._getData();
     },
-    toggle(index) {
-      this.$refs.checkboxes[index].toggle();
-      if (!this.$refs.checkboxes[index].checked) {
-        this.$refs.checkboxBtn[index].$el.style.border =
-          "1px solid red";
-        this.$refs.checkboxBtn[index].$el.style.color = "red";
-      } else {
-        this.$refs.checkboxBtn[index].$el.style.border = "";
-        this.$refs.checkboxBtn[index].$el.style.color = "";
-      }
+    // 生命周期 - 挂载完成（可以访问DOM元素）
+    mounted() {
+        // console.log(this.result)
     },
-    ...mapMutations({
-      setFeedBackState: "SET_FEEDBACK",
-      setTrueManger: 'SET_BEDMANAGER',
-      setOrderUseState: 'SET_ORDER_USE_STATE',
-      setUsedingState: 'SET_USEDING_STATE'
-
-    })
-  },
-  // 生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-    this._getData();
-  },
-  // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    // console.log(this.result)
-  },
-  beforeCreate() { }, // 生命周期 - 创建之前
-  beforeMount() { }, // 生命周期 - 挂载之前
-  beforeUpdate() { }, // 生命周期 - 更新之前
-  updated() { }, // 生命周期 - 更新之后
-  beforeDestroy() { }, // 生命周期 - 销毁之前
-  destroyed() { }, // 生命周期 - 销毁完成
-  activated() { } // 如果页面有keep-alive缓存功能，这个函数会触发
+    beforeCreate() {}, // 生命周期 - 创建之前
+    beforeMount() {}, // 生命周期 - 挂载之前
+    beforeUpdate() {}, // 生命周期 - 更新之前
+    updated() {}, // 生命周期 - 更新之后
+    beforeDestroy() {}, // 生命周期 - 销毁之前
+    destroyed() {}, // 生命周期 - 销毁完成
+    activated() {} // 如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
 <style scoped lang="stylus">

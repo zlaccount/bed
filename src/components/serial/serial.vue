@@ -73,7 +73,9 @@ export default {
       // 清空键盘值
       if (that.curVal.length === that.keyLis.length) {
         var val = that.curVal * 1
-        // this._deposit()
+        // 先判断是否缴纳押金
+        this._deposit()
+        // 开锁
         this._openLock(val)
       }
     }
@@ -93,36 +95,23 @@ export default {
       this.keyValue = this.keyValue.slice(0, this.keyValue.length - 1)
     },
     _deposit() {
-      var user_id = localStorage.getItem('id') ? localStorage.getItem('id') : ''
-      if (user_id != '') {
-        deposit(user_id).then(res => {
+      // 接口对接
+        deposit().then(res => {
           if ((res.error_code) * 1 === ERR_OK) {
-            console.log('未支付订单')
+            console.log('已经缴纳押金',res)
           } else {
-            common.$emit('handresult', (res.error_code) * 1 + 1)
-            this.$router.go(-1)
+            console.log('未缴纳押金',res)
+            // common.$emit('handresult', (res.error_code) * 1 + 1)
             return false
           }
         })
-      }
     },
     _openLock(val) {
       // 接口对接
       openLock(val).then(res => {
-        if ((res.error_code) * 1 == 1) {
-          this._setTimer()
-        } else {
-          this.setOrderUseState({
-            state: true,
-            res: res.data
-          })
-          this.setUseding({
-            state: true
-          })
-          this._setTimer()
-        }
-        common.$emit('handresult', (res.data) * 1)
+        common.$emit('handresult', (res.error_code) * 1,(res.data)*1)
         this.$router.go(-1)
+        this._setTimer()
       })
     },
     _setTimer() {

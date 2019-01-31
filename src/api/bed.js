@@ -150,6 +150,21 @@ export function instructions(deposit, cost) {
       return Promise.resolve(res.data)
     })
 }
+
+// 扫一扫
+export function RichScan() {
+  const url = 'http://192.168.1.11:8333/eht/RichScan'
+  const data = Object.assign({}, {
+    url: encodeURIComponent(location.href.split("#")[0])
+  })
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      return Promise.resolve(res.data)
+    })
+}
 // 微信支付
 export function pay(order_id) {
   const url = '/E2306_service/app/rescheduAppletPay'

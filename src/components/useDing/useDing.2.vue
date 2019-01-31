@@ -9,109 +9,167 @@
             >
             </van-nav-bar>
             <div class="topblank"></div>
-            <!-- 上下拉加载更多，刷新数据的组件updown -->
-            <up-down :pulldown="pulldown" @pulldown="loadData">
-                <!-- 此处的ui结构just a demo of test -->
-                <div style="width:100%;min-height:100%">
-                    <div class="cellCon">
-                        <div class="gray"></div>
-                        <div class="beginUse">
-                            <div class="flexItem useTimeTitle">
-                                <div class="flex-item">开锁时间</div>
-                                <div class="flex-item">使用时间</div>
-                            </div>
-                            <div class="flexItem dateText">
-                                <div class="flex-item">
-                                    <div class="times">{{ startDate }}</div>
-                                    <div class="date">{{ startTime }}</div>
-                                </div>
-                                <div class="flex-item leftLine">
-                                    <div class="times" id="mytime">
-                                        {{ str }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="beginBlank"></div>
-                        </div>
-                        <div class="useding">
-                            <van-cell-group>
-                                <van-cell
-                                    title="医院"
-                                    :value="res.hospital_name"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="科室"
-                                    :value="res.department_name"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="病房号"
-                                    :value="res.room_number"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="陪护床编号"
-                                    :value="res.chaperonage_bed_code"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="管理员"
-                                    :value="res.user_name"
-                                />
-                                <van-cell
-                                    title="联系方式"
-                                    :value="res.mobile_phone"
-                                />
-                                <!-- <van-cell
-                  title="预计消费"
-                  :value="res.cost"
-                  v-if="costShow"
-                /> -->
-                                <van-cell
-                                    title="预计消费"
-                                    v-if="!costShow"
-                                    :value="cost"
-                                />
-                            </van-cell-group>
-                        </div>
-                    </div>
+            <!-- 导航 -->
+            <div class="nav">
+                <div class="nav-tab">
+                    <ul>
+                        <li
+                            class="item"
+                            v-for="(n, index) in title"
+                            :key="index"
+                            @click="changeNav(index)"
+                            :class="{ active: index === oCurrentPage }"
+                        >
+                            {{ n.name }}
+                        </li>
+                    </ul>
                 </div>
-            </up-down>
+            </div>
+            <!-- 外层翻页组件（轮播原理） -->
+            <slider
+                :oCurrentPage="oCurrentPage"
+                ref="sendPage"
+                v-on:switchTab="msgFromChild"
+            >
+                <div v-for="(item, index) in data" :key="index">
+                    <!-- 上下拉加载更多，刷新数据的组件updown -->
+                    <up-down
+                        :data="data"
+                        :pulldown="pulldown"
+                        @pulldown="loadData"
+                    >
+                        <!-- 此处的ui结构just a demo of test -->
+                        <ul style="width:100%;min-height:100%">
+                            <li
+                                style="min-height:300px;background-color:#DDDDDD;"
+                            >
+                                1
+                            </li>
+                            <li
+                                style="min-height:300px;background-color:#AAAAAA;"
+                            >
+                                2
+                            </li>
+                            <li
+                                style="min-height:300px;background-color:#888888;"
+                            >
+                                3
+                            </li>
+                        </ul>
+                    </up-down>
+                </div>
+            </slider>
+            <div class="loading-wrapper"></div>
+            <!-- <div>
+          <div class="cellCon">
+            <div class="gray"></div>
+            <div class="beginUse">
+              <div class="flexItem useTimeTitle">
+                <div class="flex-item">开锁时间</div>
+                <div class="flex-item">使用时间</div>
+              </div>
+              <div class="flexItem dateText">
+                <div class="flex-item">
+                  <div class="times">{{ startDate }}</div>
+                  <div class="date">{{ startTime }}</div>
+                </div>
+                <div class="flex-item leftLine">
+                  <div
+                    class="times"
+                    id="mytime"
+                  >{{ str }}</div>
+                </div>
+              </div>
+              <div class="beginBlank"></div>
+            </div>
+            <div class="useding">
+              <van-cell-group>
+                <van-cell
+                  title="医院"
+                  :value="res.hospital_name"
+                >
+                </van-cell>
+                <van-cell
+                  title="科室"
+                  :value="res.department_name"
+                >
+                </van-cell>
+                <van-cell
+                  title="病房号"
+                  :value="res.room_number"
+                >
+                </van-cell>
+                <van-cell
+                  title="陪护床编号"
+                  :value="res.chaperonage_bed_code"
+                >
+                </van-cell>
+                <van-cell
+                  title="管理员"
+                  :value="res.user_name"
+                />
+                <van-cell
+                  title="联系方式"
+                  :value="res.mobile_phone"
+                />
+                <van-cell
+                  title="预计消费"
+                  v-if="!costShow"
+                  :value="cost"
+                />
+              </van-cell-group>
+            </div>
             <div class="usedingBlank"></div>
             <div class="question">
-                <p>手动将陪护床推进床柜即可关锁</p>
-                <van-button
-                    type="default"
-                    class="breakdown"
-                    @click="breakdownClose"
-                >
-                    故障关闭
-                </van-button>
-                <van-button class="normal" type="default" @click="normalClose">
-                    正常关锁
-                </van-button>
+              <p>手动将陪护床推进床柜即可关锁</p>
+              <van-button
+                type="default"
+                class="breakdown"
+                @click="breakdownClose"
+              >
+                故障关闭
+              </van-button>
+              <van-button
+                class="normal"
+                type="default"
+                @click="normalClose"
+              >
+                正常关锁
+              </van-button>
             </div>
-            <div class="loading-wrapper"></div>
-            <router-view></router-view></div
-    ></transition>
+          </div>
+        </div> -->
+            <router-view></router-view>
+        </div>
+    </transition>
 </template>
 
 <script>
+import Slider from "base/scrolltab/slider";
 import UpDown from "base/scrolltab/UpDown";
+
 import { busy, normalClose, openLock } from "api/bed";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
 export default {
     components: {
+        Slider,
         UpDown
     },
     data() {
         return {
+            data: [1, 1, 1, 1, 1],
             pulldown: true,
+            title: [
+                { name: "推荐" },
+                { name: "新品" },
+                { name: "众筹" },
+                { name: "限时购" },
+                { name: "居家" }
+            ],
             oCurrentPage: 0,
             list: [],
-            res: Object,
+            res: {},
             costShow: false,
             cost: 0,
             startDate: "",
@@ -128,49 +186,36 @@ export default {
             chaperonage_bed_code: ""
         };
     },
-    created() {
-        this.loadData();
-    },
-    computed: {
-        ...mapGetters(["orderUseState", "order"])
-    },
     // 监控data中的数据变化
     watch: {
         cost(val, oldval) {
             this.cost = val;
         }
     },
+    created() {
+        // 不会引起DOM变化的数据在此定义
+        this.loadData();
+    },
+    computed: {
+        ...mapGetters(["orderUseState", "order"])
+    },
+    mounted() {
+        this.msgFromChild();
+        this.time = setInterval(this.timer, 60);
+        // if (this.orderUseState.state === true) {
+        //   let _this = this // 声明一个变量指向Vue实例this，保证作用域一致
+        //   _this.cost = (_this.orderUseState.res.cost) * 1
+        //   _this.timer = setInterval(() => {
+        //     _this.cost = (_this.orderUseState.res.cost) * 1 + 2
+        //   }, _this.orderUseState.res.free_time * 1000)
+        // }
+    },
+    beforeDestroy() {
+        if (this.timer) {
+            clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+        }
+    }, // 生命周期 - 销毁之前
     methods: {
-        changeNav(num) {
-            this.oCurrentPage = num;
-            console.log(this.oCurrentPage);
-            this.$refs.sendPage.setPage(this.oCurrentPage);
-        },
-        loadData() {
-            // 调用api获取数据
-            console.log("初始化页面数据");
-            if (!this.$route.params.id) {
-                this.$router.push("/bed");
-                return;
-            }
-            openLock(this.$route.params.id).then(res => {
-                var arr = [];
-                for (let i in res) {
-                    let o = {};
-                    o[i] = res[i];
-                    arr.push(o);
-                }
-                this.res = arr[0].data;
-                this.startDate = arr[0].data.start_time.trim().split(" ")[1];
-                this.startTime = arr[0].data.start_time.trim().split(" ")[0];
-            });
-        },
-        // 获取子组件传过来的当前页码值
-        msgFromChild(data) {
-            if (data || data === 0) {
-                this.oCurrentPage = data;
-            }
-        },
         onClickLeft() {
             // this._busy()
             this.$router.back();
@@ -306,15 +351,12 @@ export default {
         // 故障反馈关闭
         breakdownClose() {
             this.$router.push({
-                name: "feedback",
-                params: {
-                    code: this.res.chaperonage_bed_code
-                }
+                name: "feedback"
             });
         },
         // 正常关锁
         normalClose() {
-            normalClose(this.res.chaperonage_bed_code).then(
+            normalClose(this.orderUseState.res.chaperonage_bed_code).then(
                 res => {
                     console.log(res);
                     if (res.error_code * 1 === ERR_OK) {
@@ -335,6 +377,22 @@ export default {
                 }
             );
         },
+        changeNav(num) {
+            this.oCurrentPage = num;
+            console.log(this.oCurrentPage);
+            this.$refs.sendPage.setPage(this.oCurrentPage);
+        },
+        loadData() {
+            // 调用api获取数据
+            console.log("初始化页面数据");
+        },
+        // 获取子组件传过来的当前页码值
+        msgFromChild(data) {
+            if (data || data === 0) {
+                this.oCurrentPage = data;
+            }
+        },
+
         ...mapMutations({
             setTrueManger: "SET_BEDMANAGER",
             setOrderUseState: "SET_ORDER_USE_STATE",
@@ -343,21 +401,14 @@ export default {
             setUseding: "SET_USEDING_STATE",
             setUsedingState: "SET_USEDING_STATE"
         })
-    },
-    mounted() {
-        this.msgFromChild();
-        this.time = setInterval(this.timer, 60);
-    },
-    beforeDestroy() {
-        if (this.timer) {
-            clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
-        }
-    } // 生命周期 - 销毁之前
+    }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="stylus">
+<style lang="stylus">
+$headerHeight = 44px;
+$baseColor = #6A9FB5;
+$bgColor = #FAFAFA;
 
 #usedingViewPage {
   position: fixed;
@@ -406,8 +457,7 @@ export default {
       .times {
         color: orange;
         font-size: 20px;
-           line-height: 25px;
-    padding-top: 10px;
+        line-height: 34px;
       }
 
       .date {
@@ -435,12 +485,12 @@ export default {
   }
 
   .usedingBlank {
-    height: 120px;
+    height: 100px;
   }
 
   .question {
     width: 94%;
-    position: fixed;
+    position: absolute;
     bottom: 20px;
     left: 0px;
     right: 0px;
@@ -492,24 +542,5 @@ export default {
       }
     }
   }
-  font-size: 14px;
-  .nav{
-    ul{
-      list-style: none;
-      display: flex;
-      li{
-        list-style: none;
-        flex: 1;
-      }
-    }
-  }
-  .wrapper{
-    height: calc(100vh - 84px);
-    overflow: hidden;
-  }
-.active{
-  color: burlywood;
-  border-bottom: 1px solid burlywood;
-}
 }
 </style>

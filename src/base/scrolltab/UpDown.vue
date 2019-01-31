@@ -1,20 +1,15 @@
 <template>
-  <div
-    class="up-down"
-    ref="upDown"
-  >
-    <div class="container">
-      <!-- 刷新 -->
-      <div class="loadding-pic">
-        <p>下拉刷新...</p>
-      </div>
-      <slot></slot>
-      <!-- 加载更多 -->
-      <!-- <div class="more">
+    <div class="up-down" ref="upDown">
+        <div class="container">
+            <!-- 刷新 -->
+            <div class="loadding-pic"><p>下拉刷新...</p></div>
+            <slot></slot>
+            <!-- 加载更多 -->
+            <!-- <div class="more">
         <p>正在加载更多...</p>
       </div> -->
+        </div>
     </div>
-  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -182,7 +177,7 @@ export default {
 </script>
 <style scoped lang="stylus">
 .up-down {
-  height: calc(100vh - 86px);
+  height: calc(100vh - 0px);
   overflow: hidden;
   position: relative;
 
@@ -192,6 +187,7 @@ export default {
       top: -2rem;
       width: 100%;
       height: 2rem;
+          text-align: center;
     }
 
     .more {
