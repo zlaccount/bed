@@ -160,10 +160,6 @@ export default {
     loadData() {
       // 调用api获取数据
       console.log("初始化页面数据");
-      if (!this.$route.params.id) {
-        this.$router.push("/bed");
-        return;
-      }
       openLock(this.$route.params.id).then(res => {
         var arr = [];
         for (let i in res) {
@@ -183,19 +179,15 @@ export default {
       }
     },
     onClickLeft() {
-      // this._busy()
+      this._busy()
       this.$router.back();
     },
     _busy() {
-      var user_id = localStorage.getItem("id")
-        ? localStorage.getItem("id")
-        : "";
       //接口对接
       busy().then(res => {
         if (res.error_code * 1 === 1) {
-          this.chaperonage_bed_code = res.data.chaperonage_bed_code;
-          this.setOrderUseState({
-            state: false,
+          this.setUsedingState({
+            state: true,
             busyCode: res.data.chaperonage_bed_code
           });
         }
@@ -469,7 +461,7 @@ export default {
       background: #f39357;
       color: #fff;
       font-size: 14px;
-      height: 36px;
+      height: 40px;
       line-height: 36px;
       float: left;
       letter-spacing: 2px;
@@ -481,7 +473,7 @@ export default {
       background: #4fd6bc;
       font-size: 14px;
       letter-spacing: 2px;
-      height: 36px;
+      height: 40px;
       line-height: 36px;
       float: left;
     }

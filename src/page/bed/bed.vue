@@ -119,27 +119,27 @@
           </div>
           <!-- 开锁结果-->
           <div class="locked">
-            <!-- <div
+            <div
               class="success"
-              v-if="typeResult == 0"
+              v-if="result == true"
             >
               <img
                 src="../../../static/img/success.png"
                 slot="right"
               />
-              <p>开锁成功...</p>
-            </div> -->
+              <p>开锁成功</p>
+            </div>
 
-            <div
+            <!-- <div
               class="failure"
-              v-if="typeResult == -1"
+              v-if="result != true"
             >
               <img
                 src="../../../static/img/failure.png"
                 slot="right"
               />
               <p>开锁失败!</p>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -173,6 +173,7 @@ export default {
       busyCode: "",
       // -1 开锁失败 0 开锁成功 1 未缴纳押金 2未支付订单
       typeResult: "",
+      result: false,
       toPayPop: false, // 解锁失败(未缴纳押金或者未支付订单)
       lockLoading: false // 解锁中
     };
@@ -309,22 +310,13 @@ export default {
           console.log(data)
           // 先判断是否缴纳押金
           this._deposit(data)
-
         }.bind(this)
       );
       this._busy();
+      this.wayIsShow = true
     },
-    // 正在使用
-    useding() {
-      this.$router.push({
-        name: "useDing",
-        params: {
-          id: this.busyCode
-        }
-      });
-    },
+
     toPayRouter(index) {
-      this.wayIsShow = false;
       this.toPayPop = false;
       // 未支付订单
       if (index === 10) {
@@ -352,12 +344,14 @@ export default {
         });
       }
     },
-    _setTimer() {
-      this.timeout = setTimeout(() => {
-        this.setUsedingState({
-          state: false,
-        });
-      }, 5000)
+    // 正在使用
+    useding() {
+      this.$router.push({
+        name: "useDing",
+        params: {
+          id: this.busyCode ? this.busyCode : this.usedingState.busyCode
+        }
+      });
     },
     _deposit(code) {
       deposit().then(res => {
@@ -365,6 +359,9 @@ export default {
           console.log('已经缴纳押金', res)
           // 开锁
           this._openLock(code)
+          setTimeout(() => {
+
+          }, 5000)
         } else {
           console.log('未缴纳押金', res)
           return false
@@ -375,16 +372,17 @@ export default {
       busy().then(res => {
         if (res.error_code * 1 === 1) {
           this.busyCode = res.data.chaperonage_bed_code;
+          this.setUsedingState({
+            state: true,
+            res: res.data
+          });
           //   this.$router.push({
           //     name: "useDing",
           //     params: {
           //       id: res.data.chaperonage_bed_code
           //     }
           //   });
-          //   this.setUsedingState({
-          //     state: true,
-          //     res: res.data
-          //   });
+
           //   this.setOrderUseState({
           //     state: false
           //   });
@@ -394,6 +392,9 @@ export default {
     },
     _openLock(code) {
       // ? this.orderUseState.busyCode : this.busyCode 
+      this.setUsedingState({
+        state: true,
+      });
       openLock(code).then(res => {
         console.log("openlock", res)
         if (res.error_code * 1 === 1) {
@@ -429,10 +430,22 @@ export default {
           //   }
           return false;
         } else {
-          this.setUsedingState({
-            state: true,
-            res: res.data
-          });
+          setTimeout(() => {
+            // this.setUsedingState({
+            //   state: false,
+            // });
+            // this.result = true
+            console.log(11111)
+          }, 5000)
+          setTimeout(() => {
+            this.$router.push({
+              name: "useDing",
+              params: {
+                id: code
+              }
+            });
+          }, 1500)
+
           //   this._setTimer()
           //   this.$router.push({
           //     name: "useDing",
@@ -644,15 +657,19 @@ export default {
 
       .success {
         p {
-          margin: 40px 0 0px;
           color: #4fd6bc;
+          margin: 10px 0 0px;
+          font-size: 14px;
+          letter-spacing: 2px;
         }
       }
 
       .failure {
         p {
-          margin: 40px 0 0px;
-          color: orange;
+          margin: 10px 0 0px;
+          color: #ffa500;
+          font-size: 14px;
+          letter-spacing: 2px;
         }
       }
 

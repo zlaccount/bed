@@ -386,7 +386,7 @@ export default {
   .submitQues {
     width: 94%;
     position: absolute;
-    bottom: 20px;
+    bottom: 15px;
     left: 0px;
     right: 0px;
     margin-left: auto;
