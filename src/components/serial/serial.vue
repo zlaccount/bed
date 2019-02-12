@@ -44,13 +44,6 @@
 
 <script type="text/ecmascript-6">
 import common from 'common/js/common.js'
-import { ERR_OK } from 'api/config'
-import { deposit, openLock } from 'api/bed'
-import Vue from 'vue'
-import { Toast } from 'vant'
-import { mapGetters, mapMutations } from 'vuex'
-
-Vue.use(Toast)
 export default {
   components: {},
   props: {},
@@ -62,7 +55,6 @@ export default {
       keyValue: '',
       curVal: [],
       keyLis: [1, 2, 3, 4, 5, 6],
-      dataType: 0,
       timer: null
     }
   },
@@ -73,10 +65,13 @@ export default {
       // 清空键盘值
       if (that.curVal.length === that.keyLis.length) {
         var val = that.curVal * 1
-        // 先判断是否缴纳押金
-        this._deposit()
-        // 开锁
-        this._openLock(val)
+        common.$emit('handresult', val)
+        this.$router.go(-1)
+        this._setTimer()
+        // // 先判断是否缴纳押金
+        // this._deposit()
+        // // 开锁
+        // this._openLock(val)
       }
     }
   },
@@ -94,37 +89,31 @@ export default {
     onDelete() {
       this.keyValue = this.keyValue.slice(0, this.keyValue.length - 1)
     },
-    _deposit() {
-      // 接口对接
-        deposit().then(res => {
-          if ((res.error_code) * 1 === ERR_OK) {
-            console.log('已经缴纳押金',res)
-          } else {
-            console.log('未缴纳押金',res)
-            // common.$emit('handresult', (res.error_code) * 1 + 1)
-            return false
-          }
-        })
-    },
-    _openLock(val) {
-      // 接口对接
-      openLock(val).then(res => {
-        common.$emit('handresult', (res.error_code) * 1,(res.data)*1)
-        this.$router.go(-1)
-        this._setTimer()
-      })
-    },
+    // _deposit() {
+    //   // 接口对接
+    //     deposit().then(res => {
+    //       if ((res.error_code) * 1 === ERR_OK) {
+    //         console.log('已经缴纳押金',res)
+    //       } else {
+    //         console.log('未缴纳押金',res)
+    //         // common.$emit('handresult', (res.error_code) * 1 + 1)
+    //         return false
+    //       }
+    //     })
+    // },
+    // _openLock(val) {
+    //   // 接口对接
+    //   openLock(val).then(res => {
+    //     common.$emit('handresult', (res.error_code) * 1,(res.data)*1)
+    //     this.$router.go(-1)
+    //     this._setTimer()
+    //   })
+    // },
     _setTimer() {
       this.timer = setInterval(() => {
         this.keyValue = []
       }, 1500)
     },
-
-    ...mapMutations({
-      setOrder: 'SET_ORDER',
-      setOrderUseState: 'SET_ORDER_USE_STATE',
-      setUseding: 'SET_USEDING_STATE'
-    })
   },
   created() { },
   mounted() { clearInterval(this.timer) },
