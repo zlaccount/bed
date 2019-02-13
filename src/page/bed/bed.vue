@@ -26,6 +26,7 @@
         <van-step>开锁</van-step>
         <van-step>支付</van-step>
       </van-steps>
+
       <!-- 开锁方式 -->
       <van-popup v-model="wayIsShow">
         <div class="topservice">
@@ -193,66 +194,29 @@ export default {
 
     wx() {
       if (localStorage.getItem("id") != null) {
-        if (localStorage.getItem("chaperonage_bed_code") === null) {
-          RichScan()
-            .then(res => {
-              let sign = res; //后端返回的微信的数据
-              wx.config({
-                debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-                appId: sign.appId, // 必填，公众号的唯一标识
-                timestamp: sign.timestamp, // 必填，生成签名的时间戳
-                nonceStr: sign.nonce_str, // 必填，生成签名的随机串
-                signature: sign.signature, // 必填，签名，见附录1
-                jsApiList: ["checkJsApi", "scanQRCode"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-              });
-              wx.ready(function () {
-                wx.checkJsApi({
-                  jsApiList: ["scanQRCode"],
-                  success: function (res) {
-                    // 以键值对的形式返回，可用true，不可用false。如：{"checkResult":{"scanQRCode":true},"errMsg":"checkJsApi:ok"}
-                    if (
-                      res.checkResult.scanQRCode != true
-                    ) {
-                      alert(
-                        "抱歉，当前客户端版本不支持扫一扫"
-                      );
-                    }
-                  },
-                  fail: function (res) {
-                    //检测getNetworkType该功能失败时处理
-                    alert("checkJsApi error");
-                  }
-                });
-
-                /*处理失败验证*/
-                wx.error(function (res) {
-                  alert("share error: " + res.errMsg);
-                });
-
-                wx.scanQRCode({
-                  needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果
-                  scanType: ["qrCode"],
-                  success: function (res) {
-                    console.log(res);
-                    var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    alert("扫描结果：" + result);
-                    window.location.href = result; //因为我这边是扫描后有个链接，然后跳转到该页面
-
-                    // var data = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    // var result = data.split(",")[1]; //返回的结果是码的类型+‘,’+内容，所以要以数组分割取第二个。
-                    //处理自己的逻辑
-                  },
-                  fail: function (res) {
-                    console.log(res);
-                    alert(JSON.stringify(res));
-                  }
-                });
-              });
-            })
-            .catch(function (err) { });
-        } else {
-          this.$toast("有正在使用订单");
-        }
+        RichScan().then(res => {
+          let sign = res; //后端返回的微信的数据
+          wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: sign.appId, // 必填，公众号的唯一标识
+            timestamp: sign.timestamp, // 必填，生成签名的时间戳
+            nonceStr: sign.nonce_str, // 必填，生成签名的随机串
+            signature: sign.signature, // 必填，签名，见附录1
+            jsApiList: ["scanQRCode"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+          wx.ready(function () {
+            wx.scanQRCode({
+              needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果
+              scanType: ["qrCode"],
+              success: function (res) {
+                var result = res.resultStr;
+                alert("扫描结果：" + result);
+                //  this._openLock(result)
+              },
+            });
+          });
+        })
+          .catch(function (err) { });
       } else {
         this.$toast("您还未登录");
       }
@@ -303,6 +267,7 @@ export default {
     },
 
     _getData() {
+
       // 根据key名获取传递回来的参数，data就是map
       common.$on(
         "handresult",
@@ -391,7 +356,6 @@ export default {
       });
     },
     _openLock(code) {
-      // ? this.orderUseState.busyCode : this.busyCode 
       this.setUsedingState({
         state: true,
       });
@@ -507,6 +471,7 @@ export default {
 
   .van-step__title {
     position: relative;
+    font-size: 14px;
     top: 50px;
   }
 

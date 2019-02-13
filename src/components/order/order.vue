@@ -53,7 +53,7 @@
                                     >
                                         <template slot="title">
                                             <div class="custom-text">
-                                                订单编号111 :
+                                                订单编号 :
                                                 {{ item.order_id }}
                                             </div>
                                         </template>

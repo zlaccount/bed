@@ -153,9 +153,9 @@ export function instructions(deposit, cost) {
 
 // 扫一扫
 export function RichScan() {
-  const url = 'http://192.168.1.11:8333/eht/RichScan'
+  const url = 'http://www.51edoctor.cn/eht/RichScan'
   const data = Object.assign({}, {
-    url: encodeURIComponent(location.href.split("#")[0])
+    url: location.href.split("#")[0]
   })
   return axios
     .get(url, {
@@ -168,6 +168,21 @@ export function RichScan() {
 // 微信支付
 export function pay(order_id) {
   const url = '/E2306_service/app/rescheduAppletPay'
+  const data = Object.assign({}, {
+    user_id: localStorage.getItem('id') ? localStorage.getItem('id') : '',
+    order_id: order_id
+  })
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      return Promise.resolve(res.data)
+    })
+}
+// 测试
+export function wxdemo(order_id) {
+  const url = ' https://api.weixin.qq.com/cgi-bin/menu/create?access_token=5_KAvpF88lb9KTPuonIyBh7f5pAknYbHUf2N0jzO2yaXkxDlWwz_0xy9s-OslTumiBG56jmeYvQv-KKLRpii4t-GVKi8mcjkzzicFsj-18_IXE3-e5zDZNgVhfJDMdPLhA8zkDIaf41L2ToIDrEdOCdKBzgwCHHMvlQqmp00UEf31qz5PWW5CBOyeQx19n_5zwf3RvQqdXnSVVvP5F5Xqltx5uLYQbB4UHYHI0lTGMhoG5nE-VAp0UftDZICWQdAEAVPJ'
   const data = Object.assign({}, {
     user_id: localStorage.getItem('id') ? localStorage.getItem('id') : '',
     order_id: order_id
