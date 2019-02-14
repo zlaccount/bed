@@ -28,13 +28,13 @@ const mutations = {
     state.orderUseState = orderUseState
   },
   // 正常关锁
-   [types.SET_NORMAL_STATE](state, normalState) {
-     state.normalState = normalState
-   },
-    // 正在使用
-    [types.SET_USEDING_STATE](state, usedingState) {
-      state.usedingState = usedingState
-    },
+  [types.SET_NORMAL_STATE](state, normalState) {
+    state.normalState = normalState
+  },
+  // 正在使用
+  [types.SET_USEDING_STATE](state, usedingState) {
+    state.usedingState = usedingState
+  },
   // 故障反馈
   [types.SET_FEEDBACK](state, feedback) {
     state.feedback = feedback
@@ -47,9 +47,14 @@ const mutations = {
   [types.SET_HOSPITAL](state, hospital) {
     state.hospital = hospital
   },
-    [types.SET_RESULT_TYPE](state, resultType) {
-      state.resultType = resultType
-    }
+
+  [types.SET_RESULT_TYPE](state, resultType) {
+    state.resultType = resultType
+  },
+  // openid
+  [types.SET_OPENID](state, openId) {
+    state.openId = openId
+  }
 
 
 }

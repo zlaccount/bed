@@ -4,7 +4,7 @@ const state = {
   msg: {},
   depositType: [{
     state: false
-  }, {}], 
+  }, {}],
   bedmanager: false,
   beddirections: false,
   orderState: true,
@@ -22,9 +22,10 @@ const state = {
     state: false
   }, {}],
   hospital: '',
-    resultType: [{
-      state: false
-    }, {}],
+  resultType: [{
+    state: false
+  }, {}],
+  openId: {}
 }
 
 export default state

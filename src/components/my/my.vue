@@ -44,7 +44,7 @@
         </van-col>
         <van-col span="12">
           <van-button @click="depositManger">
-            <span>58</span> <span>我的押金</span>
+            <span>{{depositType.money}}</span> <span>我的押金</span>
           </van-button>
         </van-col>
       </van-row>
@@ -125,16 +125,12 @@
     <div class="serviceIsShow">
       <van-dialog
         v-model="serviceIsShow"
-        show-cancel-button
+        :show-cancel-button=true
         :before-close="beforeClose"
         confirm-button-text="呼叫"
       >
         <h4>温馨提示</h4>
         <p>客服在线时间为正常工作日：上午8:30-12:00，下午13:30-17:00</p>
-        <a
-          @click="callphone"
-          :href="'tel:' + phone"
-        >{{ phone }}</a>
       </van-dialog>
     </div>
   </div>
@@ -146,7 +142,6 @@
 import { mapGetters, mapMutations } from "vuex";
 import { ERR_OK, imgUrl } from "api/config";
 import { getBasicData } from "api/myself";
-import { deposit } from "api/bed";
 import localImgUrl from "../../../static/img/invite@3x.png";
 // 公共js
 import common from "common/js/common.js";
@@ -172,7 +167,6 @@ export default {
       accountImage: "",
       accountName: "",
       accountBalance: "",
-      getDepositType: '',
       phone: "027-88112751",
       localImgUrl: localImgUrl,
       // 开关
@@ -209,6 +203,7 @@ export default {
     },
     // 是否登录
     _getBasicData() {
+
       common.$on(
         "msg",
         function (data) {
@@ -228,20 +223,17 @@ export default {
       this.accountName = localStorage.getItem("name")
       this.accountBalance = localStorage.getItem("balance")
       this.indexIsHide = ERR_OK
+
     },
     // 押金管理
     depositManger() {
-      deposit().then(res => {
-        this.$router.push({
-          name: 'myDeposit',
-          params: {
-            id: res.error_code
-          }
-        })
-        this.setDepositType({
-          type: (res.error_code) * 1
-        })
-      });
+      this.$router.push({
+        name: 'myDeposit',
+        params: {
+          id: this.depositType.type
+        }
+      })
+
     },
     // 使用说明
     directions() {
@@ -294,22 +286,13 @@ export default {
     },
     beforeClose(action, done) {
       if (action === "confirm") {
-        this.callphone();
+        window.location.href = 'tel://' + this.phone
         setTimeout(done, 1000);
       } else {
         done();
       }
     },
-    callphone() {
-      console.log("拨打电话");
-    },
-    // 使用说明
-    onClickLeft() {
-      this.conponentIsShow = false;
-    },
-
     ...mapMutations({
-      setDepositType: "SET_DEPOSIT_TYPE",
       setDirections: "SET_DIRECTIONS",
       setOrder: "SET_ORDER"
     })

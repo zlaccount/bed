@@ -1,9 +1,7 @@
 <!---->
 <template>
   <transition name="slide">
-    <div
-      class="routerViewPage"
-    >
+    <div class="routerViewPage">
       <van-nav-bar
         fixed
         title="登录"
@@ -132,8 +130,8 @@ export default {
       // 校验验证码登录
       if (phone != "" && sms != "") {
         checkcode(phone, sms).then(res => {
-          common.$emit('msg', res);
-          this.$router.go(-1);
+
+
           localStorage.setItem("id", res.t.user.id);
           localStorage.setItem("image", res.t.user.image);
           localStorage.setItem("name", res.t.user.name);
@@ -143,6 +141,8 @@ export default {
           localStorage.setItem("idCardNo", res.t.user.idCardNo);
           localStorage.setItem("nickName", res.t.user.nickName);
           localStorage.setItem("sex", res.t.user.sex);
+          common.$emit('msg', res);
+          this.$router.go(-1);
           this.phone = '';
           this.sms = '';
         });
@@ -153,7 +153,8 @@ export default {
     },
     ...mapMutations({
       setIsLoin: "SET_ISLOGIN",
-      setMsg: "SET_MSG"
+      setMsg: "SET_MSG",
+      setOpenId: "SET_OPENID",
     })
   },
 
@@ -194,7 +195,6 @@ export default {
     .van-cell {
       border-bottom: 1px solid #eee;
       background-color: transparent;
-
     }
 
     .confirmLogin {
@@ -210,6 +210,7 @@ export default {
 
     .van-cell-group {
       background-color: transparent;
+
       .van-button {
         width: 100%;
         padding: 0 4px !important;

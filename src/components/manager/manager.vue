@@ -100,8 +100,6 @@ export default {
     },
     // 押金管理
     depositManager() {
-
-
       var user_id = localStorage.getItem("id") ? localStorage.getItem("id") : '';
       if (user_id != '') {
         deposit().then(res => {
@@ -112,7 +110,8 @@ export default {
             }
           })
           this.setDepositType({
-            type: (res.error_code) * 1
+            type: parseInt(res.error_code),
+            money: parseInt(res.cash_pledge_money)
           })
           return false
         });

@@ -93,9 +93,8 @@
           >
             对押金规则不清楚？</a>
           <van-button
-            v-if="beddirections == 0"
             type="default"
-            @click="wxpay"
+            @click="payMoney"
           >
             <span>支付</span>
           </van-button>
@@ -110,7 +109,10 @@
 import { mapGetters, mapMutations } from "vuex";
 import common from "common/js/common.js";
 import yue from "../../../static/img_icon/yue.png";
-import wx from "../../../static/img_icon/wx.png";
+import wxpng from "../../../static/img_icon/wx.png";
+import { weChatPay, jsApiCall } from "api/bed";
+import wx from "weixin-js-sdk";
+import { ERR_OK } from "api/config";
 // 支付结果
 export default {
   // import引入的组件需要注入到对象中才能使用
@@ -124,14 +126,14 @@ export default {
       radio: "1",
       currentTabNav: ["使用说明", "退还结果"],
       icon: {
-        wx: wx,
+        wx: wxpng,
         yue: yue
       }
     };
   },
   // 监听属性 类似于data概念
   computed: {
-    ...mapGetters(["depositType", "beddirections"])
+    ...mapGetters(["depositType", "openId"])
   },
   // 监控data中的数据变化
   watch: {},
@@ -139,13 +141,36 @@ export default {
   methods: {
     //返回
     onClickLeft() {
-      // this.setDepositType(2);
       this.$router.back()
     },
     seeQuestion() {
       this.setDirections(true);
     },
-    wxpay() { },
+    payMoney() {
+      weChatPay(this.openId.openId).then(res => {
+        if (typeof WeixinJSBridge === "undefined") {
+          if (document.addEventListener) {
+            document.addEventListener(
+              "WeixinJSBridgeReady",
+              jsApiCall(res),
+              false
+            );
+          } else if (document.attachEvent) {
+            document.attachEvent(
+              "WeixinJSBridgeReady",
+              jsApiCall(res)
+            );
+            document.attachEvent(
+              "onWeixinJSBridgeReady",
+              jsApiCall(res)
+            );
+          }
+        } else {
+          jsApiCall(res);
+        }
+      })
+    },
+
     // 使用说明
     directionsManager() {
       this.setDirections(true);
@@ -155,7 +180,7 @@ export default {
     },
     ...mapMutations({
       setDepositType: "SET_DEPOSIT_TYPE",
-      setDirections: "SET_DIRECTIONS"
+      setDirections: "SET_DIRECTIONS",
     })
   },
   // 生命周期 - 创建完成（可以访问当前this实例）

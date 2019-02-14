@@ -43,7 +43,6 @@
       >
         对押金规则不清楚？</a>
       <van-button
-        v-if="beddirections == 0"
         type="default"
         @click="wxpay"
       >
@@ -162,7 +161,6 @@ export default {
       this.setDirections(true);
     },
     wxpay() {
-
       //接口对接
       if (this.radio === '2') {
         this.balancePayPop = true;

@@ -22,3 +22,5 @@ export const beddirections = state => state.beddirections
 // 选择医院
 export const hospital = state => state.hospital
 export const resultType = state => state.resultType
+// openid
+export const openId = state => state.openId

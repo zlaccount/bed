@@ -179,26 +179,9 @@ export default {
       }
     },
     onClickLeft() {
-      this._busy()
       this.$router.back();
     },
-    _busy() {
-      //接口对接
-      busy().then(res => {
-        if (res.error_code * 1 === 1) {
-          this.setUsedingState({
-            state: true,
-            busyCode: res.data.chaperonage_bed_code
-          });
-        }
-      });
-    },
     getData() {
-      // if (this.orderUseState.state === false) {
-      // this.$router.push({
-      //   name: 'bed'
-      // })
-      // }
     },
     start(bolean) {
       let _this = this;

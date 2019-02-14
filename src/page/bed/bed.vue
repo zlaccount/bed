@@ -106,7 +106,6 @@
 
       <div class="locking">
         <div class="lockLoading">
-          <!-- v-if="usedingState.state == true" -->
           <div
             v-if="usedingState.state == true"
             class="live"
@@ -154,16 +153,7 @@ import common from "common/js/common.js";
 import { mapGetters, mapMutations } from "vuex";
 import { ERR_OK } from "api/config";
 
-import {
-  deposit,
-  busy,
-  openLock,
-  payDeposit,
-  jsApiCall,
-  RichScan,
-  getUrlKey
-} from "api/bed";
-import wx from "weixin-js-sdk";
+import { jsApiCall, deposit, busy, openLock, RichScan } from "api/bed";
 export default {
   components: {},
   data() {
@@ -180,7 +170,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["orderUseState", "usedingState"])
+    ...mapGetters(["orderUseState", "usedingState", "depositType"])
   },
   watch: {},
   methods: {
@@ -238,47 +228,29 @@ export default {
         : "";
       // 接口对接
       if (user_id != "") {
-        console.log(111);
-        payDeposit(user_id, 1).then(res => {
-          if (typeof WeixinJSBridge === "undefined") {
-            if (document.addEventListener) {
-              document.addEventListener(
-                "WeixinJSBridgeReady",
-                jsApiCall(res),
-                false
-              );
-            } else if (document.attachEvent) {
-              document.attachEvent(
-                "WeixinJSBridgeReady",
-                jsApiCall(res)
-              );
-              document.attachEvent(
-                "onWeixinJSBridgeReady",
-                jsApiCall(res)
-              );
-            }
-          } else {
-            jsApiCall(res);
-          }
-        });
+
       } else {
         this.$toast("您还未登录");
       }
     },
 
     _getData() {
-
+      // alert(this.openId.openId)
       // 根据key名获取传递回来的参数，data就是map
       common.$on(
         "handresult",
         function (data) {
-          console.log(data)
           // 先判断是否缴纳押金
-          this._deposit(data)
+          if (this.depositType.type === ERR_OK) {
+            // 已缴纳押金
+            // 开锁
+            this._openLock(data)
+          } else {
+            // 未缴纳押金
+            // 去支付押金
+          }
         }.bind(this)
       );
-      this._busy();
-      this.wayIsShow = true
     },
 
     toPayRouter(index) {
@@ -311,27 +283,13 @@ export default {
     },
     // 正在使用
     useding() {
+      console.log(this.usedingState.res.chaperonage_bed_code)
       this.$router.push({
         name: "useDing",
         params: {
-          id: this.busyCode ? this.busyCode : this.usedingState.busyCode
+          id: this.usedingState.res.chaperonage_bed_code 
         }
       });
-    },
-    _deposit(code) {
-      deposit().then(res => {
-        if ((res.error_code) * 1 === ERR_OK) {
-          console.log('已经缴纳押金', res)
-          // 开锁
-          this._openLock(code)
-          setTimeout(() => {
-
-          }, 5000)
-        } else {
-          console.log('未缴纳押金', res)
-          return false
-        }
-      })
     },
     _busy() {
       busy().then(res => {
@@ -341,16 +299,6 @@ export default {
             state: true,
             res: res.data
           });
-          //   this.$router.push({
-          //     name: "useDing",
-          //     params: {
-          //       id: res.data.chaperonage_bed_code
-          //     }
-          //   });
-
-          //   this.setOrderUseState({
-          //     state: false
-          //   });
           this.$toast("有正在使用订单");
         }
       });
