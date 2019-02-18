@@ -229,9 +229,6 @@ export default {
     depositManger() {
       this.$router.push({
         name: 'myDeposit',
-        params: {
-          id: this.depositType.type
-        }
       })
 
     },

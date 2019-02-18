@@ -88,7 +88,7 @@
                   /></a>
               </p>
               <p v-if="typeResult == 10">
-                <span class="nopaytitle">您有未缴纳的订单</span>
+                <span class="nopaytitle">您有未支付的订单</span>
                 <a
                   href="javascript:void(0)"
                   @click="toPayRouter(typeResult)"
@@ -115,7 +115,8 @@
               <img src="../../../static/img/lock.png" />
             </div>
             <span></span> <span></span> <span></span>
-            <p>正在开锁...</p>
+            <p v-if="usedingState.state != true">正在开锁...</p>
+            <p v-if="usedingState.state == true">正在使用...</p>
           </div>
           <!-- 开锁结果-->
           <div class="locked">
@@ -153,7 +154,7 @@ import common from "common/js/common.js";
 import { mapGetters, mapMutations } from "vuex";
 import { ERR_OK } from "api/config";
 
-import { jsApiCall, deposit, busy, openLock, RichScan } from "api/bed";
+import { jsApiCall, openLock, RichScan } from "api/bed";
 export default {
   components: {},
   data() {
@@ -170,16 +171,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["orderUseState", "usedingState", "depositType"])
+    ...mapGetters(["orderUseState", "usedingState", "depositType", "openId"])
   },
   watch: {},
   methods: {
     // 信息管理
     manger() {
-      this.setTrueManger(true);
-      // this.$router.push({
-      //   name: 'manager'
-      // })
+      this.$router.push({
+        name: 'manager'
+      })
     },
 
     wx() {
@@ -220,23 +220,7 @@ export default {
         this.$toast("您还未登录");
       }
     },
-    payBtn() {
-      const vm = this;
-      let wx = require("weixin-js-sdk");
-      var user_id = localStorage.getItem("id")
-        ? localStorage.getItem("id")
-        : "";
-      // 接口对接
-      if (user_id != "") {
-
-      } else {
-        this.$toast("您还未登录");
-      }
-    },
-
     _getData() {
-      // alert(this.openId.openId)
-      // 根据key名获取传递回来的参数，data就是map
       common.$on(
         "handresult",
         function (data) {
@@ -247,8 +231,9 @@ export default {
             this._openLock(data)
           } else {
             // 未缴纳押金
-            // 去支付押金
+            // 未支付订单
           }
+          return false
         }.bind(this)
       );
     },
@@ -267,46 +252,21 @@ export default {
       }
       // 未缴纳押金
       if (index === 9) {
-        deposit().then(res => {
-          this.$router.push({
-            name: "deposit",
-            params: {
-              id: res.error_code
-            }
-          });
-          this.setDepositType({
-            type: res.error_code * 1
-          });
-          return false;
+        this.$router.push({
+          name: "deposit",
         });
       }
     },
     // 正在使用
     useding() {
-      console.log(this.usedingState.res.chaperonage_bed_code)
       this.$router.push({
         name: "useDing",
         params: {
-          id: this.usedingState.res.chaperonage_bed_code 
-        }
-      });
-    },
-    _busy() {
-      busy().then(res => {
-        if (res.error_code * 1 === 1) {
-          this.busyCode = res.data.chaperonage_bed_code;
-          this.setUsedingState({
-            state: true,
-            res: res.data
-          });
-          this.$toast("有正在使用订单");
+          id: this.usedingState.res.chaperonage_bed_code
         }
       });
     },
     _openLock(code) {
-      this.setUsedingState({
-        state: true,
-      });
       openLock(code).then(res => {
         console.log("openlock", res)
         if (res.error_code * 1 === 1) {
@@ -342,13 +302,11 @@ export default {
           //   }
           return false;
         } else {
-          setTimeout(() => {
-            // this.setUsedingState({
-            //   state: false,
-            // });
-            // this.result = true
-            console.log(11111)
-          }, 5000)
+          this.setUsedingState({
+            state: true,
+            useding: false,
+            res: res.data
+          });
           setTimeout(() => {
             this.$router.push({
               name: "useDing",
@@ -357,22 +315,6 @@ export default {
               }
             });
           }, 1500)
-
-          //   this._setTimer()
-          //   this.$router.push({
-          //     name: "useDing",
-          //     params: {
-          //       id: res.data.chaperonage_bed_code
-          //     }
-          //   });
-          //   this.setUsedingState({
-          //     state: true,
-          //     res: res.data
-          //   });
-          //   this.setOrderUseState({
-          //     state: true,
-          //     res: res.data
-          //   });
         }
       });
     },

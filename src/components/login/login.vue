@@ -63,6 +63,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import { mapGetters, mapMutations } from "vuex";
 import { getcode, checkcode } from "api/islogin";
+import { deposit } from "api/bed";
 import { ERR_OK } from "api/config";
 import common from "common/js/common.js";
 
@@ -84,7 +85,7 @@ export default {
 
   //监听属性 类似于data概念
   computed: {
-    ...mapGetters(["islogin"])
+    ...mapGetters(["islogin", "depositType"])
   },
   //监控data中的数据变化
   watch: {},
@@ -130,8 +131,6 @@ export default {
       // 校验验证码登录
       if (phone != "" && sms != "") {
         checkcode(phone, sms).then(res => {
-
-
           localStorage.setItem("id", res.t.user.id);
           localStorage.setItem("image", res.t.user.image);
           localStorage.setItem("name", res.t.user.name);
@@ -145,6 +144,19 @@ export default {
           this.$router.go(-1);
           this.phone = '';
           this.sms = '';
+          // 是否缴纳押金
+          deposit().then(res => {
+            this.setDepositType({
+              type: (res.error_code) * 1,
+              money: (res.cash_pledge_money) * 1
+            })
+            if (res.error_code * 1 === 0) {
+              this.$toast("已经缴纳押金")
+
+            } else {
+              this.$toast("未缴纳押金")
+            }
+          });
         });
       } else {
         this.$toast("手机号码或验证码有误，请重填");
@@ -154,6 +166,7 @@ export default {
     ...mapMutations({
       setIsLoin: "SET_ISLOGIN",
       setMsg: "SET_MSG",
+      setDepositType: "SET_DEPOSIT_TYPE",
       setOpenId: "SET_OPENID",
     })
   },

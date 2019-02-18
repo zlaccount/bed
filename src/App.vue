@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <manager></manager>
+    <!-- <manager></manager> -->
     <result></result>
     <directions></directions>
     <tab></tab>
@@ -13,7 +13,7 @@ import Tab from 'components/tab/tab'
 import Manager from 'components/manager/manager'
 import Result from 'components/result/result'
 import Directions from 'components/directions/directions'
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { getWxCode, getUrlCode, getOpenId, deposit, busy } from "api/bed";
 import wx from "weixin-js-sdk";
 export default {
@@ -22,32 +22,11 @@ export default {
 
     }
   },
+  computed: {
+    ...mapGetters(["openId"])
+  },
   methods: {
     _getData() {
-      // 是否缴纳押金
-      deposit().then(res => {
-        console.log(res)
-        this.setDepositType({
-          type: (res.error_code) * 1,
-          money: (res.cash_pledge_money) * 1
-        })
-        if (res.error_code * 1 === 0) {
-          this.$toast("已经缴纳押金")
-          // 是否有正在使用订单
-          busy().then(res => {
-            if (res.error_code * 1 === 1) {
-              this.busyCode = res.data.chaperonage_bed_code;
-              this.setUsedingState({
-                state: true,
-                res: res.data
-              });
-              this.$toast("有正在使用订单");
-            }
-          });
-        } else {
-          this.$toast("未缴纳押金")
-        }
-      });
       // 获取code
       // getWxCode().then(res => {
       //   if (!getUrlCode('code')) {
@@ -61,14 +40,34 @@ export default {
       //       this.setOpenId({
       //         openId: res
       //       });
-
-      //       deposit().then(res => {
-      //         this.setDepositType({
-      //           type: parseInt(res.error_code),
-      //           money: parseInt(res.cash_pledge_money)
-      //         })
-      //       });
-
+      if (localStorage.getItem("id") != null) {
+        // 是否缴纳押金
+        deposit().then(res => {
+          this.setDepositType({
+            type: (res.error_code) * 1,
+            money: (res.cash_pledge_money) * 1
+          })
+          if (res.error_code * 1 === 0) {
+            this.$toast("已经缴纳押金")
+            // 是否有正在使用订单
+            busy().then(res => {
+              if (res.error_code * 1 === 1) {
+                this.busyCode = res.data.chaperonage_bed_code;
+                this.setUsedingState({
+                  state: true,
+                  useding: true,
+                  res: res.data
+                });
+                this.$toast("有正在使用订单");
+              }
+            });
+          } else {
+            this.$toast("未缴纳押金")
+          }
+        });
+      } else {
+        this.$toast("您还未登录");
+      }
       //     })
       //   }
       // })

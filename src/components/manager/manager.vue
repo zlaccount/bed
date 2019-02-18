@@ -1,10 +1,7 @@
 <!--  -->
 <template>
   <transition name="slide">
-    <div
-      class="managerViewPage"
-      v-if="bedmanager == true"
-    >
+    <div class="managerViewPage">
       <van-nav-bar
         fixed
         left-arrow
@@ -55,6 +52,8 @@
           </template>
         </van-cell>
       </div>
+      <router-view></router-view>
+
     </div>
   </transition>
 </template>
@@ -89,11 +88,10 @@ export default {
   // 方法集合
   methods: {
     onClickLeft() {
-      this.setFalseManger(false);
-
-      // this.$router.push({
-      //   name: 'bed'
-      // })
+      // this.setFalseManger(false);
+      this.$router.push({
+        name: 'bed'
+      })
     },
     getData() {
 
@@ -102,19 +100,9 @@ export default {
     depositManager() {
       var user_id = localStorage.getItem("id") ? localStorage.getItem("id") : '';
       if (user_id != '') {
-        deposit().then(res => {
-          this.$router.push({
-            name: 'bedDeposit',
-            params: {
-              id: res.error_code
-            }
-          })
-          this.setDepositType({
-            type: parseInt(res.error_code),
-            money: parseInt(res.cash_pledge_money)
-          })
-          return false
-        });
+        this.$router.push({
+          name: 'deposit',
+        })
       } else {
         this.$toast('您还未登录')
       }

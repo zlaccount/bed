@@ -28,7 +28,7 @@
           对押金规则不清楚？</a>
         <van-button
           type="default"
-          @click="tab(1)"
+          @click="refunddeposit()"
         >退还 </van-button>
       </div>
     </div>
@@ -110,7 +110,7 @@ import { mapGetters, mapMutations } from "vuex";
 import common from "common/js/common.js";
 import yue from "../../../static/img_icon/yue.png";
 import wxpng from "../../../static/img_icon/wx.png";
-import { weChatPay, jsApiCall } from "api/bed";
+import { weChatPay, weChat_refun, jsApiCall } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
 // 支付结果
@@ -177,6 +177,13 @@ export default {
     },
     getData() {
 
+    },
+    // 退还押金
+    refunddeposit() {
+      weChat_refun().then(res => {
+        console.log(res)
+        window.location.href = location.href
+      })
     },
     ...mapMutations({
       setDepositType: "SET_DEPOSIT_TYPE",

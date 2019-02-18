@@ -179,6 +179,9 @@ export default {
       }
     },
     onClickLeft() {
+      this.setUsedingState({
+        useding: true,
+      });
       this.$router.back();
     },
     getData() {

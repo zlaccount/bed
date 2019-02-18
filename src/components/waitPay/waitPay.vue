@@ -90,7 +90,7 @@ import wx from "../../../static/img_icon/wx.png";
 import yue from "../../../static/img_icon/yue.png";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
-import { waitPay, jsApiCall } from "api/bed";
+import { waitPay, weChatOrderPay, jsApiCall } from "api/bed";
 
 import { getcode, checkcode } from "api/islogin";
 
@@ -121,7 +121,7 @@ export default {
   },
   // 监听属性 类似于data概念
   computed: {
-    ...mapGetters(["beddirections"])
+    ...mapGetters(["openId"])
   },
   // 监控data中的数据变化
   watch: {},
@@ -173,6 +173,30 @@ export default {
         }
       } else {
         // 微信支付
+        weChatOrderPay(this.openId.openId, this.orderId).then(res => {
+          if (typeof WeixinJSBridge === "undefined") {
+            if (document.addEventListener) {
+              document.addEventListener(
+                "WeixinJSBridgeReady",
+                jsApiCall(res),
+                false
+              );
+            } else if (document.attachEvent) {
+              document.attachEvent(
+                "WeixinJSBridgeReady",
+                jsApiCall(res)
+              );
+              document.attachEvent(
+                "onWeixinJSBridgeReady",
+                jsApiCall(res)
+              );
+            }
+          } else {
+            jsApiCall(res);
+          }
+        })
+
+
       }
     },
     payBeforeClose(action, done) {

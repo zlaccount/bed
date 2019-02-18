@@ -98,7 +98,7 @@ export function payDeposit(way) {
             return Promise.resolve(res.data);
         });
 }
-// 6.用户使用完陪护床后支付费用接口
+// 6.用户使用完陪护床后支付费用接口（订单余额支付）
 export function waitPay(order_id, state) {
     const url = "/pay";
     const data = Object.assign(
@@ -119,15 +119,34 @@ export function waitPay(order_id, state) {
             return Promise.resolve(res.data);
         });
 }
-// 8.退还押金接口
-export function refunddeposit() {
-    const url = "/deposit_refund";
+// 订单微信支付
+export function weChatOrderPay(openId, order_id) {
+    const url = "/weChatOrderPay";
     const data = Object.assign(
         {},
         {
-            user_id: localStorage.getItem("id")
+            userId: localStorage.getItem("id")
                 ? localStorage.getItem("id")
-                : ""
+                : "",
+            openId: openId,
+            orderId: order_id
+        }
+    );
+    return axios
+        .get(url, {
+            params: data
+        })
+        .then(res => {
+            return Promise.resolve(res.data);
+        });
+}
+// 8.退还押金接口(微信退款)
+export function weChat_refun() {
+    const url = "/weChat_refund";
+    const data = Object.assign(
+        {},
+        {
+            userId: localStorage.getItem("id") ? localStorage.getItem("id") : ""
         }
     );
     return axios
@@ -205,7 +224,7 @@ export function RichScan() {
     const data = Object.assign(
         {},
         {
-            url: location.href.split("#")[0]
+            url: location.href.split("/?")[0]
         }
     );
     return axios
@@ -216,26 +235,7 @@ export function RichScan() {
             return Promise.resolve(res.data);
         });
 }
-// 余额微信支付
-export function pay(order_id) {
-    const url = "/E2306_service/app/rescheduAppletPay";
-    const data = Object.assign(
-        {},
-        {
-            user_id: localStorage.getItem("id")
-                ? localStorage.getItem("id")
-                : "",
-            order_id: order_id
-        }
-    );
-    return axios
-        .get(url, {
-            params: data
-        })
-        .then(res => {
-            return Promise.resolve(res.data);
-        });
-}
+
 // 获取微信支付code接口
 export function getWxCode() {
     const url = "/getWeixinBackUrl";
@@ -295,6 +295,7 @@ export function weChatPay(openId) {
             return Promise.resolve(res.data);
         });
 }
+
 // 微信支付方法
 export function jsApiCall(data) {
     WeixinJSBridge.invoke(
@@ -313,10 +314,20 @@ export function jsApiCall(data) {
             console.log(res);
             if (res.err_msg === "get_brand_wcpay_request:ok") {
                 this.$toast("微信支付成功");
-                that.$router.replace({ name: "bed", query: { id: "2" } });
+                that.$router.replace({
+                    name: "bed",
+                    query: {
+                        id: "2"
+                    }
+                });
             } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
                 this.$toast("用户取消支付");
-                that.$router.replace({ name: "bed", query: { id: "1" } });
+                that.$router.replace({
+                    name: "bed",
+                    query: {
+                        id: "1"
+                    }
+                });
             } else if (res.err_msg === "get_brand_wcpay_request:fail") {
                 this.$toast("网络异常，请重试");
             }

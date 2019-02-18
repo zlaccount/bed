@@ -259,9 +259,6 @@ export default {
       this.$router.push({
         path: `/bed`
       });
-      this.setFeedBackState(false);
-      this.setTrueManger(false);
-      this.setOrderUseState(false);
     },
     radioClick(index) {
       this.resultRadio = index;
