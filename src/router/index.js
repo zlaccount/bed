@@ -19,6 +19,7 @@ import Person from "components/person/person";
 
 import Login from "components/login/login";
 import Deposit from "components/deposit/deposit";
+import Refund from 'components/refund/refund'
 Vue.use(Router);
 
 export default new Router({
@@ -94,7 +95,12 @@ export default new Router({
         {
           path: "/my/deposit",
           name: "myDeposit",
-          component: Deposit
+          component: Deposit,
+            children: [{
+               path: "/my/deposit/refund",
+                name: "myRefund",
+              component: Refund
+            }]
         },
         {
           path: "/my/order",
