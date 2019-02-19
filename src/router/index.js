@@ -22,8 +22,7 @@ import Deposit from "components/deposit/deposit";
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       redirect: "/bed"
     },
@@ -31,8 +30,7 @@ export default new Router({
       path: "/bed",
       name: "bed",
       component: Bed,
-      children: [
-        {
+      children: [{
           path: "/bed/serial",
           name: "serial",
           component: Serial
@@ -41,31 +39,17 @@ export default new Router({
           path: "/bed/manager",
           name: "manager",
           component: Manager,
-          children: [
-            // {
-            //   path: "/bed/manager/order",
-            //   name: "order",
-            //   component: Order,
-            //   children: [
-            //     {
-            //       path: ":id",
-            //       component: OrderDetail
-            //     }
-            //   ]
-            // },
-            {
-              path: "/bed/manager/deposit",
-              name: "deposit",
-              component: Deposit
-            }
-          ]
+          children: [{
+            path: "/bed/manager/deposit",
+            name: "deposit",
+            component: Deposit
+          }]
         },
         {
           path: "/bed/useDing",
           name: "useDing",
           component: UseDing,
-          children: [
-            {
+          children: [{
               path: "/bed/useDing/closeLock",
               name: "closeLock",
               component: CloseLock
@@ -81,21 +65,18 @@ export default new Router({
     },
     {
       path: "/bed/manager/order",
-        name: "order",
-        component: Order,
-        children: [
-            {
-                path: ":id",
-                component: OrderDetail
-            }
-        ]
+      name: "order",
+      component: Order,
+      children: [{
+        path: ":id",
+        component: OrderDetail
+      }]
     },
     {
       path: "/my",
       name: "my",
       component: My,
-      children: [
-        {
+      children: [{
           path: "/my/login",
           name: "login",
           component: Login
@@ -119,12 +100,10 @@ export default new Router({
           path: "/my/order",
           name: "myOrder",
           component: Order,
-          children: [
-            {
-              path: ":id",
-              component: OrderDetail
-            }
-          ]
+          children: [{
+            path: ":id",
+            component: OrderDetail
+          }]
         }
       ]
     }

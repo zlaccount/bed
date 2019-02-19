@@ -22,5 +22,6 @@ export const SET_DIRECTIONS = 'SET_DIRECTIONS'
 // 选择医院
 export const SET_HOSPITAL = 'SET_HOSPITAL'
 export const SET_RESULT_TYPE = 'SET_RESULT_TYPE'
+export const SET_REFUND = 'SET_REFUND'
 // openid
 export const SET_OPENID = 'SET_OPENID'

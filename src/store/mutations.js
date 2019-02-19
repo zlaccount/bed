@@ -51,6 +51,9 @@ const mutations = {
   [types.SET_RESULT_TYPE](state, resultType) {
     state.resultType = resultType
   },
+  [types.SET_REFUND](state, refund) {
+    state.refund = refund
+  },
   // openid
   [types.SET_OPENID](state, openId) {
     state.openId = openId

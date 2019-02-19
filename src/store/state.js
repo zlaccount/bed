@@ -25,6 +25,9 @@ const state = {
   resultType: [{
     state: false
   }, {}],
+  refund: [{
+    state: false
+  }, {}],
   openId: {}
 }
 

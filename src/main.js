@@ -111,7 +111,6 @@ Vue.use(Collapse).use(CollapseItem);
 Vue.use(VueAwesomeSwiper /* { default global options } */ )
 
 //细节处理一：可以给axios的ajax请求设置统一的主机和端口号
-// axios.defaults.baseURL = "http://192.168.1.92:8080/app/chaperone_bed/user"; //江岩
 axios.defaults.baseURL = "http://59.172.27.186:8888/app/chaperone_bed/user";
 //细节处理二: 可以将axios这个对象添加到Vue的原型对象中，将来在使用的时候就只需要使用this.对象名就可以了
 Vue.prototype.$http = axios;
