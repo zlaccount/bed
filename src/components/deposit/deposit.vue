@@ -111,7 +111,7 @@ import { mapGetters, mapMutations } from "vuex";
 import common from "common/js/common.js";
 import yue from "../../../static/img_icon/yue.png";
 import wxpng from "../../../static/img_icon/wx.png";
-import { weChatPay, weChat_refun, jsApiCall, deposit } from "api/bed";
+import { weChatPay, jsApiCall, weChat_refun } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
 // 支付结果
@@ -178,28 +178,20 @@ export default {
     getData() { },
     // 退还押金
     refunddeposit() {
-      // this.setRefund({
-
-      // })
-      this.$router.push({
-        name: "myRefund"
+      weChat_refun().then(res => {
+        this.$router.push({
+          name: "myRefund"
+        });
+        if ((res.result) * 1 == ERR_OK) {
+          this.$router.push({
+            name: "myRefund"
+          });
+        } else {
+          this.$toast(res.error);
+        }
       });
-      // weChat_refun().then(res => {
-      //     if ((res.error_code) * 1 == ERR_OK) {
-      //         this.$toast("退还成功");
-      //         deposit().then(res => {
-      //             this.setDepositType({
-      //                 type: res.error_code * 1,
-      //                 money: res.cash_pledge_money * 1
-      //             });
-      //         });
-      //     } else {
-      //         this.$toast(res.error);
-      //     }
-      // });
     },
     ...mapMutations({
-      setRefund: "SET_REFUND",
       setDepositType: "SET_DEPOSIT_TYPE",
       setDirections: "SET_DIRECTIONS"
     })
@@ -231,7 +223,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 154;
-  background: $color-background;
+  background: #fff;
 
   .deposit {
     text-align: center;
@@ -330,36 +322,29 @@ export default {
     }
   }
 
-  .toPayDeposit {
-    text-align: center;
-    position: absolute;
-    width: 200px;
-    margin-left: -100px;
-    left: 50%;
-    height: 200px;
-    margin-top: -200px;
-    top: 50%;
+  h4 {
+    color: orange;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 10px;
+    margin: 10px 0;
 
-    h4 {
-      color: orange;
-      font-size: 26px;
-      font-weight: 400;
-      line-height: 10px;
-      margin: 10px 0;
-
-      span {
-        font-size: 17px;
-      }
-    }
-
-    p {
-      line-height: 48px;
-    }
-
-    .tip {
-      color: #999;
-      font-size: 14px;
+    span {
+      font-size: 17px;
     }
   }
+
+  p {
+    line-height: 48px;
+  }
+
+  .tip {
+    color: #999;
+    font-size: 14px;
+  }
+}
+
+.toPayDeposit {
+  background: #f5f3f4;
 }
 </style>

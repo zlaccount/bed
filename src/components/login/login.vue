@@ -146,14 +146,17 @@ export default {
           this.sms = '';
           // 是否缴纳押金
           deposit().then(res => {
-            this.setDepositType({
-              type: (res.error_code) * 1,
-              money: (res.cash_pledge_money) * 1
-            })
-            if (res.error_code * 1 === 0) {
-              this.$toast("已经缴纳押金")
-
+            if ((res.error_code) * 1 === ERR_OK) {
+              this.setDepositType({
+                type: (res.error_code) * 1,
+                money: (res.cash_pledge_money) * 1
+              })
+              this.$toast("已缴纳押金")
             } else {
+              this.setDepositType({
+                type: (res.error_code) * 1,
+                money: 0
+              })
               this.$toast("未缴纳押金")
             }
           });
