@@ -21,11 +21,20 @@
       <van-cell-group>
         <van-field
           v-model="value"
-          placeholder="0.00"
+          placeholder="请填写充值金额"
         />
       </van-cell-group>
       <!-- 付款 -->
-      <wait-pay></wait-pay>
+      <div class="payway">
+        <div class="payBtn">
+          <van-button
+            type="default"
+            @click="wxpay"
+          >
+            <span>微信充值</span>
+          </van-button>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -34,10 +43,13 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 // 付款
-import WaitPay from "components/waitPay/waitPay";
+import { mapGetters } from "vuex";
+import {  recharge } from "api/bed";
+import wx from "weixin-js-sdk";
+import { ERR_OK } from "api/config";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: { WaitPay },
+  components: {},
   data() {
     //这里存放数据
     return {
@@ -45,7 +57,10 @@ export default {
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    ...mapGetters(["openId"])
+
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
@@ -53,6 +68,57 @@ export default {
     routerBack() {
       this.$router.back()
     },
+    wxpay() {
+      if (this.value === '') {
+        this.$toast("请填写充值金额")
+        return false
+      }
+      recharge(this.openId.openId, this.value).then(res => {
+        if (typeof WeixinJSBridge === "undefined") {
+          if (document.addEventListener) {
+            document.addEventListener(
+              "WeixinJSBridgeReady",
+              this.jsApiCall(res),
+              false
+            );
+          } else if (document.attachEvent) {
+            document.attachEvent(
+              "WeixinJSBridgeReady",
+              this.jsApiCall(res)
+            );
+            document.attachEvent(
+              "onWeixinJSBridgeReady",
+              this.jsApiCall(res)
+            );
+          }
+        } else {
+          this.jsApiCall(res);
+        }
+      });
+    },
+        jsApiCall(data) {
+  WeixinJSBridge.invoke(
+    "getBrandWCPayRequest", {
+      debug: true,
+      appId: data.appId, // 公众号名称，由商户传入
+      timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
+      nonceStr: data.nonceStr, // 随机串
+      package: data.package,
+      signType: "MD5", // 微信签名方式：
+      paySign: data.paySign, // 微信签名
+      jsApiList: ["chooseWXPay"]
+    },
+    function (res) {
+      if (res.err_msg === "get_brand_wcpay_request:ok") {
+        window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+      } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+        window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+      } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+        this.$toast("网络异常，请重试");
+      }
+    }
+  );
+},
     statement() { }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -108,6 +174,31 @@ export default {
           padding-left: 30px;
         }
       }
+    }
+  }
+
+  .payBtn {
+    position: fixed;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 20px;
+    padding-bottom: 15px;
+    background: #f5f3f4;
+    bottom: 0;
+
+    .seeQuestion {
+      font-size: 14px;
+      display: block;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    .van-button {
+      background: #1AAD19;
+      color: #fff;
+      font-size: 16px;
+      width: 100%;
     }
   }
 }

@@ -16,10 +16,10 @@
       <div class="topblank"></div>
       <div class="deposit">
         <p>押金（元）</p>
-        <h4><span>￥</span>58元</h4>
-        <p class="tip">押金随心退，安全速到账</p>
+        <h4><span>￥</span>{{depositType.money}}</h4>
+        <p class="tip">温馨提示：押金可随时退还</p>
       </div>
-      <div class="backdMoney">
+      <div class="payBtn backdMoney">
         <a
           href="javascript:void(0)"
           @click="directionsManager"
@@ -53,40 +53,6 @@
         <p class="tip">押金随心退，安全速到账</p>
       </div>
       <div class="payway">
-        <van-radio-group v-model="radio">
-          <van-cell-group>
-            <van-cell
-              title-class="radioIcon"
-              clickable
-              @click="radio = '1'"
-            >
-              <template slot="title">
-                <img
-                  :src="icon.wx"
-                  slot="right"
-                  class="leftPayIcon"
-                />
-                <span class="custom-text">微信支付</span>
-              </template>
-              <van-radio name="1" />
-            </van-cell>
-            <van-cell
-              title-class="radioIcon"
-              clickable
-              @click="radio = '2'"
-            >
-              <template slot="title">
-                <img
-                  :src="icon.yue"
-                  slot="right"
-                  class="leftPayIcon"
-                />
-                <span class="custom-text">余额支付</span>
-              </template>
-              <van-radio name="2" />
-            </van-cell>
-          </van-cell-group>
-        </van-radio-group>
         <div class="payBtn">
           <a
             href="javascript:void(0)"
@@ -98,7 +64,7 @@
             type="default"
             @click="payMoney"
           >
-            <span>支付</span>
+            <span>微信充值</span>
           </van-button>
         </div>
       </div>
@@ -109,9 +75,8 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import common from "common/js/common.js";
-import yue from "../../../static/img_icon/yue.png";
-import wxpng from "../../../static/img_icon/wx.png";
-import { weChatPay, jsApiCall, weChat_refun } from "api/bed";
+
+import { weChatPay, weChat_refun,deposit } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
 // 支付结果
@@ -122,13 +87,7 @@ export default {
     // 这里存放数据
     return {
       resultType: "",
-      num: 0,
-      radio: "1",
       currentTabNav: ["使用说明", "退还结果"],
-      icon: {
-        wx: wxpng,
-        yue: yue
-      }
     };
   },
   // 监听属性 类似于data概念
@@ -146,43 +105,64 @@ export default {
     seeQuestion() {
       this.setDirections(true);
     },
+    // 充值押金
     payMoney() {
       weChatPay(this.openId.openId).then(res => {
         if (typeof WeixinJSBridge === "undefined") {
           if (document.addEventListener) {
             document.addEventListener(
               "WeixinJSBridgeReady",
-              jsApiCall(res),
+              this.jsApiCall(res),
               false
             );
           } else if (document.attachEvent) {
             document.attachEvent(
               "WeixinJSBridgeReady",
-              jsApiCall(res)
+              this.jsApiCall(res)
             );
             document.attachEvent(
               "onWeixinJSBridgeReady",
-              jsApiCall(res)
+              this.jsApiCall(res)
             );
           }
         } else {
-          jsApiCall(res);
+          this.jsApiCall(res);
         }
       });
     },
-
+    jsApiCall(data) {
+      const vm = this;
+      WeixinJSBridge.invoke(
+        "getBrandWCPayRequest", {
+          debug: true,
+          appId: data.appId, // 公众号名称，由商户传入
+          timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
+          nonceStr: data.nonceStr, // 随机串
+          package: data.package,
+          signType: "MD5", // 微信签名方式：
+          paySign: data.paySign, // 微信签名
+          jsApiList: ["chooseWXPay"]
+        },
+        function (res) {
+          if (res.err_msg === "get_brand_wcpay_request:ok") {
+             vm.$router.push('/sign_ht');
+            // window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+          } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+            // window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+          } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+            this.$toast("网络异常，请重试");
+          }
+        }
+      );
+    },
     // 使用说明
     directionsManager() {
       this.setDirections(true);
     },
-    getData() { },
     // 退还押金
     refunddeposit() {
       weChat_refun().then(res => {
-        this.$router.push({
-          name: "myRefund"
-        });
-        if ((res.result) * 1 == ERR_OK) {
+        if ((res.result) * 1 == 1) {
           this.$router.push({
             name: "myRefund"
           });
@@ -228,18 +208,14 @@ export default {
   .deposit {
     text-align: center;
     position: relative;
+    top: 15%;
 
-    // margin-top: 15%;
     h4 {
       color: orange;
       font-size: 23px;
       font-weight: 400;
       line-height: 10px;
       margin: 10px 0;
-    }
-
-    .moneyTitle {
-      padding-top: 20px;
     }
 
     p {
@@ -252,95 +228,37 @@ export default {
     }
   }
 
-  .payway {
+  .payBtn {
+    position: fixed;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 20px;
+    padding-bottom: 15px;
     background: #f5f3f4;
+    bottom: 0;
 
-    .van-radio-group {
-      padding-top: 20px;
-      text-align: left;
-
-      .van-cell {
-        background: #f5f3f4;
-
-        .leftPayIcon {
-          height: 25px;
-          width: 25px;
-          margin: -6px 0;
-        }
-      }
+    .seeQuestion {
+      font-size: 14px;
+      display: block;
+      text-align: center;
+      line-height: 30px;
     }
 
-    .payBtn {
-      position: fixed;
-      width: 90%;
-      margin-left: 5%;
-      margin-right: 5%;
-      margin-top: 20px;
-      padding-bottom: 15px;
-      background: #f5f3f4;
-      bottom: 0;
-
-      .seeQuestion {
-        font-size: 14px;
-        display: block;
-        text-align: center;
-        line-height: 30px;
-      }
-
-      .van-button {
-        background: #4fd6bc;
-        color: #fff;
-        font-size: 16px;
-        width: 100%;
-      }
+    .van-button {
+      background: #1AAD19;
+      color: #fff;
+      font-size: 16px;
+      width: 100%;
     }
   }
 
   .backdMoney {
-    position: relative;
-
-    .seeQuestion {
-      position: fixed;
-      bottom: 72px;
-      text-align: center;
-      color: #999;
-      width: 100%;
-      left: 0;
-    }
+    background: #fff;
 
     .van-button {
-      position: fixed;
-      bottom: 20px;
-      left: 0px;
-      right: 0px;
-      width: 92%;
-      margin-left: auto;
-      margin-right: auto;
       background: #4fd6bc;
-      color: #fff;
-      font-size: 16px;
     }
-  }
-
-  h4 {
-    color: orange;
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 10px;
-    margin: 10px 0;
-
-    span {
-      font-size: 17px;
-    }
-  }
-
-  p {
-    line-height: 48px;
-  }
-
-  .tip {
-    color: #999;
-    font-size: 14px;
   }
 }
 

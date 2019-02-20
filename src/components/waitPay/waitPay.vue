@@ -90,7 +90,7 @@ import wx from "../../../static/img_icon/wx.png";
 import yue from "../../../static/img_icon/yue.png";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
-import { waitPay, weChatOrderPay, jsApiCall } from "api/bed";
+import { waitPay, weChatOrderPay } from "api/bed";
 
 import { getcode, checkcode } from "api/islogin";
 
@@ -178,26 +178,47 @@ export default {
             if (document.addEventListener) {
               document.addEventListener(
                 "WeixinJSBridgeReady",
-                jsApiCall(res),
+                this.jsApiCall(res),
                 false
               );
             } else if (document.attachEvent) {
               document.attachEvent(
                 "WeixinJSBridgeReady",
-                jsApiCall(res)
+                this.jsApiCall(res)
               );
               document.attachEvent(
                 "onWeixinJSBridgeReady",
-                jsApiCall(res)
+                this.jsApiCall(res)
               );
             }
           } else {
-            jsApiCall(res);
+            this.jsApiCall(res);
           }
         })
-
-
       }
+    },
+    jsApiCall(data) {
+      WeixinJSBridge.invoke(
+        "getBrandWCPayRequest", {
+          debug: true,
+          appId: data.appId, // 公众号名称，由商户传入
+          timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
+          nonceStr: data.nonceStr, // 随机串
+          package: data.package,
+          signType: "MD5", // 微信签名方式：
+          paySign: data.paySign, // 微信签名
+          jsApiList: ["chooseWXPay"]
+        },
+        function (res) {
+          if (res.err_msg === "get_brand_wcpay_request:ok") {
+            window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+          } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+            window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+          } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+            this.$toast("网络异常，请重试");
+          }
+        }
+      );
     },
     payBeforeClose(action, done) {
       if (action === "confirm") {
@@ -240,9 +261,7 @@ export default {
   created() { },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    common.$on("payType", data => {
-      console.log("payType", data);
-    });
+
   },
   beforeCreate() { }, // 生命周期 - 创建之前
   beforeMount() { }, // 生命周期 - 挂载之前

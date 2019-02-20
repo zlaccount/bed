@@ -27,7 +27,8 @@ export default {
   methods: {
     _getData() {
       // 获取code
-      getWxCode().then(res => {
+      var url = location.href.split("#")[0];
+      getWxCode(url).then(res => {
         if (!getUrlCode('code')) {
           this.$toast('微信授权中……')
           let currentUrl = encodeURIComponent(window.location.href)

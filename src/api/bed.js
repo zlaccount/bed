@@ -205,10 +205,12 @@ export function geographical(LocationHref) {
     });
 }
 // 获取微信支付code接口
-export function getWxCode() {
+export function getWxCode(LocationHref) {
   const url = "/getWeixinBackUrl";
   // const url = "http://59.172.27.186:8888/E2306_service/payPlatform/tenpay/getWeixinBackUrl";
-  const data = Object.assign({}, {});
+  const data = Object.assign({}, {
+    callBackUrl: LocationHref
+  });
   return axios
     .get(url, {
       params: data
@@ -241,7 +243,7 @@ export function getOpenId(code) {
       return Promise.resolve(res.data);
     });
 }
-// 微信支付押金
+// 押金支付
 export function weChatPay(openId) {
   const url = "/weChatPay";
   const data = Object.assign({}, {
@@ -257,40 +259,45 @@ export function weChatPay(openId) {
       return Promise.resolve(res.data);
     });
 }
+// 余额充值
+export function recharge(openId, money) {
+  const url = "/recharge";
+  const data = Object.assign({}, {
+    userId: localStorage.getItem("id") ?
+      localStorage.getItem("id") : "",
+    openId: openId,
+    money: money
+  });
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      return Promise.resolve(res.data);
+    });
+}
 
 // 微信支付方法
-export function jsApiCall(data) {
-  WeixinJSBridge.invoke(
-    "getBrandWCPayRequest", {
-      debug: true,
-      appId: data.appId, // 公众号名称，由商户传入
-      timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
-      nonceStr: data.nonceStr, // 随机串
-      package: data.package,
-      signType: "MD5", // 微信签名方式：
-      paySign: data.paySign, // 微信签名
-      jsApiList: ["chooseWXPay"]
-    },
-    function (res) {
-      if (res.err_msg === "get_brand_wcpay_request:ok") {
-        this.$toast("微信支付成功");
-        that.$router.replace({
-          name: "bed",
-          query: {
-            id: "2"
-          }
-        });
-      } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
-        this.$toast("用户取消支付");
-        that.$router.replace({
-          name: "bed",
-          query: {
-            id: "1"
-          }
-        });
-      } else if (res.err_msg === "get_brand_wcpay_request:fail") {
-        this.$toast("网络异常，请重试");
-      }
-    }
-  );
-}
+// export function jsApiCall(data) {
+//   WeixinJSBridge.invoke(
+//     "getBrandWCPayRequest", {
+//       debug: true,
+//       appId: data.appId, // 公众号名称，由商户传入
+//       timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
+//       nonceStr: data.nonceStr, // 随机串
+//       package: data.package,
+//       signType: "MD5", // 微信签名方式：
+//       paySign: data.paySign, // 微信签名
+//       jsApiList: ["chooseWXPay"]
+//     },
+//     function (res) {
+//       if (res.err_msg === "get_brand_wcpay_request:ok") {
+//         window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+//       } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+//         window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+//       } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+//         this.$toast("网络异常，请重试");
+//       }
+//     }
+//   );
+// }

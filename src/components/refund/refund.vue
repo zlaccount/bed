@@ -62,7 +62,10 @@ export default {
   components: {},
   data() {
     // 这里存放数据
-    return {};
+    return {
+      error_code: '',
+      cost: ''
+    };
   },
   // 监听属性 类似于data概念
   computed: {
@@ -73,6 +76,10 @@ export default {
   // 方法集合
   methods: {
     onClickLeft() {
+      this.setDepositType({
+        type: this.error_code,
+        money: this.cost
+      })
       this.$router.push({
         path: `/my`
       });
@@ -80,28 +87,22 @@ export default {
     getData() {
       setTimeout(() => {
         deposit().then(res => {
-          if ((res.error_code) * 1 === ERR_OK) {
-            // 已缴纳押金
+          this.error_code = (res.error_code) * 1
+          this.cost = (res.cash_pledge_money) * 1
+          if (this.error_code === ERR_OK) {
+            // 退款失败
             this.setRefund({
               state: true,
               type: -1,
             })
-            this.setDepositType({
-              type: (res.error_code) * 1,
-              money: (res.cash_pledge_money) * 1
-            })
           } else {
-            // 待缴纳押金
+            // 退款成功
             this.setRefund({
               state: true,
               type: 1,
             })
-            this.setDepositType({
-              type: (res.error_code) * 1,
-              money: 0
-            })
-          }
 
+          }
           this.$refs.refunding.style.display = "none";
 
         });
@@ -115,8 +116,6 @@ export default {
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.getData();
-    // 获取get传递过来的动态路由的值
-    // this.refund = this.$route.params.id;
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() { },
