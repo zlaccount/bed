@@ -12,7 +12,7 @@ import Tab from 'components/tab/tab'
 import Result from 'components/result/result'
 import Directions from 'components/directions/directions'
 import { mapGetters, mapMutations } from "vuex";
-import { getWxCode, getUrlCode, getOpenId, deposit, busy } from "api/bed";
+import { getWxCode, getUrlCode, getOpenId, deposit, busy ,seeBalance} from "api/bed";
 import { ERR_OK } from "api/config";
 import wx from "weixin-js-sdk";
 export default {
@@ -48,6 +48,10 @@ export default {
     },
     basic() {
       if (localStorage.getItem("id") != null) {
+        // 查询余额
+        seeBalance().then(res => {
+          localStorage.setItem("balance", res.balance);
+        })
         // 是否缴纳押金
         deposit().then(res => {
           if ((res.error_code) * 1 === ERR_OK) {
@@ -81,8 +85,8 @@ export default {
 
   },
   created() {
-    // this._getData();
-    this.basic()
+    this._getData();
+    // this.basic()
 
   },
 }

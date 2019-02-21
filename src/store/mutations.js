@@ -8,8 +8,8 @@ const mutations = {
     state.msg = msg
   },
   // 信息管理
-  [types.SET_BEDMANAGER](state, bedmanager) {
-    state.bedmanager = bedmanager
+  [types.SET_WAYISSHOW](state, wayIsShow) {
+    state.wayIsShow = wayIsShow
   },
   // 押金管理
   [types.SET_DEPOSIT_TYPE](state, depositType) {

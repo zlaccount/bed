@@ -90,7 +90,7 @@ import wx from "../../../static/img_icon/wx.png";
 import yue from "../../../static/img_icon/yue.png";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
-import { waitPay, weChatOrderPay } from "api/bed";
+import { waitPay, weChatOrderPay, seeBalance } from "api/bed";
 
 import { getcode, checkcode } from "api/islogin";
 
@@ -239,7 +239,10 @@ export default {
                 state: true,
                 type: res.error_code
               })
-
+              // 查询余额
+              seeBalance().then(res => {
+                localStorage.setItem("balance", res.balance);
+              })
               this.balancePayPop = false;
               this.sms = "";
             })
@@ -283,6 +286,7 @@ export default {
 
     .van-cell {
       background: #f5f3f4;
+      border: 0;
 
       .leftPayIcon {
         height: 25px;
@@ -344,7 +348,7 @@ export default {
         }
 
         .van-cell-group {
-          margin: 10px 0 15px;
+          margin: 10px 0 21px;
 
           .van-field {
             padding: 0;
@@ -356,8 +360,8 @@ export default {
             background: #ccc;
             border-radius: 5px;
             color: #000;
-            height: 30px;
-            line-height: 30px;
+            height: 36px;
+            line-height: 36px;
           }
         }
 

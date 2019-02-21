@@ -2,7 +2,7 @@
 export const SET_ISLOGIN = 'SET_ISLOGIN'
 export const SET_MSG = 'SET_MSG'
 // 信息管理
-export const SET_BEDMANAGER = 'SET_BEDMANAGER'
+export const SET_WAYISSHOW = 'SET_WAYISSHOW'
 // 押金管理
 export const SET_DEPOSIT_TYPE = 'SET_DEPOSIT_TYPE'
 // 订单管理

@@ -5,7 +5,9 @@ const state = {
   depositType: [{
     state: false
   }, {}],
-  bedmanager: false,
+  wayIsShow: [{
+    state: true
+  }, {}], 
   beddirections: false,
   orderState: true,
   order: {},
@@ -16,7 +18,7 @@ const state = {
     state: false
   }, {}],
   usedingState: [{
-    state: false
+    state: false,
   }, {}],
   feedback: [{
     state: false

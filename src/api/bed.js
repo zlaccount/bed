@@ -276,7 +276,21 @@ export function recharge(openId, money) {
       return Promise.resolve(res.data);
     });
 }
-
+// 查询余额
+export function seeBalance(openId, money) {
+  const url = "/seeBalance";
+  const data = Object.assign({}, {
+    userId: localStorage.getItem("id") ?
+      localStorage.getItem("id") : "",
+  });
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      return Promise.resolve(res.data);
+    });
+}
 // 微信支付方法
 // export function jsApiCall(data) {
 //   WeixinJSBridge.invoke(

@@ -232,12 +232,12 @@ $bgColor = #FAFAFA;
   display: flex;
   flex-direction: column;
 
-    h4 {
-      padding: 10px 15px;
-      font-weight: 600;
-      font-size: 14px;
-      border-bottom: 1px solid #ebedf0;
-    }
+    // h4 {
+    //   padding: 10px 15px;
+    //   font-weight: 600;
+    //   font-size: 14px;
+    //   border-bottom: 1px solid #ebedf0;
+    // }
 
     .textarea {
       padding: 10px 15px;

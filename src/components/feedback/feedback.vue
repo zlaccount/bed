@@ -129,7 +129,7 @@
         >
           提交反馈
         </van-button>
-        <van-popup v-model="submitStatus">
+        <van-popup v-model="submitStatus" :close-on-click-overlay=false>
           <div class="result">
             <div
               class="success"
@@ -252,6 +252,9 @@ export default {
               state: false,
               res:''
             });
+              this.setWayisshow({
+              state: false
+            })
           }
         });
       }
@@ -280,7 +283,8 @@ export default {
       setFeedBackState: "SET_FEEDBACK",
       setTrueManger: "SET_BEDMANAGER",
       setOrderUseState: "SET_ORDER_USE_STATE",
-      setUsedingState: "SET_USEDING_STATE"
+      setUsedingState: "SET_USEDING_STATE",
+      setWayisshow: "SET_WAYISSHOW"
     })
   },
   // 生命周期 - 创建完成（可以访问当前this实例）

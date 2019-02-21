@@ -1,101 +1,111 @@
 <template>
-    <transition name="slide">
-        <div id="usedingViewPage">
-            <van-nav-bar
-                fixed
-                left-arrow
-                @click-left="onClickLeft"
-                title="共享陪护床"
-            >
-            </van-nav-bar>
-            <div class="topblank"></div>
-            <!-- 上下拉加载更多，刷新数据的组件updown -->
-            <up-down :pulldown="pulldown" @pulldown="loadData">
-                <!-- 此处的ui结构just a demo of test -->
-                <div style="width:100%;min-height:100%">
-                    <div class="cellCon">
-                        <div class="gray"></div>
-                        <div class="beginUse">
-                            <div class="flexItem useTimeTitle">
-                                <div class="flex-item">开锁时间</div>
-                                <div class="flex-item">使用时间</div>
-                            </div>
-                            <div class="flexItem dateText">
-                                <div class="flex-item">
-                                    <div class="times">{{ startDate }}</div>
-                                    <div class="date">{{ startTime }}</div>
-                                </div>
-                                <div class="flex-item leftLine">
-                                    <div class="times" id="mytime">
-                                        {{ str }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="beginBlank"></div>
-                        </div>
-                        <div class="useding">
-                            <van-cell-group>
-                                <van-cell
-                                    title="医院"
-                                    :value="res.hospital_name"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="科室"
-                                    :value="res.department_name"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="病房号"
-                                    :value="res.room_number"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="陪护床编号"
-                                    :value="res.chaperonage_bed_code"
-                                >
-                                </van-cell>
-                                <van-cell
-                                    title="管理员"
-                                    :value="res.user_name"
-                                />
-                                <van-cell
-                                    title="联系方式"
-                                    :value="res.mobile_phone"
-                                />
-                                <!-- <van-cell
+  <transition name="slide">
+    <div id="usedingViewPage">
+      <van-nav-bar
+        fixed
+        left-arrow
+        @click-left="onClickLeft"
+        title="共享陪护床"
+      >
+      </van-nav-bar>
+      <div class="topblank"></div>
+      <!-- 上下拉加载更多，刷新数据的组件updown -->
+      <up-down
+        :pulldown="pulldown"
+        @pulldown="loadData"
+      >
+        <!-- 此处的ui结构just a demo of test -->
+        <div style="width:100%;min-height:100%">
+          <div class="cellCon">
+            <div class="gray"></div>
+            <div class="beginUse">
+              <div class="flexItem useTimeTitle">
+                <div class="flex-item">开锁时间</div>
+                <div class="flex-item">使用时间</div>
+              </div>
+              <div class="flexItem dateText">
+                <div class="flex-item">
+                  <div class="times">{{ startDate }}</div>
+                  <div class="date">{{ startTime }}</div>
+                </div>
+                <div class="flex-item leftLine">
+                  <div
+                    class="times"
+                    id="mytime"
+                  >
+                    {{ str }}
+                  </div>
+                </div>
+              </div>
+              <div class="beginBlank"></div>
+            </div>
+            <div class="useding">
+              <van-cell-group>
+                <van-cell
+                  title="医院"
+                  :value="res.hospital_name"
+                >
+                </van-cell>
+                <van-cell
+                  title="科室"
+                  :value="res.department_name"
+                >
+                </van-cell>
+                <van-cell
+                  title="病房号"
+                  :value="res.room_number"
+                >
+                </van-cell>
+                <van-cell
+                  title="陪护床编号"
+                  :value="res.chaperonage_bed_code"
+                >
+                </van-cell>
+                <van-cell
+                  title="管理员"
+                  :value="res.user_name"
+                />
+                <van-cell
+                  title="联系方式"
+                  :value="res.mobile_phone"
+                />
+                <!-- <van-cell
                   title="预计消费"
                   :value="res.cost"
                   v-if="costShow"
                 /> -->
-                                <van-cell
-                                    title="预计消费"
-                                    v-if="!costShow"
-                                    :value="cost"
-                                />
-                            </van-cell-group>
-                        </div>
-                    </div>
-                </div>
-            </up-down>
-            <div class="usedingBlank"></div>
-            <div class="question">
-                <p>手动将陪护床推进床柜即可关锁</p>
-                <van-button
-                    type="default"
-                    class="breakdown"
-                    @click="breakdownClose"
-                >
-                    故障关闭
-                </van-button>
-                <van-button class="normal" type="default" @click="normalClose">
-                    正常关锁
-                </van-button>
+                <van-cell
+                  title="预计消费"
+                  v-if="!costShow"
+                  :value="cost"
+                />
+              </van-cell-group>
             </div>
-            <div class="loading-wrapper"></div>
-            <router-view></router-view>
+          </div>
         </div>
-    </transition>
+      </up-down>
+      <div class="usedingBlank"></div>
+      <div class="question">
+        <p>手动将陪护床推进床柜即可关锁</p>
+        <van-button
+          type="default"
+          class="breakdown"
+          @click="breakdownClose"
+        >
+          故障关闭
+        </van-button>
+        <van-button
+          class="normal"
+          type="default"
+          @click="normalClose"
+        >
+          正常关锁
+        </van-button>
+      </div>
+      <div class="loading-wrapper"></div>
+      <router-view></router-view>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -104,223 +114,237 @@ import { busy, normalClose, openLock } from "api/bed";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
 export default {
-    components: {
-        UpDown
-    },
-    data() {
-        return {
-            pulldown: true,
-            oCurrentPage: 0,
-            list: [],
-            res: Object,
-            costShow: false,
-            cost: 0,
-            startDate: "",
-            startTime: "",
-            // 初始化数据
-            h: 0, // 定义时，分，秒，毫秒并初始化为0；
-            m: 0,
-            ms: 0,
-            s: 0,
-            time: 0,
-            str: "",
-            mytime: "",
-            costTime: 0,
-            chaperonage_bed_code: ""
-        };
-    },
-    created() {
-        this.loadData();
-    },
-    computed: {
-        ...mapGetters(["orderUseState", "order"])
-    },
-    // 监控data中的数据变化
-    watch: {
-        cost(val, oldval) {
-            this.cost = val;
+  components: {
+    UpDown
+  },
+  data() {
+    return {
+      pulldown: true,
+      oCurrentPage: 0,
+      list: [],
+      res: Object,
+      costShow: false,
+      cost: 0,
+      startDate: "",
+      startTime: "",
+      // 初始化数据
+      h: 0, // 定义时，分，秒，毫秒并初始化为0；
+      m: 0,
+      ms: 0,
+      s: 0,
+      time: 0,
+      str: "",
+      mytime: "",
+      costTime: 0,
+      chaperonage_bed_code: ""
+    };
+  },
+  created() {
+    this.loadData();
+  },
+  computed: {
+    ...mapGetters(["orderUseState", "order"])
+  },
+  // 监控data中的数据变化
+  watch: {
+    cost(val, oldval) {
+      this.cost = val;
+    }
+  },
+  methods: {
+    loadData() {
+      const vm = this;
+      // 调用api获取数据
+      openLock(vm.$route.params.id).then(res => {
+
+        var arr = [];
+        for (let i in res) {
+          let o = {};
+          o[i] = res[i];
+          arr.push(o);
         }
-    },
-    methods: {
-        loadData() {
-            // 调用api获取数据
-            console.log("初始化页面数据");
-            openLock(this.$route.params.id).then(res => {
-                var arr = [];
-                for (let i in res) {
-                    let o = {};
-                    o[i] = res[i];
-                    arr.push(o);
-                }
-                this.res = arr[0].data;
-                this.startDate = arr[0].data.start_time.trim().split(" ")[1];
-                this.startTime = arr[0].data.start_time.trim().split(" ")[0];
-            });
-        },
-        // 获取子组件传过来的当前页码值
-        msgFromChild(data) {
-            if (data || data === 0) {
-                this.oCurrentPage = data;
-            }
-        },
-        onClickLeft() {
-            this.$router.back();
-        },
-        getData() {},
-        start(bolean) {
-            let _this = this;
-            let hour, minute, second;
-            hour = minute = second = 0;
-            if (bolean === true) {
-                _this.timer = setInterval(function() {
-                    if (second >= 0) {
-                        second = second + 1;
-                    }
-                    if (second >= 60) {
-                        second = 0;
-                        minute = minute + 1;
-                    }
-                    if (minute >= 60) {
-                        minute = 0;
-                        hour = hour + 1;
-                    }
-                    _this.callinTime =
-                        hour + "时" + minute + "分" + second + "秒";
-                }, 1000);
-            } else {
-                window.clearInterval(_this.timer);
-            }
-        },
-
-        timer() {
-            // 定义计时函数
-            let that = this;
-            that.ms = that.ms + 60; // 毫秒
-            if (that.ms >= 1000) {
-                that.ms = 0;
-                if (that.orderUseState.state === true) {
-                    that.s = that.s + 1; // 秒
-                }
-            }
-            if (that.s >= 60) {
-                that.s = 0;
-                that.m = that.m + 1; // 分钟
-                that.costTime = that.costTime + 1;
-            }
-            if (that.m >= 60) {
-                that.m = 0;
-                that.h = that.h + 1; // 小时
-            }
-            // 半小时
-
-            if (that.orderUseState.state === true) {
-                if (
-                    that.orderUseState.service_time * 1 <=
-                    that.orderUseState.free_time * 1
-                ) {
-                    that.cost = that.orderUseState.res.cost * 1;
-                } else {
-                    if (that.costTime >= 30) {
-                        that.costShow = false;
-                        that.cost = that.orderUseState.res.cost * 1 + 2;
-                    }
-                }
-            }
-            that.str =
-                that.toDub(that.h) +
-                ":" +
-                that.toDub(that.m) +
-                ":" +
-                that.toDub(that.s) +
-                ""; /* +that.toDubms(this.ms)+"毫秒" */
-            // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
-        },
-
-        reset() {
-            // 重置
-            clearInterval(this.time);
-            this.h = 0;
-            this.m = 0;
-            this.ms = 0;
-            this.s = 0;
-            this.str = "00:00:00";
-        },
-
-        start() {
-            // 开始
-            this.time = setInterval(this.timer, 60);
-        },
-
-        stop() {
-            // 暂停
-            clearInterval(this.time);
-        },
-
-        toDub(n) {
-            // 补0操作
-            if (n < 10) {
-                return "0" + n;
-            } else {
-                return "" + n;
-            }
-        },
-
-        toDubms(n) {
-            // 给毫秒补0操作
-            if (n < 10) {
-                return "00" + n;
-            } else {
-                return "0" + n;
-            }
-        },
-        // 故障反馈关闭
-        breakdownClose() {
-            this.$router.push({
-                name: "feedback",
-                params: {
-                    code: this.res.chaperonage_bed_code
-                }
-            });
-        },
-        // 正常关锁
-        normalClose() {
-            normalClose(this.res.chaperonage_bed_code).then(res => {
-                console.log(res);
-                if (res.error_code * 1 === ERR_OK) {
-                    this.$router.push({
-                        name: "closeLock"
-                    });
-                    this.setNormalState({
-                        state: true,
-                        order: res.data
-                    });
-                    this.setOrderUseState({
-                        state: false
-                    });
-                    this.setUsedingState({
-                        state: false
-                    });
-                }
-            });
-        },
-        ...mapMutations({
-            setTrueManger: "SET_BEDMANAGER",
-            setOrderUseState: "SET_ORDER_USE_STATE",
-            setFeedBackState: "SET_FEEDBACK",
-            setNormalState: "SET_NORMAL_STATE",
-            setUseding: "SET_USEDING_STATE",
-            setUsedingState: "SET_USEDING_STATE"
+        vm.res = arr[0].data;
+        vm.startDate = arr[0].data.start_time.trim().split(" ")[1];
+        vm.startTime = arr[0].data.start_time.trim().split(" ")[0];
+        vm.setUsedingState({
+          usedoing: true,
+          res: res.data,
         })
+        vm.setRefund({
+          state: false,
+        })
+      });
     },
-    mounted() {
-        this.msgFromChild();
-        this.time = setInterval(this.timer, 60);
+    // 获取子组件传过来的当前页码值
+    msgFromChild(data) {
+      if (data || data === 0) {
+        this.oCurrentPage = data;
+      }
     },
-    beforeDestroy() {
-        if (this.timer) {
-            clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+    onClickLeft() {
+      this.$router.back();
+    },
+    getData() { },
+    start(bolean) {
+      let _this = this;
+      let hour, minute, second;
+      hour = minute = second = 0;
+      if (bolean === true) {
+        _this.timer = setInterval(function () {
+          if (second >= 0) {
+            second = second + 1;
+          }
+          if (second >= 60) {
+            second = 0;
+            minute = minute + 1;
+          }
+          if (minute >= 60) {
+            minute = 0;
+            hour = hour + 1;
+          }
+          _this.callinTime =
+            hour + "时" + minute + "分" + second + "秒";
+        }, 1000);
+      } else {
+        window.clearInterval(_this.timer);
+      }
+    },
+
+    timer() {
+      // 定义计时函数
+      let that = this;
+      that.ms = that.ms + 60; // 毫秒
+      if (that.ms >= 1000) {
+        that.ms = 0;
+        if (that.orderUseState.state === true) {
+          that.s = that.s + 1; // 秒
         }
-    } // 生命周期 - 销毁之前
+      }
+      if (that.s >= 60) {
+        that.s = 0;
+        that.m = that.m + 1; // 分钟
+        that.costTime = that.costTime + 1;
+      }
+      if (that.m >= 60) {
+        that.m = 0;
+        that.h = that.h + 1; // 小时
+      }
+      // 半小时
+
+      if (that.orderUseState.state === true) {
+        if (
+          that.orderUseState.service_time * 1 <=
+          that.orderUseState.free_time * 1
+        ) {
+          that.cost = that.orderUseState.res.cost * 1;
+        } else {
+          if (that.costTime >= 30) {
+            that.costShow = false;
+            that.cost = that.orderUseState.res.cost * 1 + 2;
+          }
+        }
+      }
+      that.str =
+        that.toDub(that.h) +
+        ":" +
+        that.toDub(that.m) +
+        ":" +
+        that.toDub(that.s) +
+        ""; /* +that.toDubms(this.ms)+"毫秒" */
+      // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
+    },
+
+    reset() {
+      // 重置
+      clearInterval(this.time);
+      this.h = 0;
+      this.m = 0;
+      this.ms = 0;
+      this.s = 0;
+      this.str = "00:00:00";
+    },
+
+    start() {
+      // 开始
+      this.time = setInterval(this.timer, 60);
+    },
+
+    stop() {
+      // 暂停
+      clearInterval(this.time);
+    },
+
+    toDub(n) {
+      // 补0操作
+      if (n < 10) {
+        return "0" + n;
+      } else {
+        return "" + n;
+      }
+    },
+
+    toDubms(n) {
+      // 给毫秒补0操作
+      if (n < 10) {
+        return "00" + n;
+      } else {
+        return "0" + n;
+      }
+    },
+    // 故障反馈关闭
+    breakdownClose() {
+      this.$router.push({
+        name: "feedback",
+        params: {
+          code: this.res.chaperonage_bed_code
+        }
+      });
+    },
+    // 正常关锁
+    normalClose() {
+      normalClose(this.res.chaperonage_bed_code).then(res => {
+        console.log(res);
+        if (res.error_code * 1 === ERR_OK) {
+          this.$router.push({
+            name: "closeLock"
+          });
+          this.setNormalState({
+            state: true,
+            order: res.data
+          });
+          this.setOrderUseState({
+            state: false
+          });
+          this.setUsedingState({
+            state: false,
+            res:''
+          });
+           this.setWayisshow({
+              state: false
+            })
+        }
+      });
+    },
+    ...mapMutations({
+      setTrueManger: "SET_BEDMANAGER",
+      setOrderUseState: "SET_ORDER_USE_STATE",
+      setFeedBackState: "SET_FEEDBACK",
+      setNormalState: "SET_NORMAL_STATE",
+      setUseding: "SET_USEDING_STATE",
+      setUsedingState: "SET_USEDING_STATE",
+      setRefund: "SET_REFUND",
+      setWayisshow: "SET_WAYISSHOW"
+    })
+  },
+  mounted() {
+    this.msgFromChild();
+    this.time = setInterval(this.timer, 60);
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+    }
+  } // 生命周期 - 销毁之前
 };
 </script>
 

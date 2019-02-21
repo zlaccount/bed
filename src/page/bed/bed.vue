@@ -14,11 +14,8 @@
       </van-nav-bar>
     </div>
     <div class="topblank"></div>
-    <!-- v-if="usedingState.state != true" -->
-    <div
-      class="way"
-      v-if="usedingState.state != true"
-    >
+    <!---->
+    <div class="way">
       <van-steps
         :active="stepsActive"
         active-color="#4FD6BC"
@@ -27,45 +24,47 @@
         <van-step>开锁</van-step>
         <van-step>支付</van-step>
       </van-steps>
-      <!-- 开锁方式 -->
-      <van-popup v-model="wayIsShow">
-        <div class="topservice">
-          <van-row>
-            <van-col span="24">
-              <div class="topImg">
-                <img
-                  src="../../../static/img/Sweeptheyard.png"
-                  class="more"
-                  @click="wx()"
-                />
-              </div>
-              <p>扫码开锁</p>
-            </van-col>
-          </van-row>
-          <van-row>
-            <van-col span="24">
-              <div class="topImg">
-                <img
-                  src="../../../static/img/Theinput.png"
-                  class="more"
-                  @click="handinput()"
-                />
-              </div>
-              <p>输入编码开锁</p>
-            </van-col>
-          </van-row>
+      <div v-if="wayIsShow.state !=true">
+        <!-- 开锁方式 -->
+        <div class="wayPop">
+          <div class="topservice">
+            <van-row>
+              <van-col span="24">
+                <div class="topImg">
+                  <img
+                    src="../../../static/img/Sweeptheyard.png"
+                    class="more"
+                    @click="wx()"
+                  />
+                </div>
+                <p>扫码开锁</p>
+              </van-col>
+            </van-row>
+            <van-row>
+              <van-col span="24">
+                <div class="topImg">
+                  <img
+                    src="../../../static/img/Theinput.png"
+                    class="more"
+                    @click="handinput()"
+                  />
+                </div>
+                <p>输入编码开锁</p>
+              </van-col>
+            </van-row>
+          </div>
         </div>
-      </van-popup>
-      <div class="pleaseSelect">
-        <p class="pleaseText">请选择开锁方式</p>
-        <p class="tip">提示:未在医院工作时间内不能成功开锁</p>
+        <div class="pleaseSelect">
+          <p class="pleaseText">请选择开锁方式</p>
+          <p class="tip">提示:未在医院工作时间内不能成功开锁</p>
+        </div>
       </div>
     </div>
     <!-- 解锁 -->
     <div class="lockresult">
       <!-- 开锁失败 -->
       <div class="lockTopay">
-        <van-popup v-model="toPayPop">
+        <van-popup v-model="toPayPop" :close-on-click-overlay=false>
           <div class="fail">
             <p>
               <img
@@ -109,20 +108,32 @@
           <div
             v-if="usedingState.state == true"
             class="live"
+          >
+            <div class="liveimg">
+              <img src="../../../static/img/lock.png" />
+            </div>
+            <span></span> <span></span> <span></span>
+            <p>正在开锁...</p>
+          </div>
+          <div
+            v-if="usedingState.usedoing == true"
+            class="live"
             @click="useding"
           >
             <div class="liveimg">
               <img src="../../../static/img/lock.png" />
             </div>
             <span></span> <span></span> <span></span>
-            <p v-if="usedingState.useding != true">正在开锁...</p>
-            <p v-if="usedingState.useding == true">正在使用...</p>
+            <p>正在使用...</p>
           </div>
           <!-- 开锁结果-->
-          <div class="locked">
+          <div
+            class="locked"
+            v-if="refund.state == true"
+          >
             <div
               class="success"
-              v-if="result == true"
+              v-if="refund.type == 1"
             >
               <img
                 src="../../../static/img/success.png"
@@ -131,16 +142,16 @@
               <p>开锁成功</p>
             </div>
 
-            <!-- <div
+            <div
               class="failure"
-              v-if="result != true"
+              v-if="refund.type == -1"
             >
               <img
                 src="../../../static/img/failure.png"
                 slot="right"
               />
               <p>开锁失败!</p>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -162,11 +173,9 @@ export default {
     return {
       // 初始化数据
       stepsActive: 0,
-      wayIsShow: true,
       busyCode: "",
       // -1 开锁失败 0 开锁成功 1 未缴纳押金 2未支付订单
       typeResult: "",
-      result: false,
       toPayPop: false, // 解锁失败(未缴纳押金或者未支付订单)
       lockLoading: false // 解锁中
     };
@@ -176,7 +185,9 @@ export default {
       "orderUseState",
       "usedingState",
       "depositType",
-      "openId"
+      "openId",
+      "refund",
+      "wayIsShow"
     ])
   },
   watch: {},
@@ -223,30 +234,7 @@ export default {
               scanType: ["qrCode"],
               success: function (res) {
                 var result = res.resultStr;
-                openLock("123456").then(res => {
-                  if (res.error_code * 1 === 1) {
-                    vm.$toast(res.error_msg);
-                    vm.toPayPop = true;
-                    vm.typeResult = parseInt(res.data);
-                    return false;
-                  } else {
-                    // 解锁成功
-                    // window.location.href = 'http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot/'
-                    vm.setUsedingState({
-                      state: true,
-                      useding: false,
-                      res: res.data
-                    });
-                    setTimeout(() => {
-                      vm.$router.push({
-                        name: "useDing",
-                        params: {
-                          id: code
-                        }
-                      });
-                    }, 1500);
-                  }
-                });
+                vm._openLock(result)
               }
             });
           });
@@ -265,38 +253,50 @@ export default {
       }
     },
     _getData() {
+      const vm = this;
       if (localStorage.getItem("id") != null) {
         common.$on(
           "handresult",
           function (data) {
             // 先判断是否缴纳押金
-            if (this.depositType.type === ERR_OK) {
+            if (vm.depositType.type === ERR_OK) {
               // 已缴纳押金
               // 开锁
-              this._openLock(data);
-            } else if (this.depositType.type === 1) {
+              vm._openLock(data);
+            } else if (vm.depositType.type === 1) {
               // 未缴纳押金
-              this.toPayPop = true;
-              this.typeResult = 9;
+              vm.toPayPop = true;
+              vm.typeResult = 9;
             } else {
             }
             return false;
-          }.bind(this)
+          }.bind(vm)
         );
         busy().then(res => {
           if (res.error_code * 1 === 1) {
-            this.busyCode = res.data.chaperonage_bed_code;
-            this.setUsedingState({
-              state: true,
+            vm.busyCode = res.data.chaperonage_bed_code;
+            vm.setWayisshow({
+              state: true
+            })
+            vm.setUsedingState({
+              state: false,
+              usedoing: true,
               res: res.data
             });
-            this.$toast("有正在使用订单");
+            vm.$toast("有正在使用订单");
           }
+
         });
       }
     },
 
     toPayRouter(index) {
+      this.setRefund({
+        state: false,
+      })
+      this.setWayisshow({
+        state: false
+      })
       // 未支付订单
       if (index === 10) {
         this.setOrder({
@@ -305,10 +305,8 @@ export default {
         this.$router.push({
           name: "order"
         });
-        return false;
-      }
-      // 未缴纳押金
-      if (index === 9) {
+      } else if (index === 9) {
+        // 未缴纳押金
         this.$router.push({
           name: "deposit"
         });
@@ -325,27 +323,49 @@ export default {
       });
     },
     _openLock(code) {
+      const vm = this;
       openLock(code).then(res => {
-        if (res.error_code * 1 === 1) {
-        // 解锁失败
-          this.toPayPop = true;
-          this.typeResult = parseInt(res.data);
-          return false;
-        } else {
-          // 解锁成功
-          this.setUsedingState({
-            state: true,
-            res: res.data
-          });
-          // setTimeout(() => {
-          //   this.$router.push({
-          //     name: "useDing",
-          //     params: {
-          //       id: code
-          //     }
-          //   });
-          // }, 1500);
-        }
+        vm.setWayisshow({
+          state: true
+        })
+        vm.setUsedingState({
+          state: true,
+          res: res.data,
+        });
+
+        setTimeout(() => {
+          vm.setUsedingState({
+            state: false,
+          })
+          if (res.error_code * 1 === 1) {
+            // 解锁失败
+            vm.setRefund({
+              state: true,
+              type: -1,
+            })
+            setTimeout(() => {
+              vm.toPayPop = true;
+              vm.typeResult = parseInt(res.data);
+            }, 1000)
+
+            return false;
+          } else {
+            // 解锁成功
+            vm.setRefund({
+              state: true,
+              type: 1,
+            })
+            setTimeout(() => {
+              vm.$router.push({
+                name: "useDing",
+                params: {
+                  id: code
+                }
+              });
+            }, 1500);
+          }
+        }, 1500)
+
       });
     },
 
@@ -356,6 +376,7 @@ export default {
       setUsedingState: "SET_USEDING_STATE",
       setOrder: "SET_ORDER",
       setRefund: "SET_REFUND",
+      setWayisshow: "SET_WAYISSHOW"
     })
   },
   created() {
@@ -372,6 +393,23 @@ export default {
 };
 </script>
 <style scoped lang="stylus">
+.wayPop {
+  width: 200px;
+  height: 302px;
+  background: #f5f3f4;
+  z-index: 10 !important;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-height: 100%;
+  overflow-y: auto;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+
 .van-steps {
   background: #f5f3f4;
   height: 72px;
@@ -410,7 +448,7 @@ export default {
   .lockTopay {
     .van-popup {
       text-align: center;
-      width: 60%;
+      width: 57%;
       height: 320px;
       font-size: 13px;
 
@@ -533,8 +571,8 @@ export default {
         left: 50%;
         width: 105px;
         height: 105px;
-        margin-left: -52px;
-        margin-top: -105px;
+        margin-left: -53px;
+        margin-top: -96px;
         z-index: 12;
         text-align: center;
       }

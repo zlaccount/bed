@@ -44,7 +44,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 // 付款
 import { mapGetters } from "vuex";
-import { recharge } from "api/bed";
+import { recharge,seeBalance } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
 export default {
@@ -116,8 +116,10 @@ export default {
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
             vm.$toast("充值成功")
-            // vm.balance = (localStorage.getItem("balance")) * 1 + (vm.value) * 1
-            // localStorage.setItem("balance", vm.balance);
+            seeBalance().then(res => {
+          localStorage.setItem("balance", res.balance);
+        })
+            
             vm.$router.push({
               path: `/my`
             });

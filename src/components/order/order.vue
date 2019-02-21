@@ -63,7 +63,7 @@
                   </van-cell>
                   <van-cell
                     v-if="item.pay_state == 1"
-                    value="未完成"
+                    value="未支付"
                     value-class="itemWaitPay"
                   >
                     <template slot="title">

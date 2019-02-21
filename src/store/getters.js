@@ -2,7 +2,7 @@
 export const islogin = state => state.islogin
 export const msg = state => state.msg
 // 信息管理
-export const bedmanager = state => state.bedmanager
+export const wayIsShow = state => state.wayIsShow
 // 押金管理
 export const depositType = state => state.depositType
 // 订单管理
