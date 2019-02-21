@@ -76,7 +76,7 @@
 import { mapGetters, mapMutations } from "vuex";
 import common from "common/js/common.js";
 
-import { weChatPay, weChat_refun,deposit } from "api/bed";
+import { weChatPay, weChat_refun, deposit } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
 // 支付结果
@@ -145,13 +145,30 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
-             vm.$router.push('/sign_ht');
-            // window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+            vm.$toast("充值成功")
+            vm.$router.push({
+              path: `/my`
+            });
           } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
-            // window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+            vm.$toast("取消充值")
           } else if (res.err_msg === "get_brand_wcpay_request:fail") {
-            this.$toast("网络异常，请重试");
+            vm.$toast("网络异常，请重试");
           }
+           deposit().then(res => {
+          if ((res.error_code) * 1 === ERR_OK) {
+            vm.setDepositType({
+              type: (res.error_code) * 1,
+              money: (res.cash_pledge_money) * 1
+            })
+            vm.$toast("已缴纳押金")
+          } else {
+            vm.setDepositType({
+              type: (res.error_code) * 1,
+              money: 0
+            })
+            vm.$toast("未缴纳押金")
+          }
+        });
         }
       );
     },
@@ -178,7 +195,6 @@ export default {
   },
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.getData();
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() { },

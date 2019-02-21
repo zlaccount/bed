@@ -199,7 +199,7 @@ export default {
   },
   // 监听属性 类似于data概念
   computed: {
-    ...mapGetters(["feedback", "orderUseState"])
+    ...mapGetters(["feedback", "orderUseState","refund"])
   },
   // 监控data中的数据变化
   watch: {
@@ -249,7 +249,8 @@ export default {
             this.message = "";
             this.type = res.data.error_code * 1;
             this.setUsedingState({
-              state: false
+              state: false,
+              res:''
             });
           }
         });

@@ -151,13 +151,13 @@ export default {
                 type: (res.error_code) * 1,
                 money: (res.cash_pledge_money) * 1
               })
-              this.$toast("已缴纳押金")
+              // this.$toast("已缴纳押金")
             } else {
               this.setDepositType({
                 type: (res.error_code) * 1,
                 money: 0
               })
-              this.$toast("未缴纳押金")
+              // this.$toast("未缴纳押金")
             }
           });
         });

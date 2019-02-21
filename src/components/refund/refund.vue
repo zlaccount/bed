@@ -76,37 +76,51 @@ export default {
   // 方法集合
   methods: {
     onClickLeft() {
-      this.setDepositType({
-        type: this.error_code,
-        money: this.cost
-      })
+
       this.$router.push({
         path: `/my`
       });
     },
     getData() {
+      const vm = this;
       setTimeout(() => {
         deposit().then(res => {
-          this.error_code = (res.error_code) * 1
-          this.cost = (res.cash_pledge_money) * 1
-          if (this.error_code === ERR_OK) {
+          if (vm.error_code === ERR_OK) {
             // 退款失败
-            this.setRefund({
+            vm.setRefund({
               state: true,
               type: -1,
             })
+            setTimeout(() => {
+              vm.setDepositType({
+                type: (res.error_code) * 1,
+                money: (res.cash_pledge_money) * 1
+              })
+              this.$router.push({
+                path: `/my`
+              });
+            }, 1000)
           } else {
             // 退款成功
-            this.setRefund({
+            vm.setRefund({
               state: true,
               type: 1,
             })
-
+            setTimeout(() => {
+              vm.setDepositType({
+                type: (res.error_code) * 1,
+                money: 0
+              })
+              this.$router.push({
+                path: `/my`
+              });
+            }, 1000)
           }
-          this.$refs.refunding.style.display = "none";
+          vm.$refs.refunding.style.display = "none";
 
         });
       }, 5000);
+
     },
     ...mapMutations({
       setRefund: "SET_REFUND",

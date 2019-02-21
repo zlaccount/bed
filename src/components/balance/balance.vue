@@ -14,7 +14,7 @@
       <div class="AmountOfAccount">
         <div class="AccountWH">
           <div class="title">账户金额:(元)</div>
-          <h4>959.13</h4>
+          <h4>{{balance}}</h4>
           <p>温馨提示 :<br><span>账户金额可用于电话咨询、预约医生、送礼物、购买商品等。</span></p>
         </div>
       </div>
@@ -44,7 +44,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 // 付款
 import { mapGetters } from "vuex";
-import {  recharge } from "api/bed";
+import { recharge } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
 export default {
@@ -53,7 +53,8 @@ export default {
   data() {
     //这里存放数据
     return {
-      value: ''
+      value: '',
+      balance: '',
     };
   },
   //监听属性 类似于data概念
@@ -67,6 +68,9 @@ export default {
   methods: {
     routerBack() {
       this.$router.back()
+    },
+    _getData() {
+      this.balance = localStorage.getItem("balance")
     },
     wxpay() {
       if (this.value === '') {
@@ -96,34 +100,40 @@ export default {
         }
       });
     },
-        jsApiCall(data) {
-  WeixinJSBridge.invoke(
-    "getBrandWCPayRequest", {
-      debug: true,
-      appId: data.appId, // 公众号名称，由商户传入
-      timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
-      nonceStr: data.nonceStr, // 随机串
-      package: data.package,
-      signType: "MD5", // 微信签名方式：
-      paySign: data.paySign, // 微信签名
-      jsApiList: ["chooseWXPay"]
+    jsApiCall(data) {
+      const vm = this;
+      WeixinJSBridge.invoke(
+        "getBrandWCPayRequest", {
+          debug: true,
+          appId: data.appId, // 公众号名称，由商户传入
+          timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
+          nonceStr: data.nonceStr, // 随机串
+          package: data.package,
+          signType: "MD5", // 微信签名方式：
+          paySign: data.paySign, // 微信签名
+          jsApiList: ["chooseWXPay"]
+        },
+        function (res) {
+          if (res.err_msg === "get_brand_wcpay_request:ok") {
+            vm.$toast("充值成功")
+            // vm.balance = (localStorage.getItem("balance")) * 1 + (vm.value) * 1
+            // localStorage.setItem("balance", vm.balance);
+            vm.$router.push({
+              path: `/my`
+            });
+          } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+            vm.$toast("取消充值")
+          } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+            vm.$toast("网络异常，请重试");
+          }
+        }
+      );
     },
-    function (res) {
-      if (res.err_msg === "get_brand_wcpay_request:ok") {
-        window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
-      } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
-        window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
-      } else if (res.err_msg === "get_brand_wcpay_request:fail") {
-        this.$toast("网络异常，请重试");
-      }
-    }
-  );
-},
     statement() { }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-
+    this._getData()
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {

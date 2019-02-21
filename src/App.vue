@@ -30,7 +30,7 @@ export default {
       var url = location.href.split("#")[0];
       getWxCode(url).then(res => {
         if (!getUrlCode('code')) {
-          this.$toast('微信授权中……')
+          // this.$toast('微信授权中……')
           let currentUrl = encodeURIComponent(window.location.href)
           window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxc925a2130da89369&redirect_uri=' + currentUrl + '&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
         } else {
@@ -55,13 +55,13 @@ export default {
               type: (res.error_code) * 1,
               money: (res.cash_pledge_money) * 1
             })
-            this.$toast("已缴纳押金")
+            // this.$toast("已缴纳押金")
           } else {
             this.setDepositType({
               type: (res.error_code) * 1,
               money: 0
             })
-            this.$toast("未缴纳押金")
+            // this.$toast("未缴纳押金")
           }
         });
       } else {

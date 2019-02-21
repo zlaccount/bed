@@ -188,6 +188,7 @@ export default {
       });
     },
     wx() {
+      const vm = this;
       if (localStorage.getItem("id") != null) {
         var url = location.href.split("#")[0];
         // 扫一扫
@@ -224,20 +225,20 @@ export default {
                 var result = res.resultStr;
                 openLock("123456").then(res => {
                   if (res.error_code * 1 === 1) {
-                    this.$toast(res.error_msg);
-                    this.toPayPop = true;
-                    this.typeResult = parseInt(res.data);
+                    vm.$toast(res.error_msg);
+                    vm.toPayPop = true;
+                    vm.typeResult = parseInt(res.data);
                     return false;
                   } else {
                     // 解锁成功
                     // window.location.href = 'http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot/'
-                    this.setUsedingState({
+                    vm.setUsedingState({
                       state: true,
                       useding: false,
                       res: res.data
                     });
                     setTimeout(() => {
-                      this.$router.push({
+                      vm.$router.push({
                         name: "useDing",
                         params: {
                           id: code
@@ -287,7 +288,6 @@ export default {
             this.busyCode = res.data.chaperonage_bed_code;
             this.setUsedingState({
               state: true,
-              useding: true,
               res: res.data
             });
             this.$toast("有正在使用订单");
@@ -326,53 +326,25 @@ export default {
     },
     _openLock(code) {
       openLock(code).then(res => {
-        // 解锁失败
         if (res.error_code * 1 === 1) {
+        // 解锁失败
           this.toPayPop = true;
           this.typeResult = parseInt(res.data);
-          //   if (code === 0) {
-          //     this.lockLoading = true;
-          //     this.typeResult = data;
-          //     this._busy();
-          //     return false;
-          //   }
-          //   // 解锁失败，原因是有未支付订单
-          //   if (data === 10) {
-          //     console.log("data", data);
-          //     this.toPayPop = true;
-          //     this.typeResult = data;
-          //   }
-          //   // 解锁失败，原因是未缴纳押金
-          //   if (data === 9) {
-          //     console.log("data", data);
-          //     this.toPayPop = true;
-          //     this.typeResult = data;
-          //   }
-          //   // 解锁失败，原因是陪护床编号不存在
-          //   if (data === 3) {
-          //     console.log("data", data);
-          //     this.toPayPop = true;
-          //     this.typeResult = data;
-          //   }
-          //   // 网络原因解锁失败
-          //   if (data === -1) {
-          //   }
           return false;
         } else {
           // 解锁成功
           this.setUsedingState({
             state: true,
-            useding: false,
             res: res.data
           });
-          setTimeout(() => {
-            this.$router.push({
-              name: "useDing",
-              params: {
-                id: code
-              }
-            });
-          }, 1500);
+          // setTimeout(() => {
+          //   this.$router.push({
+          //     name: "useDing",
+          //     params: {
+          //       id: code
+          //     }
+          //   });
+          // }, 1500);
         }
       });
     },
@@ -382,7 +354,8 @@ export default {
       setTrueManger: "SET_BEDMANAGER",
       setOrderUseState: "SET_ORDER_USE_STATE",
       setUsedingState: "SET_USEDING_STATE",
-      setOrder: "SET_ORDER"
+      setOrder: "SET_ORDER",
+      setRefund: "SET_REFUND",
     })
   },
   created() {
