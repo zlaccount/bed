@@ -152,7 +152,7 @@ export default {
       // 获取验证码
       getcode(localStorage.getItem("mobileNo")).then(res => {
         if (res.returns === "success") {
-          that.$toast("验证码已发至您手机，请注意查收");
+          that.$toast("验证码已发至您手机，请查收");
         }
       });
     },
@@ -164,6 +164,7 @@ export default {
       //接口对接
       if (this.radio === '2') {
         this.balancePayPop = true;
+        this.countDown()
         if (Number(this.phone) && String(this.phone).length === 11) {
           var mobile = String(this.phone)
           var reg = /^(\d{3})\d{4}(\d{4})$/

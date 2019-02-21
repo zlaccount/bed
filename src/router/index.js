@@ -65,7 +65,7 @@ export default new Router({
       ]
     },
     {
-      path: "/bed/manager/order",
+      path: "/manager/order",
       name: "order",
       component: Order,
       children: [{

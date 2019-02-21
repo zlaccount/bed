@@ -64,7 +64,10 @@
     <div class="lockresult">
       <!-- 开锁失败 -->
       <div class="lockTopay">
-        <van-popup v-model="toPayPop" :close-on-click-overlay=false>
+        <van-popup
+          v-model="toPayPop"
+          :close-on-click-overlay=false
+        >
           <div class="fail">
             <p>
               <img
@@ -283,9 +286,8 @@ export default {
               usedoing: true,
               res: res.data
             });
-            vm.$toast("有正在使用订单");
+            // vm.$toast("有正在使用订单");
           }
-
         });
       }
     },
@@ -337,8 +339,8 @@ export default {
           vm.setUsedingState({
             state: false,
           })
-          if (res.error_code * 1 === 1) {
-            // 解锁失败
+          if (res.data * 1 != "" && res.error_code * 1 === 1) {
+            // 解锁失败 9.未缴纳押金，10.订单未支付，11.该账户被冻结
             vm.setRefund({
               state: true,
               type: -1,
@@ -349,7 +351,7 @@ export default {
             }, 1000)
 
             return false;
-          } else {
+          } else if (res.error_code * 1 === ERR_OK) {
             // 解锁成功
             vm.setRefund({
               state: true,
@@ -363,6 +365,20 @@ export default {
                 }
               });
             }, 1500);
+          } else if (res.data * 1 == "" && res.error_code * 1 === 1) {
+            vm.setRefund({
+              state: true,
+              type: -1,
+            })
+            setTimeout(() => {
+              vm.setWayisshow({
+                state: false
+              })
+              vm.setRefund({
+                state: false,
+              })
+              vm.$toast(res.error_msg)
+            }, 1000)
           }
         }, 1500)
 

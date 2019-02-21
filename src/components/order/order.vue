@@ -217,7 +217,7 @@ export default {
       console.log("order", this.order);
       if (this.order.type === 1) {
         this.$router.push({
-          path: `/bed/manager/order/${order.order_id}`,
+          path: `/manager/order/${order.order_id}`,
           params: {
             id: order.order_id
           }
@@ -238,7 +238,7 @@ export default {
         });
       } else if (this.order.type === 4) {
         this.$router.push({
-          path: `/bed/manager/order/${order.order_id}`,
+          path: `/manager/order/${order.order_id}`,
           params: {
             id: order.order_id
           }

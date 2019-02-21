@@ -185,7 +185,6 @@ export default {
 
     async _fetchList(page = 1, pageSize = this.pageSize) {
       orderDetail(this.$route.params.id).then(res => {
-        console.log('res', res)
         this.res = res
       })
       try {
