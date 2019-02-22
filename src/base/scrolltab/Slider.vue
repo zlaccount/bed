@@ -78,7 +78,6 @@ export default {
       this._initContentWidth()
       this._initScroll()
       this._initDots()
-      console.log(this.oCurrentPage)
     }, 20)
     window.addEventListener('resize', () => {
       if (!this.slider) {
@@ -106,10 +105,8 @@ export default {
     _initContentWidth(isResize) {
       // 获取组件下有多少个子元素
       this.children = this.$refs.content.children
-      console.log(this.children)
       let width = 0
       let wrapperWidth = this.$refs.wrapper.clientWidth
-      console.log(wrapperWidth)
       for (let i = 0; i < this.children.length; i++) {
         // console.log(this.children[i])
         let child = this.children[i]
@@ -141,7 +138,6 @@ export default {
       // 利用轮播原理左右翻页
       this.slider.on('scrollEnd', () => {
         let pageIndex = this.slider.getCurrentPage().pageX
-        console.log(pageIndex)
         if (this.loop) {
           pageIndex -= 1
         }

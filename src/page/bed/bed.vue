@@ -289,6 +289,14 @@ export default {
             // vm.$toast("有正在使用订单");
           }
         });
+      } else {
+        vm.setWayisshow({
+          state: false
+        })
+        vm.setUsedingState({
+          state: false,
+          usedoing: false,
+        })
       }
     },
 

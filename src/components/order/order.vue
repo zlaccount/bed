@@ -37,6 +37,8 @@
           <up-down
             :data="data"
             :pulldown="pulldown"
+            :scrollToEnd="scrollToEnd"
+            @scrollToEnd="moreData"
             @pulldown="loadData"
           >
             <!-- 此处的ui结构just a demo of test -->
@@ -162,6 +164,8 @@ export default {
     return {
       data: [1, 1, 1, 1],
       pulldown: true,
+      scrollToEnd: true,
+      pageNum: 1,
       title: [
         { name: "全部订单" },
         { name: "已完成" },
@@ -170,7 +174,6 @@ export default {
       ],
       oCurrentPage: 0,
       orderData: [],
-      allData: []
     };
   },
   created() {
@@ -214,7 +217,6 @@ export default {
       this.$refs.sendPage.setPage(this.oCurrentPage);
     },
     selectItem(order) {
-      console.log("order", this.order);
       if (this.order.type === 1) {
         this.$router.push({
           path: `/manager/order/${order.order_id}`,
@@ -245,8 +247,22 @@ export default {
         });
       }
     },
+    moreData() {
+      this.pageNum += 1;
+      var pageSize = 10;
+      var state = -1;
+      // 调用api获取数据
+      // 接口对接
+      order(state, this.pageNum, pageSize).then(res => {
+        if (res.error_code * 1 === ERR_OK) {
+          this.orderData = this.orderData.concat(res.data);
+          this.dataDeal(this.orderData);
+        } else {
+        }
+      });
+    },
     loadData() {
-      var pageNum = 1;
+      this.pageNum = 1;
       var pageSize = 10;
       var state = -1;
       // 调用api获取数据
@@ -258,12 +274,10 @@ export default {
       if (this.order.type === 4) {
         var state = this.order.type - 3;
         this.oCurrentPage = this.order.type - 2;
-        console.log(this.oCurrentPage, state);
       }
-      order(state, pageNum, pageSize).then(res => {
+      order(state, this.pageNum, pageSize).then(res => {
         if (res.error_code * 1 === ERR_OK) {
           this.orderData = res.data;
-          this.allData = res.data;
           this.dataDeal(res.data);
         } else {
         }
@@ -313,11 +327,10 @@ export default {
       if (data || data === 0) {
         this.oCurrentPage = data;
         var pageNum = 1;
-        var pageSize = 20;
+        var pageSize = 10;
         order(this.oCurrentPage - 1, pageNum, pageSize).then(res => {
           if (res.error_code * 1 === ERR_OK) {
             this.orderData = res.data;
-            this.allData = res.data;
             this.dataDeal(res.data);
           } else {
           }
@@ -329,7 +342,6 @@ export default {
     })
   },
   mounted() {
-    this.msgFromChild();
   }
 };
 </script>
@@ -391,7 +403,7 @@ export default {
 
     .van-cell {
       border: 0;
-      background-color:transparent;
+      background-color: transparent;
     }
   }
 
