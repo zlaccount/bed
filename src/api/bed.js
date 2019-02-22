@@ -3,6 +3,7 @@ import axios from "axios";
 // 1.扫码或输入编号开锁接口（写好待测）
 export function openLock(code) {
   const url = "/openLock";
+  // const url = "http://192.168.1.92:8080/app/chaperone_bed/user/openLock";
   const data = Object.assign({}, {
     user_id: localStorage.getItem("id") ?
       localStorage.getItem("id") : "",

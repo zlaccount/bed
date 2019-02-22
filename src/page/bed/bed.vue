@@ -332,12 +332,12 @@ export default {
         })
         vm.setUsedingState({
           state: true,
-          res: res.data,
         });
 
         setTimeout(() => {
           vm.setUsedingState({
             state: false,
+            res: res.data,
           })
           if (res.data * 1 != "" && res.error_code * 1 === 1) {
             // 解锁失败 9.未缴纳押金，10.订单未支付，11.该账户被冻结

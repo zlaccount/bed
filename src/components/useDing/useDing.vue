@@ -33,7 +33,7 @@
                     class="times"
                     id="mytime"
                   >
-                    {{ str }}
+                    {{ localTimeLong }}
                   </div>
                 </div>
               </div>
@@ -69,14 +69,8 @@
                   title="联系方式"
                   :value="res.mobile_phone"
                 />
-                <!-- <van-cell
-                  title="预计消费"
-                  :value="res.cost"
-                  v-if="costShow"
-                /> -->
                 <van-cell
                   title="预计消费"
-                  v-if="!costShow"
                   :value="cost"
                 />
               </van-cell-group>
@@ -123,8 +117,8 @@ export default {
       oCurrentPage: 0,
       list: [],
       res: Object,
-      costShow: false,
-      cost: 0,
+      cost: '',
+      localCost: '',
       startDate: "",
       startTime: "",
       // 初始化数据
@@ -132,31 +126,31 @@ export default {
       m: 0,
       ms: 0,
       s: 0,
+      costMinite: 0,
       time: 0,
       str: "",
       mytime: "",
       costTime: 0,
-      chaperonage_bed_code: ""
+      chaperonage_bed_code: "",
+      localTimeLong: ''
     };
   },
   created() {
     this.loadData();
   },
   computed: {
-    ...mapGetters(["orderUseState", "order"])
+    ...mapGetters(["usedingState", "orderUseState", "order"])
   },
   // 监控data中的数据变化
   watch: {
-    cost(val, oldval) {
-      this.cost = val;
-    }
+
   },
   methods: {
     loadData() {
       const vm = this;
       // 调用api获取数据
-      openLock(vm.$route.params.id).then(res => {
 
+      openLock(vm.$route.params.id).then(res => {
         var arr = [];
         for (let i in res) {
           let o = {};
@@ -166,6 +160,8 @@ export default {
         vm.res = arr[0].data;
         vm.startDate = arr[0].data.start_time.trim().split(" ")[1];
         vm.startTime = arr[0].data.start_time.trim().split(" ")[0];
+        vm.timeLong = (arr[0].data.service_time) * 1
+        vm.cost = (arr[0].data.cost) * 1
         vm.setUsedingState({
           usedoing: true,
           res: res.data,
@@ -174,7 +170,10 @@ export default {
           state: false,
         })
       });
+
+
     },
+
     // 获取子组件传过来的当前页码值
     msgFromChild(data) {
       if (data || data === 0) {
@@ -183,75 +182,65 @@ export default {
     },
     onClickLeft() {
       this.$router.back();
+      this.stop()
+    },
+    sec_to_time(s) {
+      var t;
+      if (s > -1) {
+        var hour = Math.floor(s / 3600);
+        var min = Math.floor(s / 60) % 60;
+        var sec = s % 60;
+        if (hour < 10) {
+          t = "0" + hour + ":";
+        } else {
+          t = hour + ":";
+        }
+
+        if (min < 10) {
+          t += "0";
+        }
+        t += min + ":";
+        if (sec < 10) {
+          t += "0";
+        }
+        t += sec;
+      }
+      return t;
     },
     getData() { },
-    start(bolean) {
-      let _this = this;
-      let hour, minute, second;
-      hour = minute = second = 0;
-      if (bolean === true) {
-        _this.timer = setInterval(function () {
-          if (second >= 0) {
-            second = second + 1;
-          }
-          if (second >= 60) {
-            second = 0;
-            minute = minute + 1;
-          }
-          if (minute >= 60) {
-            minute = 0;
-            hour = hour + 1;
-          }
-          _this.callinTime =
-            hour + "时" + minute + "分" + second + "秒";
-        }, 1000);
-      } else {
-        window.clearInterval(_this.timer);
-      }
-    },
+    costTimer() {
+      // 半小时 增加费用
+      let vm = this;
 
+      vm.cost = vm.cost + 1;
+    },
     timer() {
       // 定义计时函数
-      let that = this;
-      that.ms = that.ms + 60; // 毫秒
-      if (that.ms >= 1000) {
-        that.ms = 0;
-        if (that.orderUseState.state === true) {
-          that.s = that.s + 1; // 秒
-        }
+      let vm = this;
+      vm.ms = vm.ms + 50; // 毫秒
+      if (vm.ms >= 1000) {
+        vm.ms = 0;
+        vm.timeLong = vm.timeLong + 1
+        vm.localTimeLong = vm.sec_to_time(vm.timeLong)
+        vm.s = vm.s + 1; // 秒
       }
-      if (that.s >= 60) {
-        that.s = 0;
-        that.m = that.m + 1; // 分钟
-        that.costTime = that.costTime + 1;
-      }
-      if (that.m >= 60) {
-        that.m = 0;
-        that.h = that.h + 1; // 小时
-      }
-      // 半小时
 
-      if (that.orderUseState.state === true) {
-        if (
-          that.orderUseState.service_time * 1 <=
-          that.orderUseState.free_time * 1
-        ) {
-          that.cost = that.orderUseState.res.cost * 1;
-        } else {
-          if (that.costTime >= 30) {
-            that.costShow = false;
-            that.cost = that.orderUseState.res.cost * 1 + 2;
-          }
-        }
+      if (vm.s >= 60) {
+        vm.s = 0;
+        vm.m = vm.m + 1; // 分钟
       }
-      that.str =
-        that.toDub(that.h) +
+      if (vm.m >= 60) {
+        vm.m = 0;
+        vm.h = vm.h + 1; // 小时
+      }
+
+      vm.str =
+        vm.toDub(vm.h) +
         ":" +
-        that.toDub(that.m) +
+        vm.toDub(vm.m) +
         ":" +
-        that.toDub(that.s) +
-        ""; /* +that.toDubms(this.ms)+"毫秒" */
-      // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
+        vm.toDub(vm.s) +
+        "";
     },
 
     reset() {
@@ -271,7 +260,7 @@ export default {
 
     stop() {
       // 暂停
-      clearInterval(this.time);
+      clearInterval(this.costTime);
     },
 
     toDub(n) {
@@ -317,11 +306,11 @@ export default {
           });
           this.setUsedingState({
             state: false,
-            res:''
+            res: ''
           });
-           this.setWayisshow({
-              state: false
-            })
+          this.setWayisshow({
+            state: false
+          })
         }
       });
     },
@@ -339,10 +328,14 @@ export default {
   mounted() {
     this.msgFromChild();
     this.time = setInterval(this.timer, 60);
+    this.costTime = setInterval(this.costTimer, 30 * 60 * 1000);
   },
   beforeDestroy() {
     if (this.timer) {
       clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+    }
+    if (this.costTimer) {
+      clearInterval(this.costTimer); // 在Vue实例销毁前，清除我们的定时器
     }
   } // 生命周期 - 销毁之前
 };

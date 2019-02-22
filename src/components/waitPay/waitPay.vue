@@ -164,7 +164,8 @@ export default {
       //接口对接
       if (this.radio === '2') {
         this.balancePayPop = true;
-        this.countDown()
+        // 获取验证码
+        // this.countDown()
         if (Number(this.phone) && String(this.phone).length === 11) {
           var mobile = String(this.phone)
           var reg = /^(\d{3})\d{4}(\d{4})$/

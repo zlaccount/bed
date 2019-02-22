@@ -2,6 +2,7 @@
   <div id="app">
     <router-view></router-view>
     <result></result>
+    <demo></demo>
     <directions></directions>
     <tab></tab>
   </div>
@@ -10,6 +11,7 @@
 <script type="text/ecmascript-6">
 import Tab from 'components/tab/tab'
 import Result from 'components/result/result'
+import Demo from 'components/demo/demo'
 import Directions from 'components/directions/directions'
 import { mapGetters, mapMutations } from "vuex";
 import { getWxCode, getUrlCode, getOpenId, deposit, busy ,seeBalance} from "api/bed";
@@ -79,7 +81,7 @@ export default {
     })
   },
   components: {
-    Tab, Result, Directions
+    Tab, Result, Directions,Demo
   },
   mounted() {
 
