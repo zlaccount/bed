@@ -390,6 +390,7 @@ export default {
               type: -1,
             })
             setTimeout(() => {
+              vm.setTabActive(1)
               vm.setWayisshow({
                 state: false
               })
