@@ -3,7 +3,6 @@
     <div id="usedingViewPage">
       <van-nav-bar
         fixed
-        left-arrow
         @click-left="onClickLeft"
         title="共享陪护床"
       >
@@ -128,6 +127,7 @@ export default {
       s: 0,
       costMinite: 0,
       time: 0,
+      free_time: '',
       str: "",
       mytime: "",
       costTime: 0,
@@ -161,7 +161,9 @@ export default {
         vm.startDate = arr[0].data.start_time.trim().split(" ")[1];
         vm.startTime = arr[0].data.start_time.trim().split(" ")[0];
         vm.timeLong = (arr[0].data.service_time) * 1
+        vm.free_time = (arr[0].data.free_time) * 1
         vm.cost = (arr[0].data.cost) * 1
+
         vm.setUsedingState({
           usedoing: true,
           res: res.data,
@@ -174,15 +176,8 @@ export default {
 
     },
 
-    // 获取子组件传过来的当前页码值
-    msgFromChild(data) {
-      if (data || data === 0) {
-        this.oCurrentPage = data;
-      }
-    },
     onClickLeft() {
       this.$router.back();
-      this.stop()
     },
     sec_to_time(s) {
       var t;
@@ -207,13 +202,17 @@ export default {
       }
       return t;
     },
-    getData() { },
     costTimer() {
       // 半小时 增加费用
       let vm = this;
-
       vm.cost = vm.cost + 2;
+      // if (vm.timeLong < vm.free_time) {
+      //   vm.cost = 0
+      //   return false
+      // } else {
+      // }
     },
+
     timer() {
       // 定义计时函数
       let vm = this;
@@ -292,7 +291,7 @@ export default {
     // 正常关锁
     normalClose() {
       normalClose(this.res.chaperonage_bed_code).then(res => {
-      this.setTabActive(1)
+        this.setTabActive(1)
         if (res.error_code * 1 === ERR_OK) {
           this.$router.push({
             name: "normalClose"
@@ -327,10 +326,10 @@ export default {
     })
   },
   mounted() {
-    this.msgFromChild();
     this.time = setInterval(this.timer, 60);
     this.costTime = setInterval(this.costTimer, 30 * 60 * 1000);
   },
+
   beforeDestroy() {
     if (this.timer) {
       clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器

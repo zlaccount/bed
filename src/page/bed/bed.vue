@@ -176,7 +176,7 @@ import { mapGetters, mapMutations } from "vuex";
 import { ERR_OK } from "api/config";
 import wx from "weixin-js-sdk";
 
-import { jsApiCall, openLock, RichScan, busy } from "api/bed";
+import { openLock, RichScan, busy } from "api/bed";
 export default {
   components: {},
   data() {
@@ -284,7 +284,7 @@ export default {
         );
         busy().then(res => {
           if (res.error_code * 1 === 1) {
-      this.setTabActive(2)
+            this.setTabActive(2)
             vm.busyCode = res.data.chaperonage_bed_code;
             vm.setWayisshow({
               state: true
@@ -344,7 +344,7 @@ export default {
     _openLock(code) {
       const vm = this;
       openLock(code).then(res => {
-      this.setTabActive(2)
+        this.setTabActive(2)
         vm.setWayisshow({
           state: true
         })

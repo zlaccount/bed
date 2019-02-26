@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <keep-alive>
-    <router-view></router-view>
+      <router-view></router-view>
     </keep-alive>
     <result></result>
     <demo></demo>
@@ -16,7 +16,7 @@ import Result from 'components/result/result'
 import Demo from 'components/demo/demo'
 import Directions from 'components/directions/directions'
 import { mapGetters, mapMutations } from "vuex";
-import { getWxCode, getUrlCode, getOpenId, deposit, busy ,seeBalance} from "api/bed";
+import { getWxCode, getUrlCode, getOpenId, deposit, busy, seeBalance } from "api/bed";
 import { ERR_OK } from "api/config";
 import wx from "weixin-js-sdk";
 export default {
@@ -83,7 +83,7 @@ export default {
     })
   },
   components: {
-    Tab, Result, Directions,Demo
+    Tab, Result, Directions, Demo
   },
   mounted() {
 

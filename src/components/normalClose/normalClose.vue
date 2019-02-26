@@ -108,7 +108,18 @@
               </van-cell>
 
             </van-cell-group>
-            <normalize-pay :orderId="res.orderId"></normalize-pay>
+            <div class="backIndexBox">
+              <van-button
+                @click="backIndex"
+                v-if="res.serviceTime<res.freeTime"
+                class="backIndex"
+                type="primary"
+              >回到首页</van-button>
+            </div>
+            <normalize-pay
+              v-if="res.serviceTime>res.freeTime"
+              :orderId="res.orderId"
+            ></normalize-pay>
           </div>
         </div>
       </yd-layout>
@@ -141,18 +152,16 @@ export default {
   //方法集合
   methods: {
     onClickLeft() {
+      this.$router.back();
+
       // this.$router.push({
       //   name: "bed",
       // });
-      // this.setNormalState({
-      //   state: false
-      // });  
     },
-    loadImgae() {
-      if (!this.checkLoaded) {
-        this.$refs.scroll.refresh()
-        this.checkLoaded = true
-      }
+    backIndex() {
+      this.$router.push({
+        name: "bed",
+      });
     },
     delClose() {
 
@@ -214,6 +223,27 @@ export default {
   .yd-layout {
     div {
       height: 40px;
+    }
+  }
+
+  .backIndexBox {
+    height: 100px;
+
+    .backIndex {
+      height: 45px;
+      text-align: center;
+      background: #4fd6bc;
+      width: 92%;
+      border: 0;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      line-height: 45px;
+      color: #fff;
+      font-size: 16px;
+      margin-left: 4%;
+      margin-right: 4%;
+      position: fixed;
+      bottom: 0;
     }
   }
 }

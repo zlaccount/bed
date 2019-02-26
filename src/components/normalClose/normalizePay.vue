@@ -1,7 +1,7 @@
 <!---->
 <template>
   <div class="payway">
-    <van-radio-group v-model="radio">
+    <van-radio-group  v-model="radio">
       <van-cell-group>
         <van-cell
           title-class="radioIcon"
@@ -37,6 +37,7 @@
     </van-radio-group>
     <div class="payBtn">
       <a
+      
         href="javascript:void(0)"
         @click="seeQuestion"
         class="seeQuestion"
@@ -90,6 +91,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 // 公共js
@@ -276,7 +278,8 @@ export default {
     })
   },
   // 生命周期 - 创建完成（可以访问当前this实例）
-  created() { },
+  created() {
+   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
 
