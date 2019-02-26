@@ -1,6 +1,7 @@
 const state = {
   // 是否登录
   islogin: true,
+  active: 1,
   msg: {},
   depositType: [{
     state: false

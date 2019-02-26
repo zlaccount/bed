@@ -212,7 +212,7 @@ export default {
       // 半小时 增加费用
       let vm = this;
 
-      vm.cost = vm.cost + 1;
+      vm.cost = vm.cost + 2;
     },
     timer() {
       // 定义计时函数
@@ -292,10 +292,10 @@ export default {
     // 正常关锁
     normalClose() {
       normalClose(this.res.chaperonage_bed_code).then(res => {
-        console.log(res);
+      this.setTabActive(1)
         if (res.error_code * 1 === ERR_OK) {
           this.$router.push({
-            name: "closeLock"
+            name: "normalClose"
           });
           this.setNormalState({
             state: true,
@@ -322,6 +322,7 @@ export default {
       setUseding: "SET_USEDING_STATE",
       setUsedingState: "SET_USEDING_STATE",
       setRefund: "SET_REFUND",
+      setTabActive: "SET_ACTIVE",
       setWayisshow: "SET_WAYISSHOW"
     })
   },
@@ -397,7 +398,7 @@ export default {
       .date {
         font-size: 14px;
         color: #999;
-        padding-bottom: 5px;
+        padding-bottom: 8px;
       }
     }
 

@@ -57,7 +57,11 @@ const mutations = {
   // openid
   [types.SET_OPENID](state, openId) {
     state.openId = openId
-  }
+  },
+   [types.SET_ACTIVE](state, active) {
+     state.active = active
+   }
+
 
 
 }

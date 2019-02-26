@@ -199,7 +199,6 @@ export default {
     },
     // 是否登录
     _getBasicData() {
-      console.log(111)
       common.$on(
         "msg",
         function (data) {
@@ -334,7 +333,7 @@ export default {
 
           span {
             position: relative;
-            float: left;
+            // float: left;
             padding-left: 5px;
             height: 20px;
             line-height: 20px;
@@ -412,7 +411,6 @@ export default {
 
           span {
             display: block;
-            height: 20px;
             line-height: 20px;
           }
         }

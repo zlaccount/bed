@@ -15,15 +15,22 @@
     </div>
     <div class="topblank"></div>
     <!---->
+
     <div class="way">
-      <van-steps
-        :active="stepsActive"
-        active-color="#4FD6BC"
+      <yd-step
+        :current="active"
+        current-color="#4fd6bc"
       >
-        <van-step>扫码 </van-step>
-        <van-step>开锁</van-step>
-        <van-step>支付</van-step>
-      </van-steps>
+        <yd-step-item>
+          <span slot="bottom">扫码</span>
+        </yd-step-item>
+        <yd-step-item>
+          <span slot="bottom">开锁</span>
+        </yd-step-item>
+        <yd-step-item>
+          <span slot="bottom">支付</span>
+        </yd-step-item>
+      </yd-step>
       <div v-if="wayIsShow.state !=true">
         <!-- 开锁方式 -->
         <div class="wayPop">
@@ -116,7 +123,7 @@
               <img src="../../../static/img/lock.png" />
             </div>
             <span></span> <span></span> <span></span>
-            <p>正在开锁...</p>
+            <p>正在开锁</p>
           </div>
           <div
             v-if="usedingState.usedoing == true"
@@ -127,7 +134,7 @@
               <img src="../../../static/img/lock.png" />
             </div>
             <span></span> <span></span> <span></span>
-            <p>正在使用...</p>
+            <p>正在使用</p>
           </div>
           <!-- 开锁结果-->
           <div
@@ -175,7 +182,6 @@ export default {
   data() {
     return {
       // 初始化数据
-      stepsActive: 0,
       busyCode: "",
       // -1 开锁失败 0 开锁成功 1 未缴纳押金 2未支付订单
       typeResult: "",
@@ -190,7 +196,8 @@ export default {
       "depositType",
       "openId",
       "refund",
-      "wayIsShow"
+      "wayIsShow",
+      "active"
     ])
   },
   watch: {},
@@ -277,6 +284,7 @@ export default {
         );
         busy().then(res => {
           if (res.error_code * 1 === 1) {
+      this.setTabActive(2)
             vm.busyCode = res.data.chaperonage_bed_code;
             vm.setWayisshow({
               state: true
@@ -321,6 +329,7 @@ export default {
           name: "deposit"
         });
       }
+      this.setTabActive(1)
       this.toPayPop = false;
     },
     // 正在使用
@@ -335,6 +344,7 @@ export default {
     _openLock(code) {
       const vm = this;
       openLock(code).then(res => {
+      this.setTabActive(2)
         vm.setWayisshow({
           state: true
         })
@@ -343,6 +353,7 @@ export default {
         });
 
         setTimeout(() => {
+
           vm.setUsedingState({
             state: false,
             res: res.data,
@@ -388,7 +399,7 @@ export default {
               vm.$toast(res.error_msg)
             }, 1000)
           }
-        }, 1500)
+        }, 2000)
 
       });
     },
@@ -400,7 +411,8 @@ export default {
       setUsedingState: "SET_USEDING_STATE",
       setOrder: "SET_ORDER",
       setRefund: "SET_REFUND",
-      setWayisshow: "SET_WAYISSHOW"
+      setWayisshow: "SET_WAYISSHOW",
+      setTabActive: "SET_ACTIVE",
     })
   },
   created() {
@@ -486,10 +498,13 @@ export default {
         display: block;
         height: 100px;
 
+        .nopaytitle {
+          padding-top: 20px;
+        }
+
         p {
           span {
             display: block;
-            line-height: 62px;
           }
 
           a {
@@ -517,18 +532,22 @@ export default {
         top: 50%;
         left: 50%;
         z-index: 12;
-        width: 120px;
-        height: 120px;
-        margin-left: -60px;
-        margin-top: -105px;
-        z-index: 12;
+        width: 100px;
+        height: 100px;
+        margin-left: -50px;
+        margin-top: -70px;
 
         .liveimg {
-          width: 120px;
-          height: 120px;
+          width: 100px;
+          height: 100px;
           background: #b0e2d7;
           border-radius: 50%;
-          position: relative;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          z-index: 12;
+          margin-left: -50px;
+          margin-top: -70px;
 
           img {
             z-index: 0;
@@ -583,6 +602,9 @@ export default {
           text-align: center;
           padding-top: 25px;
           color: #4fd6bc;
+          position: absolute;
+          bottom: -40px;
+          width: 100%;
         }
       }
     }
@@ -593,10 +615,10 @@ export default {
         position: fixed;
         top: 50%;
         left: 50%;
-        width: 105px;
-        height: 105px;
-        margin-left: -53px;
-        margin-top: -96px;
+        width: 100px;
+        height: 100px;
+        margin-left: -50px;
+        margin-top: -70px;
         z-index: 12;
         text-align: center;
       }
@@ -604,7 +626,7 @@ export default {
       .success {
         p {
           color: #4fd6bc;
-          margin: 10px 0 0px;
+          margin: 20px 0 0px;
           font-size: 14px;
           letter-spacing: 2px;
         }
@@ -612,7 +634,7 @@ export default {
 
       .failure {
         p {
-          margin: 10px 0 0px;
+          margin: 20px 0 0px;
           color: #ffa500;
           font-size: 14px;
           letter-spacing: 2px;

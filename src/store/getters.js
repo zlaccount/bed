@@ -25,3 +25,4 @@ export const resultType = state => state.resultType
 export const refund = state => state.refund
 // openid
 export const openId = state => state.openId
+export const active = state => state.active

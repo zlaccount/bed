@@ -109,13 +109,17 @@
                   />
                   <span>可添加图片</span>
                 </van-uploader>
-                <div class="uploadImgBg">
+                <div
+                  class="uploadImgBg"
+                  ref="uploadImgBg"
+                >
                   <img
                     @click="selectFile"
                     src="../../../static/img/upload.png"
                     class="uploadImg"
                     ref="uploadImg"
                   />
+                  <span>可预览图片</span>
                 </div>
               </div>
             </div>
@@ -129,7 +133,10 @@
         >
           提交反馈
         </van-button>
-        <van-popup v-model="submitStatus" :close-on-click-overlay=false>
+        <van-popup
+          v-model="submitStatus"
+          :close-on-click-overlay=false
+        >
           <div class="result">
             <div
               class="success"
@@ -199,7 +206,7 @@ export default {
   },
   // 监听属性 类似于data概念
   computed: {
-    ...mapGetters(["feedback", "orderUseState","refund"])
+    ...mapGetters(["feedback", "orderUseState", "refund"])
   },
   // 监控data中的数据变化
   watch: {
@@ -219,7 +226,7 @@ export default {
       this.fileName = item.file;
       this.$refs.uploadImg.src = item.content;
       this.$refs.uploader.$el.style.display = "none";
-      this.$refs.uploadImg.style.display = "block";
+      this.$refs.uploadImgBg.style.display = "block";
     },
     selectFile() {
       ImagePreview([this.$refs.uploadImg.src]);
@@ -248,11 +255,12 @@ export default {
             this.resultRadio = "";
             this.message = "";
             this.type = res.data.error_code * 1;
+      this.setTabActive(1)
             this.setUsedingState({
               state: false,
-              res:''
+              res: ''
             });
-              this.setWayisshow({
+            this.setWayisshow({
               state: false
             })
           }
@@ -284,6 +292,7 @@ export default {
       setTrueManger: "SET_BEDMANAGER",
       setOrderUseState: "SET_ORDER_USE_STATE",
       setUsedingState: "SET_USEDING_STATE",
+      setTabActive: "SET_ACTIVE",
       setWayisshow: "SET_WAYISSHOW"
     })
   },
@@ -351,7 +360,8 @@ export default {
             height: 100%;
             padding: 2px 0;
             color: #999;
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 25px;
           }
 
           .van-cell {
@@ -386,8 +396,9 @@ export default {
           }
 
           .uploadImgBg {
+            display: none;
+
             .uploadImg {
-              display: none;
               // width: 100px;
               // height: 120px;
             }

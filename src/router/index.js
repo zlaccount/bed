@@ -9,7 +9,7 @@ import OrderDetail from "components/orderDetail/orderDetail";
 
 import Serial from "components/serial/serial";
 import UseDing from "components/useDing/useDing";
-import CloseLock from "components/closeLock/closeLock";
+import NormalClose from "components/normalClose/normalClose";
 import FeedBack from "components/feedback/feedback";
 
 // 我的
@@ -51,9 +51,9 @@ export default new Router({
           name: "useDing",
           component: UseDing,
           children: [{
-              path: "/bed/useDing/closeLock",
-              name: "closeLock",
-              component: CloseLock
+              path: "/bed/useDing/normalClose",
+              name: "normalClose",
+              component: NormalClose
             },
             {
               path: "/bed/useDing/feedback",
@@ -96,11 +96,11 @@ export default new Router({
           path: "/my/deposit",
           name: "myDeposit",
           component: Deposit,
-            children: [{
-               path: "/my/deposit/refund",
-                name: "myRefund",
-              component: Refund
-            }]
+          children: [{
+            path: "/my/deposit/refund",
+            name: "myRefund",
+            component: Refund
+          }]
         },
         {
           path: "/my/order",

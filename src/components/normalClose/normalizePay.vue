@@ -41,12 +41,20 @@
         @click="seeQuestion"
         class="seeQuestion"
       >
-        对押金规则不清楚？</a>
+        对收费标准有疑问?</a>
       <van-button
         type="default"
-        @click="wxpay"
+        class="toPay"
+        @click="toPay"
       >
         <span>支付</span>
+      </van-button>
+      <van-button
+        type="default"
+        class="waitPay"
+        @click="waitPay"
+      >
+        <span>下次再说</span>
       </van-button>
     </div>
     <!-- 余额支付弹框 -->
@@ -160,7 +168,12 @@ export default {
     seeQuestion() {
       this.setDirections(true);
     },
-    wxpay() {
+    waitPay() {
+      this.$router.push({
+        name: "bed"
+      });
+    },
+    toPay() {
       //接口对接
       if (this.radio === '2') {
         this.balancePayPop = true;
@@ -303,10 +316,8 @@ export default {
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
-    margin-top: 20px;
-    // padding-bottom: 15px;
     background: #f5f3f4;
-    bottom: 0;
+    height: 115px;
 
     .seeQuestion {
       font-size: 14px;
@@ -315,11 +326,28 @@ export default {
       line-height: 30px;
     }
 
-    .van-button {
-      background: #4fd6bc;
+    .toPay {
+      width: 50%;
       color: #fff;
-      font-size: 16px;
-      width: 100%;
+      background: #4fd6bc;
+      font-size: 14px;
+      letter-spacing: 2px;
+      height: 40px;
+      line-height: 36px;
+      float: left;
+      border: 0;
+    }
+
+    .waitPay {
+      width: 50%;
+      color: #fff;
+      background: #B5E3D9;
+      font-size: 14px;
+      letter-spacing: 2px;
+      height: 40px;
+      line-height: 36px;
+      float: left;
+      border: 0;
     }
   }
 

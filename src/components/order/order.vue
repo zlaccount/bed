@@ -141,13 +141,16 @@
           </up-down>
         </div>
       </slider>
-      <div class="loading-wrapper"></div>
+      <!-- <div class="loading-container" v-show="!orderData.length">
+        <loading></loading>
+      </div> -->
       <router-view></router-view>
     </div>
   </transition>
 </template>
 
 <script>
+import Loading from 'base/loading/loading'
 import Slider from "base/scrolltab/slider";
 import UpDown from "base/scrolltab/UpDown";
 import { mapGetters, mapMutations } from "vuex";
@@ -155,8 +158,9 @@ import { mapGetters, mapMutations } from "vuex";
 import { ERR_OK } from "api/config";
 import { order } from "api/bed";
 export default {
-  name: "HelloWorld",
+  name: "",
   components: {
+    Loading,
     Slider,
     UpDown
   },
@@ -247,19 +251,20 @@ export default {
         });
       }
     },
+    // 分页功能（接口有问题，待对接）
     moreData() {
-      this.pageNum += 1;
-      var pageSize = 10;
-      var state = -1;
-      // 调用api获取数据
-      // 接口对接
-      order(state, this.pageNum, pageSize).then(res => {
-        if (res.error_code * 1 === ERR_OK) {
-          this.orderData = this.orderData.concat(res.data);
-          this.dataDeal(this.orderData);
-        } else {
-        }
-      });
+      // this.pageNum += 1;
+      // var pageSize = 10;
+      // var state = -1;
+      // // 调用api获取数据
+      // // 接口对接
+      // order(state, this.pageNum, pageSize).then(res => {
+      //   if (res.error_code * 1 === ERR_OK) {
+      //     this.orderData = this.orderData.concat(res.data);
+      //     this.dataDeal(this.orderData);
+      //   } else {
+      //   }
+      // });
     },
     loadData() {
       this.pageNum = 1;
@@ -267,11 +272,13 @@ export default {
       var state = -1;
       // 调用api获取数据
       // 接口对接
-      if (this.order.type === 3) {
+      if (this.order.type === 1) {
+        this.oCurrentPage = 0
+        console.log(this.oCurrentPage)
+      } else if (this.order.type === 3) {
         var state = this.order.type - 2;
         this.oCurrentPage = this.order.type - 1;
-      }
-      if (this.order.type === 4) {
+      } else if (this.order.type === 4) {
         var state = this.order.type - 3;
         this.oCurrentPage = this.order.type - 2;
       }
@@ -326,9 +333,9 @@ export default {
     msgFromChild(data) {
       if (data || data === 0) {
         this.oCurrentPage = data;
-        var pageNum = 1;
+        this.pageNum = 1;
         var pageSize = 10;
-        order(this.oCurrentPage - 1, pageNum, pageSize).then(res => {
+        order(this.oCurrentPage - 1, this.pageNum , pageSize).then(res => {
           if (res.error_code * 1 === ERR_OK) {
             this.orderData = res.data;
             this.dataDeal(res.data);

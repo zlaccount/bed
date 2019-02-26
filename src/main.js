@@ -4,14 +4,15 @@ import App from './App'
 import router from './router'
 import store from './store'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import YDUI from 'vue-ydui';
+import 'vue-ydui/dist/ydui.px.css'
+import 'vue-ydui/dist/ydui.base.css';
 
 import fastclick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
 import axios from 'axios'
-import {
-  Tabbar,
-  TabbarItem
-} from 'vant'
+
+import { Tabbar,TabbarItem} from 'vant'
 import {
   Swipe,
   SwipeItem
@@ -85,6 +86,7 @@ import {
   CollapseItem
 } from 'vant';
 
+Vue.use(YDUI);
 Vue.use(Swipe).use(SwipeItem)
 Vue.use(Lazyload)
 Vue.use(Tabbar).use(TabbarItem)
