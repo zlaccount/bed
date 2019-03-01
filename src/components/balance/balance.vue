@@ -14,7 +14,7 @@
       <div class="AmountOfAccount">
         <div class="AccountWH">
           <div class="title">账户金额:(元)</div>
-          <h4>{{balance}}</h4>
+          <h4>{{msg.balance||'"0'}}</h4>
           <p>温馨提示 :<br><span>账户金额可用于电话咨询、预约医生、送礼物、购买商品等。</span></p>
         </div>
       </div>
@@ -43,7 +43,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 // 付款
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { recharge, seeBalance } from "api/bed";
 import wx from "weixin-js-sdk";
 import { ERR_OK } from "api/config";
@@ -54,7 +54,6 @@ export default {
     //这里存放数据
     return {
       value: '',
-      balance: '',
     };
   },
   //监听属性 类似于data概念
@@ -70,7 +69,6 @@ export default {
       this.$router.back()
     },
     _getData() {
-      this.balance = localStorage.getItem("balance")
     },
     wxpay() {
       if (this.value === '') {
@@ -115,8 +113,12 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
+
+            // 查询余额
             seeBalance().then(res => {
-              localStorage.setItem("balance", res.balance);
+              this.setMsg({
+                balance: res.balance
+              })
             })
             vm.$router.push({
               path: `/my`
@@ -129,7 +131,10 @@ export default {
         }
       );
     },
-    statement() { }
+    statement() { },
+    ...mapMutations({
+      setMsg: "SET_MSG",
+    })
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

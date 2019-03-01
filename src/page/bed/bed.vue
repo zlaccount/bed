@@ -275,8 +275,26 @@ export default {
               vm._openLock(data);
             } else if (vm.depositType.type === 1) {
               // 未缴纳押金
-              vm.toPayPop = true;
-              vm.typeResult = 9;
+              vm.setTabActive(2)
+              vm.setWayisshow({
+                state: true
+              })
+              vm.setUsedingState({
+                state: true,
+              });
+              setTimeout(() => {
+                vm.setUsedingState({
+                  state: false,
+                })
+                vm.setRefund({
+                  state: true,
+                  type: -1,
+                })
+                setTimeout(() => {
+                  vm.toPayPop = true;
+                  vm.typeResult = 9;
+                }, 1000)
+              }, 2000)
             } else {
             }
             return false;
@@ -309,28 +327,32 @@ export default {
     },
 
     toPayRouter(index) {
-      this.setRefund({
+      const vm = this;
+      vm.setRefund({
         state: false,
       })
-      this.setWayisshow({
+      vm.setWayisshow({
         state: false
       })
+      vm.setUsedingState({
+        state: false,
+      });
       // 未支付订单
       if (index === 10) {
-        this.setOrder({
+        vm.setOrder({
           type: 4
         });
-        this.$router.push({
+        vm.$router.push({
           name: "order"
         });
       } else if (index === 9) {
         // 未缴纳押金
-        this.$router.push({
+        vm.$router.push({
           name: "deposit"
         });
       }
-      this.setTabActive(1)
-      this.toPayPop = false;
+      vm.setTabActive(1)
+      vm.toPayPop = false;
     },
     // 正在使用
     useding() {

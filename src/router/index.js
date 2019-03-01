@@ -51,6 +51,10 @@ export default new Router({
           name: "useDing",
           component: UseDing,
           children: [{
+              path: "/bed/manager",
+              name: "usedManager",
+              component: Manager
+            }, {
               path: "/bed/useDing/normalClose",
               name: "normalClose",
               component: NormalClose

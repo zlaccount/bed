@@ -38,7 +38,7 @@
             size="normal"
             @click="balance"
           >
-            <span>{{ accountBalance || "0.0" }} 元</span>
+            <span>{{ msg.balance || "0" }} 元</span>
             <span>我的余额</span>
           </van-button>
         </van-col>
@@ -143,6 +143,7 @@
 // 例如：import 《组件名称》 from '《组件路径》';
 import { mapGetters, mapMutations } from "vuex";
 import { ERR_OK, imgUrl } from "api/config";
+import { seeBalance } from "api/bed";
 import { getBasicData } from "api/myself";
 import localImgUrl from "../../../static/img/invite@3x.png";
 // 公共js
@@ -167,7 +168,6 @@ export default {
       indexIsHide: 1,
       accountImage: "",
       accountName: "",
-      accountBalance: "",
       phone: "027-88112751",
       localImgUrl: localImgUrl,
       // 开关
@@ -182,7 +182,7 @@ export default {
   },
   // 监听属性 类似于data概念
   computed: {
-    ...mapGetters(["depositType", "beddirections"])
+    ...mapGetters(["depositType", "beddirections", "msg"])
   },
   // 监控data中的数据变化
   watch: {},
@@ -203,6 +203,7 @@ export default {
     },
     // 是否登录
     _getBasicData() {
+      console.log(this.msg)
       common.$on(
         "msg",
         function (data) {
@@ -212,7 +213,6 @@ export default {
             this.accountImage = imgUrl + data.t.user.image;
           }
           this.accountName = data.t.user.name;
-          this.accountBalance = data.t.user.balance;
           this.indexIsHide = ERR_OK;
           return false;
         }.bind(this)
@@ -227,8 +227,8 @@ export default {
       } else {
         this.accountImage = imgUrl + localStorage.getItem("image");
       }
+
       this.accountName = localStorage.getItem("name");
-      this.accountBalance = localStorage.getItem("balance");
       this.indexIsHide = ERR_OK;
     },
     // 押金管理
@@ -304,7 +304,8 @@ export default {
     this._getBasicData();
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() { },
+  mounted() {
+  },
   beforeCreate() { }, // 生命周期 - 创建之前
   beforeMount() { }, // 生命周期 - 挂载之前
   beforeUpdate() { }, // 生命周期 - 更新之前

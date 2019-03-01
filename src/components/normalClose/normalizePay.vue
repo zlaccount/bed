@@ -1,7 +1,7 @@
 <!---->
 <template>
   <div class="payway">
-    <van-radio-group  v-model="radio">
+    <van-radio-group v-model="radio">
       <van-cell-group>
         <van-cell
           title-class="radioIcon"
@@ -37,7 +37,6 @@
     </van-radio-group>
     <div class="payBtn">
       <a
-      
         href="javascript:void(0)"
         @click="seeQuestion"
         class="seeQuestion"
@@ -228,9 +227,17 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
-            window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+            // 查询余额
+            seeBalance().then(res => {
+              this.setMsg({
+                balance: res.balance
+              })
+            })
+            this.$router.push({
+              name: "bed"
+            });
           } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
-            window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+
           } else if (res.err_msg === "get_brand_wcpay_request:fail") {
             this.$toast("网络异常，请重试");
           }
@@ -251,14 +258,16 @@ export default {
       if (this.phone != "" && this.sms != "") {
         checkcode(this.phone, this.sms).then(res => {
           if (res.t.errorCode === null) {
-            waitPay(this.orderId, this.radio).then(res => {
+            waitPay(this.orderId, this.radio).then(response => {
               this.setResult({
                 state: true,
-                type: res.error_code
+                type: response.error_code
               })
               // 查询余额
               seeBalance().then(res => {
-                localStorage.setItem("balance", res.balance);
+                this.setMsg({
+                  balance: res.balance
+                })
               })
               this.balancePayPop = false;
               this.sms = "";
@@ -274,12 +283,13 @@ export default {
     },
     ...mapMutations({
       setDirections: "SET_DIRECTIONS",
-      setResult: "SET_RESULT_TYPE"
+      setResult: "SET_RESULT_TYPE",
+      setMsg: "SET_MSG",
     })
   },
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   },
+  },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
 

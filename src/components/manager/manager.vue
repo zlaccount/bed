@@ -89,9 +89,10 @@ export default {
   methods: {
     onClickLeft() {
       // this.setFalseManger(false);
-      this.$router.push({
-        name: 'bed'
-      })
+      this.$router.back()
+      // ({
+      //   name: 'bed'
+      // })
     },
     getData() {
 

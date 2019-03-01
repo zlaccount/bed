@@ -217,9 +217,15 @@ export default {
               state: true,
               type: 1
             })
-            seeBalance().then(response => {
-              localStorage.setItem("balance", response.balance);
+            // 查询余额
+            seeBalance().then(res => {
+              this.setMsg({
+                balance: res.balance
+              })
             })
+            this.$router.push({
+              name: "order"
+            });
           } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
             this.setResult({
               state: true,
@@ -252,8 +258,10 @@ export default {
                 type: waitPayRes.error_code
               })
               // 查询余额
-              seeBalance().then(seeBalanceRes => {
-                localStorage.setItem("balance", seeBalanceRes.balance);
+              seeBalance().then(res => {
+                this.setMsg({
+                  balance: res.balance
+                })
               })
               this.balancePayPop = false;
               this.sms = "";
@@ -269,6 +277,7 @@ export default {
     },
     ...mapMutations({
       setDirections: "SET_DIRECTIONS",
+      setMsg: "SET_MSG",
       setResult: "SET_RESULT_TYPE"
     })
   },

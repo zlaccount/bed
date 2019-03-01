@@ -145,6 +145,9 @@ export default {
           localStorage.setItem("nickName", res.t.user.nickName);
           localStorage.setItem("sex", res.t.user.sex);
           common.$emit('msg', res);
+            this.setMsg({
+            balance: res.t.user.balance
+          })
           // 是否缴纳押金
           deposit().then(response => {
             this.setDepositType({

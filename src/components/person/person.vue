@@ -59,27 +59,16 @@
 
           <div class="sex">
             <van-cell title="性别" />
-            <van-radio-group v-model="accountSex">
-              <van-cell-group>
-                <van-cell
-                  title="男"
-                  clickable
-                  @click="radio = '1'"
-                >
-                  <van-radio name="1" />
-                </van-cell>
-                <van-cell
-                  title="女"
-                  clickable
-                  @click="radio = '2'"
-                >
-                  <van-radio name="2" />
-                </van-cell>
-              </van-cell-group>
-            </van-radio-group>
-            <div class="rightHeight"></div>
+            <div class="radio">
+              <yd-radio-group
+                v-model="accountSex"
+                size="20"
+              >
+                <yd-radio val="1"><span style="font-size: 24px;">男</span></yd-radio>
+                <yd-radio val="2"><span style="font-size: 24px;">女</span></yd-radio>
+              </yd-radio-group>
+            </div>
           </div>
-
           <van-cell-group>
             <van-field
               clearable
@@ -185,7 +174,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // this._getBasicData();
+    this._getBasicData();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() { },
@@ -232,23 +221,25 @@ export default {
     margin-top: 10px;
 
     .sex {
+      position: relative;
+
       .van-cell {
         float: left;
-        position: relative;
         z-index: 10;
-        width: 68%;
       }
 
-      .van-radio-group {
-        .van-cell {
-          float: left;
-          width: 16%;
-          padding-right: 0;
-        }
-
-        .van-cell:last-child {
-          padding-left: 0;
-          padding-right: 15px;
+      .radio {
+        position: absolute;
+        right: 15px;
+        top: 0;
+        margin: 12px 0;
+        z-index: 1000;
+        line-height: 20px;
+        .yd-radio {
+          span {
+            font-size: 16px !important;
+            color:#000;
+          }
         }
       }
     }

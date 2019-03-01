@@ -6,6 +6,11 @@
         @click-left="onClickLeft"
         title="共享陪护床"
       >
+        <!-- <img
+          src="../../../static/img_icon/more.png"
+          slot="right"
+          class="mangerIcon"
+        /> -->
       </van-nav-bar>
       <div class="topblank"></div>
       <!-- 上下拉加载更多，刷新数据的组件updown -->
@@ -133,7 +138,7 @@ export default {
       costTime: 0,
       chaperonage_bed_code: "",
       localTimeLong: '',
-      hourly_rate:'',
+      hourly_rate: '',
     };
   },
   created() {
@@ -147,6 +152,11 @@ export default {
 
   },
   methods: {
+    manger() {
+      this.$router.push({
+        name: "usedManager"
+      });
+    },
     loadData() {
       const vm = this;
       // 调用api获取数据
@@ -164,7 +174,7 @@ export default {
         vm.timeLong = (arr[0].data.service_time) * 1
         vm.free_time = (arr[0].data.free_time) * 1
         vm.cost = (arr[0].data.cost) * 1
-        vm.hourly_rate=(arr[0].data.hourly_rate) * 1
+        vm.hourly_rate = (arr[0].data.hourly_rate) * 1
         vm.setUsedingState({
           usedoing: true,
           res: res.data,

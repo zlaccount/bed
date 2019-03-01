@@ -54,7 +54,9 @@ export default {
       if (localStorage.getItem("id") != null) {
         // 查询余额
         seeBalance().then(res => {
-          localStorage.setItem("balance", res.balance);
+          this.setMsg({
+            balance: res.balance
+          })
         })
         // 是否缴纳押金
         deposit().then(res => {
@@ -64,7 +66,7 @@ export default {
           })
         });
 
-        
+
       } else {
         this.$toast("您还未登录");
       }
@@ -73,6 +75,7 @@ export default {
       setOpenId: "SET_OPENID",
       setDepositType: "SET_DEPOSIT_TYPE",
       setUsedingState: "SET_USEDING_STATE",
+      setMsg: "SET_MSG",
     })
   },
   components: {
@@ -82,8 +85,8 @@ export default {
 
   },
   created() {
-    // this._getData();
-    this.basic()
+    this._getData();
+    // this.basic()
 
   },
 }
