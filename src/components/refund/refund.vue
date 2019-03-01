@@ -99,11 +99,12 @@ export default {
               vm.setRefund({
                 state: false,
               })
-              vm.$refs.refunding.style.display = "none";
               this.$router.push({
-                path: `/my`
+                name: "myDeposit"
               });
             }, 1000)
+            vm.$refs.refunding.style.display = "none";
+
           } else {
             // 退款成功
             vm.setRefund({
@@ -118,11 +119,14 @@ export default {
               vm.setRefund({
                 state: false,
               })
-              vm.$refs.refunding.style.display = "none";
               this.$router.push({
-                path: `/my`
+                name: "myDeposit"
               });
+
             }, 1000)
+
+            vm.$refs.refunding.style.display = "none";
+
           }
 
         });

@@ -1,0 +1,421 @@
+<template>
+  <transition name="slide">
+    <div class="orderViewPage">
+      <van-nav-bar
+        fixed
+        left-arrow
+        @click-left="onClickLeft"
+        title="订单管理"
+      >
+      </van-nav-bar>
+      <div class="topblank"></div>
+      <!-- 导航 -->
+      <div class="nav">
+        <ul>
+          <li
+            class="tab-item"
+            v-for="(n, index) in title"
+            :key="index"
+            @click="changeNav(index)"
+            :class="{ active: index === oCurrentPage }"
+          >
+            <span class="tab-link"> {{ n.name }}</span>
+          </li>
+        </ul>
+      </div>
+      <!-- 外层翻页组件（轮播原理） -->
+      <slider
+        :oCurrentPage="oCurrentPage"
+        ref="sendPage"
+        v-on:switchTab="msgFromChild"
+      >
+        <div
+          v-for="(item, index) in data"
+          :key="index"
+        >
+          <!-- 上下拉加载更多，刷新数据的组件updown -->
+          <up-down
+            :data="data"
+            :pulldown="pulldown"
+            :scrollToEnd="scrollToEnd"
+            @scrollToEnd="moreData"
+          >
+            <!-- 此处的ui结构just a demo of test -->
+            <div
+              class="cellCon"
+              v-for="(item, index) in orderData"
+              :key="index"
+              @click="selectItem(item)"
+            >
+              <div class="gray"></div>
+              <div style="width:100%;min-height:100%">
+                <div>
+                  <van-cell
+                    v-if="item.pay_state == 0"
+                    value="已完成"
+                    value-class="itemFinished"
+                  >
+                    <template slot="title">
+                      <div class="custom-text">
+                        订单编号 :
+                        {{ item.order_id }}
+                      </div>
+                    </template>
+                  </van-cell>
+                  <van-cell
+                    v-if="item.pay_state == 1"
+                    value="未支付"
+                    value-class="itemWaitPay"
+                  >
+                    <template slot="title">
+                      <div class="custom-text">
+                        订单编号 : {{ item.order_id }}
+                      </div>
+                    </template>
+                  </van-cell>
+                  <van-cell
+                    v-if="item.pay_state == 2"
+                    value="待审核"
+                    value-class="itemAudit"
+                  >
+                    <template slot="title">
+                      <div class="custom-text">
+                        订单编号 : {{ item.order_id }}
+                      </div>
+                    </template>
+                  </van-cell>
+                  <van-cell
+                    v-if="item.pay_state == 3"
+                    value="正在使用"
+                    value-class="itemAudit"
+                  >
+                    <template slot="title">
+                      <div class="custom-text">
+                        订单编号 : {{ item.order_id }}
+                      </div>
+                    </template>
+                  </van-cell>
+                  <div class="detail">
+                    <van-cell>
+                      <template slot="title">
+                        <div class="custom-text">
+                          医院 :
+                          {{ item.hospital_name }}
+                        </div>
+                        <!-- <div class="custom-text">
+                                                    病房号 :
+                                                    {{ item.room_number }}
+                                                </div> -->
+                        <div class="custom-text">
+                          科室 :
+                          {{ item.department_name }}
+                        </div>
+                        <!-- <div class="custom-text">
+                                                    开始时间 :
+                                                    {{ item.start_time }}
+                                                </div>
+                                                <div class="custom-text">
+                                                    结束时间 :
+                                                    {{ item.end_time }}
+                                                </div> -->
+                        <div class="custom-text">
+                          总时长 :
+                          {{
+                          sec_to_time(
+                          item.service_time
+                          )
+                          }}
+                        </div>
+                        <div class="link">
+                          <van-icon name="arrow" />
+                        </div>
+                      </template>
+                    </van-cell>
+                  </div>
+                </div>
+              </div>
+              <div class="white"></div>
+            </div>
+            <div class="orderBlank"></div>
+          </up-down>
+        </div>
+      </slider>
+      <!-- <div class="loading-container" v-show="!orderData.length">
+        <loading></loading>
+      </div> -->
+      <router-view></router-view>
+    </div>
+  </transition>
+</template>
+
+<script>
+import Loading from 'base/loading/loading'
+import Slider from "base/scrolltab/slider";
+import UpDown from "base/scrolltab/UpDown";
+import { mapGetters, mapMutations } from "vuex";
+
+import { ERR_OK } from "api/config";
+import { order } from "api/bed";
+export default {
+  name: "",
+  components: {
+    Loading,
+    Slider,
+    UpDown
+  },
+  data() {
+    return {
+      data: [1, 1, 1, 1],
+      pulldown: true,
+      scrollToEnd: true,
+      pageNum: 1,
+      page: 1,
+      title: [
+        { name: "全部订单" },
+        { name: "已完成" },
+        { name: "未支付" },
+        { name: "待审核" }
+      ],
+      oCurrentPage: 0,
+      orderData: [],
+    };
+  },
+  created() {
+    this.loadData();
+  },
+  computed: {
+    ...mapGetters(["order"])
+  },
+  methods: {
+    onClickLeft() {
+      this.$router.back();
+      //        this.$router.push({
+      //   name: "bed",
+      // });
+    },
+    sec_to_time(s) {
+      var t;
+      if (s > -1) {
+        var hour = Math.floor(s / 3600);
+        var min = Math.floor(s / 60) % 60;
+        var sec = s % 60;
+        if (hour < 10) {
+          t = "0" + hour + ":";
+        } else {
+          t = hour + ":";
+        }
+
+        if (min < 10) {
+          t += "0";
+        }
+        t += min + ":";
+        if (sec < 10) {
+          t += "0";
+        }
+        t += sec;
+      }
+      return t;
+    },
+    changeNav(num) {
+      this.oCurrentPage = num;
+      this.$refs.sendPage.setPage(this.oCurrentPage);
+    },
+    selectItem(order) {
+      if (this.order.type === 1) {
+        this.$router.push({
+          path: `/manager/order/${order.order_id}`,
+          params: {
+            id: order.order_id
+          }
+        });
+      } else if (this.order.type === 2) {
+        this.$router.push({
+          path: `/my/order/${order.order_id}`,
+          params: {
+            id: order.order_id
+          }
+        });
+      } else if (this.order.type === 3) {
+        this.$router.push({
+          path: `/my/order/${order.order_id}`,
+          params: {
+            id: order.order_id
+          }
+        });
+      } else if (this.order.type === 4) {
+        this.$router.push({
+          path: `/manager/order/${order.order_id}`,
+          params: {
+            id: order.order_id
+          }
+        });
+      }
+    },
+    // 分页功能（接口有问题，待对接）
+    moreData() {
+      this.page += 1;
+      var pageSize = 10;
+      var state = -1;
+      // 调用api获取数据
+      // 接口对接
+      order(state, this.page, pageSize).then(res => {
+        if (res.error_code * 1 === ERR_OK) {
+          this.orderData = this.orderData.concat(res.data);
+          this.dataDeal(this.orderData);
+        } else {
+        }
+      });
+    },
+    loadData() {
+      this.pageNum = 1;
+      var pageSize = 10;
+      var state = -1;
+      // 调用api获取数据
+      // 接口对接
+      if (this.order.type === 1) {
+        this.oCurrentPage = 0
+        console.log(this.oCurrentPage)
+      } else if (this.order.type === 3) {
+        var state = this.order.type - 2;
+        this.oCurrentPage = this.order.type - 1;
+      } else if (this.order.type === 4) {
+        var state = this.order.type - 3;
+        this.oCurrentPage = this.order.type - 2;
+      }
+      order(state, this.pageNum, pageSize).then(res => {
+        if (res.error_code * 1 === ERR_OK) {
+          this.orderData = res.data;
+          this.dataDeal(res.data);
+        } else {
+        }
+      });
+    },
+    dataDeal(data) {
+      var that = this;
+      var arr = data;
+      var listArr = [];
+
+      arr.forEach(function (el, index) {
+        for (var i = 0; i < listArr.length; i++) {
+          // 对比相同的字段key，相同放入对应的数组
+          if (listArr[i].payState === el.payState) {
+            listArr[i].listInfo.push({
+              order_id: el.order_id,
+              payState: el.payState,
+              hospitalName: el.hospitalName,
+              departmentName: el.departmentName,
+              serviceTime: el.serviceTime,
+              startTime: el.startTime,
+              endTime: el.endTime
+            });
+            return;
+          }
+        }
+        // 第一次对比没有参照，放入参照
+        listArr.push({
+          payState: el.payState,
+          listInfo: [
+            {
+              order_id: el.order_id,
+              payState: el.payState,
+              hospitalName: el.hospitalName,
+              departmentName: el.departmentName,
+              serviceTime: el.serviceTime,
+              startTime: el.startTime,
+              endTime: el.endTime
+            }
+          ]
+        });
+      });
+      that.orderList = listArr;
+    },
+    // 获取子组件传过来的当前页码值
+    msgFromChild(data) {
+      if (data || data === 0) {
+        this.oCurrentPage = data;
+        this.pageNum = 1;
+        var pageSize = 10;
+        order(this.oCurrentPage - 1, this.pageNum, pageSize).then(res => {
+          if (res.error_code * 1 === ERR_OK) {
+            this.orderData = res.data;
+            this.dataDeal(res.data);
+          } else {
+          }
+        });
+      }
+    },
+    ...mapMutations({
+      setOrder: "SET_ORDER"
+    })
+  },
+  mounted() {
+  }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="stylus">
+@import '~common/stylus/variable';
+
+.orderViewPage {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 156;
+  background: #f5f3f4;
+
+  .nav {
+    ul {
+      list-style: none;
+      display: flex;
+      height: 40px;
+      line-height: 40px;
+      font-size: $font-size-medium;
+      background: #fff;
+      border-bottom: 1px solid #dbdcde;
+
+      li {
+        list-style: none;
+        flex: 1;
+        text-align: center;
+
+        .tab-link {
+          padding-bottom: 5px;
+          color: $color-default;
+        }
+      }
+
+      .active {
+        .tab-link {
+          color: $color-theme;
+          border-bottom: 2px solid $color-theme;
+        }
+      }
+    }
+  }
+
+  .orderBlank {
+    height: 86px;
+  }
+
+  .wrapper {
+    height: calc(100vh - 84px);
+    overflow: hidden;
+  }
+
+  .detail {
+    background: #f5f3f4;
+
+    .van-cell {
+      border: 0;
+      background-color: transparent;
+    }
+  }
+
+  .custom-text {
+    text-align: left;
+  }
+}
+</style>

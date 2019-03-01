@@ -61,7 +61,7 @@ export default {
     background: #4fd6bc;
     color: #fff;
     font-weight: 400;
-
+    font-size: 16px;
     .van-button {
       height: 45px;
       width: 45px;

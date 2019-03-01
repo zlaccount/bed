@@ -203,7 +203,6 @@ export default {
     },
     // 是否登录
     _getBasicData() {
-      console.log(this.msg)
       common.$on(
         "msg",
         function (data) {

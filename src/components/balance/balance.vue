@@ -58,7 +58,7 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    ...mapGetters(["openId"])
+    ...mapGetters(["openId", "msg"])
 
   },
   //监控data中的数据变化
@@ -113,16 +113,16 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
-
             // 查询余额
             seeBalance().then(res => {
-              this.setMsg({
+              vm.setMsg({
                 balance: res.balance
               })
+              vm.$router.push({
+                path: `/my`
+              });
             })
-            vm.$router.push({
-              path: `/my`
-            });
+
           } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
             vm.$toast("取消充值")
           } else if (res.err_msg === "get_brand_wcpay_request:fail") {

@@ -2,6 +2,7 @@
   <transition name="slide">
     <div id="usedingViewPage">
       <van-nav-bar
+        left-arrow
         fixed
         @click-left="onClickLeft"
         title="共享陪护床"
