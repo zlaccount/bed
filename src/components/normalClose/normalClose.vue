@@ -227,8 +227,6 @@ export default {
   }
 
   .backIndexBox {
-    height: 100px;
-
     .backIndex {
       height: 45px;
       text-align: center;

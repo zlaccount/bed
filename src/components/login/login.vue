@@ -128,6 +128,10 @@ export default {
     login() {
       let phone = this.phone;
       let sms = this.sms;
+       if (sms.length != 6) {
+        this.$toast("请填写正确的验证码");
+        return false
+      }
       // 校验验证码登录
       if (phone != "" && sms != "") {
         checkcode(phone, sms).then(res => {
@@ -141,25 +145,16 @@ export default {
           localStorage.setItem("nickName", res.t.user.nickName);
           localStorage.setItem("sex", res.t.user.sex);
           common.$emit('msg', res);
+          // 是否缴纳押金
+          deposit().then(response => {
+            this.setDepositType({
+              type: (response.error_code) * 1,
+              money: (response.cash_pledge_money) * 1
+            })
+          });
           this.$router.go(-1);
           this.phone = '';
           this.sms = '';
-          // 是否缴纳押金
-          deposit().then(res => {
-            if ((res.error_code) * 1 === ERR_OK) {
-              this.setDepositType({
-                type: (res.error_code) * 1,
-                money: (res.cash_pledge_money) * 1
-              })
-              // this.$toast("已缴纳押金")
-            } else {
-              this.setDepositType({
-                type: (res.error_code) * 1,
-                money: 0
-              })
-              // this.$toast("未缴纳押金")
-            }
-          });
         });
       } else {
         this.$toast("手机号码或验证码有误，请重填");

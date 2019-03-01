@@ -38,13 +38,14 @@
             size="normal"
             @click="balance"
           >
-            <span>{{ accountBalance || "0.0" }}</span>
+            <span>{{ accountBalance || "0.0" }} 元</span>
             <span>我的余额</span>
           </van-button>
         </van-col>
         <van-col span="12">
           <van-button @click="depositManger">
-            <span>{{ depositType.money }}</span>
+            <span v-if="depositType.type == 0">{{ depositType.money }} 元</span>
+            <span v-if="depositType.type == 1">0 元</span>
             <span>我的押金</span>
           </van-button>
         </van-col>
@@ -192,10 +193,13 @@ export default {
       this.$router.push({
         name: "login"
       });
-      this.indexIsHide = 1;
-      this.accountImage = "";
-      this.accountName = "";
-      window.localStorage.clear();
+      setTimeout(() => {
+        this.indexIsHide = 1;
+        this.accountImage = "";
+        this.accountName = "";
+        window.localStorage.clear();
+      }, 1000)
+
     },
     // 是否登录
     _getBasicData() {

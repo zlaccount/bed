@@ -49,7 +49,7 @@
       <div class="topblank"></div>
       <div class="deposit">
         <p class="moneyTitle">金额</p>
-        <h4>58元</h4>
+        <h4>{{depositType.money}}元</h4>
         <p class="tip">押金随心退，安全速到账</p>
       </div>
       <div class="payway">
@@ -145,7 +145,6 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
-            vm.$toast("充值成功")
             vm.$router.push({
               path: `/my`
             });
@@ -154,21 +153,12 @@ export default {
           } else if (res.err_msg === "get_brand_wcpay_request:fail") {
             vm.$toast("网络异常，请重试");
           }
-           deposit().then(res => {
-          if ((res.error_code) * 1 === ERR_OK) {
+          deposit().then(response => {
             vm.setDepositType({
-              type: (res.error_code) * 1,
-              money: (res.cash_pledge_money) * 1
+              type: (response.error_code) * 1,
+              money: (response.cash_pledge_money) * 1
             })
-            vm.$toast("已缴纳押金")
-          } else {
-            vm.setDepositType({
-              type: (res.error_code) * 1,
-              money: 0
-            })
-            vm.$toast("未缴纳押金")
-          }
-        });
+          });
         }
       );
     },

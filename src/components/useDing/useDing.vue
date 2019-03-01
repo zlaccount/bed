@@ -132,7 +132,8 @@ export default {
       mytime: "",
       costTime: 0,
       chaperonage_bed_code: "",
-      localTimeLong: ''
+      localTimeLong: '',
+      hourly_rate:'',
     };
   },
   created() {
@@ -163,7 +164,7 @@ export default {
         vm.timeLong = (arr[0].data.service_time) * 1
         vm.free_time = (arr[0].data.free_time) * 1
         vm.cost = (arr[0].data.cost) * 1
-
+        vm.hourly_rate=(arr[0].data.hourly_rate) * 1
         vm.setUsedingState({
           usedoing: true,
           res: res.data,
@@ -205,7 +206,7 @@ export default {
     costTimer() {
       // 半小时 增加费用
       let vm = this;
-      vm.cost = vm.cost + 2;
+      vm.cost = vm.cost + vm.hourly_rate;
       // if (vm.timeLong < vm.free_time) {
       //   vm.cost = 0
       //   return false

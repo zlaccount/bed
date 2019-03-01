@@ -213,10 +213,20 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
-            window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+            this.setResult({
+              state: true,
+              type: 1
+            })
+            seeBalance().then(response => {
+              localStorage.setItem("balance", response.balance);
+            })
           } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
-            window.location.href = "http://www.51edoctor.cn/chaperonageBed/wxbed/ehaot"
+            this.setResult({
+              state: true,
+              type: 0
+            })
           } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+
             this.$toast("网络异常，请重试");
           }
         }
@@ -234,16 +244,16 @@ export default {
     //余额支付
     confirPay() {
       if (this.phone != "" && this.sms != "") {
-        checkcode(this.phone, this.sms).then(res => {
-          if (res.t.errorCode === null) {
-            waitPay(this.orderId, this.radio).then(res => {
+        checkcode(this.phone, this.sms).then(checkcodeRes => {
+          if (checkcodeRes.t.errorCode === null) {
+            waitPay(this.orderId, this.radio).then(waitPayRes => {
               this.setResult({
                 state: true,
-                type: res.error_code
+                type: waitPayRes.error_code
               })
               // 查询余额
-              seeBalance().then(res => {
-                localStorage.setItem("balance", res.balance);
+              seeBalance().then(seeBalanceRes => {
+                localStorage.setItem("balance", seeBalanceRes.balance);
               })
               this.balancePayPop = false;
               this.sms = "";

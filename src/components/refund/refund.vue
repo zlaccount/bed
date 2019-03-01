@@ -31,7 +31,7 @@
               slot="right"
             />
             <p>退还成功</p>
-            <p class="reason">已将58元退还至您的账户</p>
+            <p class="reason">已将{{depositType.money}}元退还至您的账户</p>
           </div>
           <div
             class="failure"
@@ -69,7 +69,7 @@ export default {
   },
   // 监听属性 类似于data概念
   computed: {
-    ...mapGetters(["refund"])
+    ...mapGetters(["refund", "depositType"])
   },
   // 监控data中的数据变化
   watch: {},
@@ -96,6 +96,10 @@ export default {
                 type: (res.error_code) * 1,
                 money: (res.cash_pledge_money) * 1
               })
+              vm.setRefund({
+                state: false,
+              })
+              vm.$refs.refunding.style.display = "none";
               this.$router.push({
                 path: `/my`
               });
@@ -109,14 +113,17 @@ export default {
             setTimeout(() => {
               vm.setDepositType({
                 type: (res.error_code) * 1,
-                money: 0
+                money: (res.cash_pledge_money) * 1
               })
+              vm.setRefund({
+                state: false,
+              })
+              vm.$refs.refunding.style.display = "none";
               this.$router.push({
                 path: `/my`
               });
             }, 1000)
           }
-          vm.$refs.refunding.style.display = "none";
 
         });
       }, 5000);

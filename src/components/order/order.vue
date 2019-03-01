@@ -39,7 +39,6 @@
             :pulldown="pulldown"
             :scrollToEnd="scrollToEnd"
             @scrollToEnd="moreData"
-            @pulldown="loadData"
           >
             <!-- 此处的ui结构just a demo of test -->
             <div

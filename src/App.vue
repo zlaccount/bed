@@ -58,20 +58,13 @@ export default {
         })
         // 是否缴纳押金
         deposit().then(res => {
-          if ((res.error_code) * 1 === ERR_OK) {
-            this.setDepositType({
-              type: (res.error_code) * 1,
-              money: (res.cash_pledge_money) * 1
-            })
-            // this.$toast("已缴纳押金")
-          } else {
-            this.setDepositType({
-              type: (res.error_code) * 1,
-              money: 0
-            })
-            // this.$toast("未缴纳押金")
-          }
+          this.setDepositType({
+            type: (res.error_code) * 1,
+            money: (res.cash_pledge_money) * 1
+          })
         });
+
+        
       } else {
         this.$toast("您还未登录");
       }
@@ -89,8 +82,8 @@ export default {
 
   },
   created() {
-    this._getData();
-    // this.basic()
+    // this._getData();
+    this.basic()
 
   },
 }
