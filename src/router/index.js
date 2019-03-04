@@ -41,6 +41,15 @@ export default new Router({
           name: "manager",
           component: Manager,
           children: [{
+            path: "/bed/manager/order",
+            name: "order",
+            component: Order,
+            children: [{
+              path: "/bed/manager/order/detail",
+              name: "bedDetail",
+              component: OrderDetail
+            }]
+          }, {
             path: "/bed/manager/deposit",
             name: "deposit",
             component: Deposit
@@ -68,15 +77,15 @@ export default new Router({
         }
       ]
     },
-    {
-      path: "/manager/order",
-      name: "order",
-      component: Order,
-      children: [{
-        path: ":id",
-        component: OrderDetail
-      }]
-    },
+    // {
+    //   path: "/manager/order",
+    //   name: "order",
+    //   component: Order,
+    //   children: [{
+    //     path: ":id",
+    //     component: OrderDetail
+    //   }]
+    // },
     {
       path: "/my",
       name: "my",
@@ -111,7 +120,8 @@ export default new Router({
           name: "myOrder",
           component: Order,
           children: [{
-            path: ":id",
+            path: "/my/order/detail",
+            name: "myDetail",
             component: OrderDetail
           }]
         }

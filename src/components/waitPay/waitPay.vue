@@ -200,6 +200,7 @@ export default {
       }
     },
     jsApiCall(data) {
+      vm=this
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest", {
           debug: true,
@@ -213,27 +214,27 @@ export default {
         },
         function (res) {
           if (res.err_msg === "get_brand_wcpay_request:ok") {
-            this.setResult({
+            vm.setResult({
               state: true,
               type: 1
             })
             // 查询余额
             seeBalance().then(res => {
-              this.setMsg({
+              vm.setMsg({
                 balance: res.balance
               })
             })
-            this.$router.push({
+            vm.$router.push({
               name: "order"
             });
           } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
-            this.setResult({
+            vm.setResult({
               state: true,
               type: 0
             })
           } else if (res.err_msg === "get_brand_wcpay_request:fail") {
 
-            this.$toast("网络异常，请重试");
+            vm.$toast("网络异常，请重试");
           }
         }
       );

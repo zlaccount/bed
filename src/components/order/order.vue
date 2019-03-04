@@ -55,84 +55,13 @@
             <ul id="dataList0">
               <li
                 class="data-li"
-                v-for="item in tabs[0].list"
-                :key="item.id"
+                v-for="pd in tabs[0].list"
+                :key="pd.id"
               >
-                <div class="gray"></div>
-                <div>
-                  <van-cell
-                    v-if="item.pay_state == 0"
-                    value="已完成"
-                    value-class="itemFinished"
-                  >
-                    <template slot="title">
-                      <div class="custom-text">
-                        订单编号 :
-                        {{ item.order_id }}
-                      </div>
-                    </template>
-                  </van-cell>
-                  <van-cell
-                    v-if="item.pay_state == 1"
-                    value="未支付"
-                    value-class="itemWaitPay"
-                  >
-                    <template slot="title">
-                      <div class="custom-text">
-                        订单编号 : {{ item.order_id }}
-                      </div>
-                    </template>
-                  </van-cell>
-                  <van-cell
-                    v-if="item.pay_state == 2"
-                    value="待审核"
-                    value-class="itemAudit"
-                  >
-                    <template slot="title">
-                      <div class="custom-text">
-                        订单编号 : {{ item.order_id }}
-                      </div>
-                    </template>
-                  </van-cell>
-                  <van-cell
-                    v-if="item.pay_state == 3"
-                    value="正在使用"
-                    value-class="itemAudit"
-                  >
-                    <template slot="title">
-                      <div class="custom-text">
-                        订单编号 : {{ item.order_id }}
-                      </div>
-                    </template>
-                  </van-cell>
-                  <div class="detail">
-                    <van-cell>
-                      <template slot="title">
-                        <div class="custom-text">
-                          医院 :
-                          {{ item.hospital_name }}
-                        </div>
-
-                        <div class="custom-text">
-                          科室 :
-                          {{ item.department_name }}
-                        </div>
-                        <div class="custom-text">
-                          总时长 :
-                          {{
-                          sec_to_time(
-                          item.service_time
-                          )
-                          }}
-                        </div>
-                        <div class="link">
-                          <van-icon name="arrow" />
-                        </div>
-                      </template>
-                    </van-cell>
-                  </div>
-                </div>
-                <div class="white"></div>
+                <order-list
+                  @select="selectItem"
+                  :item="pd"
+                ></order-list>
               </li>
             </ul>
           </mescroll-vue>
@@ -150,13 +79,10 @@
                 v-for="pd in tabs[1].list"
                 :key="pd.id"
               >
-                <img
-                  class="pd-img"
-                  :src="pd.pdImg"
-                />
-                <div class="pd-name">{{pd.pdName}}</div>
-                <p class="pd-price">{{pd.pdPrice}} 元</p>
-                <p class="pd-sold">已售{{pd.pdSold}}件</p>
+                <order-list
+                  @select="selectItem"
+                  :item="pd"
+                ></order-list>
               </li>
             </ul>
           </mescroll-vue>
@@ -174,13 +100,10 @@
                 v-for="pd in tabs[2].list"
                 :key="pd.id"
               >
-                <img
-                  class="pd-img"
-                  :src="pd.pdImg"
-                />
-                <div class="pd-name">{{pd.pdName}}</div>
-                <p class="pd-price">{{pd.pdPrice}} 元</p>
-                <p class="pd-sold">已售{{pd.pdSold}}件</p>
+                <order-list
+                  @select="selectItem"
+                  :item="pd"
+                ></order-list>
               </li>
             </ul>
           </mescroll-vue>
@@ -198,18 +121,16 @@
                 v-for="pd in tabs[3].list"
                 :key="pd.id"
               >
-                <img
-                  class="pd-img"
-                  :src="pd.pdImg"
-                />
-                <div class="pd-name">{{pd.pdName}}</div>
-                <p class="pd-price">{{pd.pdPrice}} 元</p>
-                <p class="pd-sold">已售{{pd.pdSold}}件</p>
+                <order-list
+                  @select="selectItem"
+                  :item="pd"
+                ></order-list>
               </li>
             </ul>
           </mescroll-vue>
         </swiper-slide>
       </swiper>
+      <router-view></router-view>
     </div>
   </transition>
 </template>
@@ -218,12 +139,14 @@
 // 轮播组件: https://github.com/surmon-china/vue-awesome-swiper
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-// 引入mescroll的vue组件
 import MescrollVue from 'mescroll.js/mescroll.vue'
+// 引入mescroll的vue组件
+import OrderList from 'components/order/orderList'
 // 模拟数据
 import mockData from 'src/mock/pdlist'
 import { ERR_OK } from "api/config";
 import { order } from "api/bed";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: 'mescrollSwiperNav',
   data() {
@@ -233,6 +156,7 @@ export default {
       barWidth: 60, // tab底部红色线的宽度
       curIndex: 0, // 当前tab的下标
       tabScrollLeft: 0, // 菜单滚动条的位置
+      pageNum: 1,
       swiperOption: { // 轮播配置
         on: {
           transitionEnd: () => {
@@ -245,9 +169,11 @@ export default {
   components: {
     swiper, // 轮播组件
     swiperSlide, // 轮播组件
-    MescrollVue // Mescroll组件
+    MescrollVue, // Mescroll组件
+    OrderList
   },
   computed: {
+    ...mapGetters(["order"]),
     swiper() { // 轮播对象
       return this.$refs.mySwiper.swiper
     },
@@ -255,47 +181,39 @@ export default {
       return (this.tabWidth * this.curIndex + (this.tabWidth - this.barWidth) / 2) + 'px'
     }
   },
+  created() {
+    if (this.order.type === 0 || this.order.type === 1) {
+      this.curIndex = 0
+    } else if (this.order.type == 2 || this.order.type === 3) {
+      console.log(111)
+      this.curIndex = 2
+this.changeTab(this.curIndex)
+
+    }
+  },
   methods: {
     onClickLeft() {
       this.$router.back();
     },
-    sec_to_time(s) {
-      var t;
-      if (s > -1) {
-        var hour = Math.floor(s / 3600);
-        var min = Math.floor(s / 60) % 60;
-        var sec = s % 60;
-        if (hour < 10) {
-          t = "0" + hour + ":";
-        } else {
-          t = hour + ":";
-        }
-
-        if (min < 10) {
-          t += "0";
-        }
-        t += min + ":";
-        if (sec < 10) {
-          t += "0";
-        }
-        t += sec;
+    selectItem(order) {
+      if (this.order.type === 1 || this.order.type === 3) {
+        // 全部订单
+        this.$router.push({
+          name: "bedDetail",
+          params: {
+            id: order.order_id
+          }
+        });
+      } else if (this.order.type == 0 || this.order.type === 2) {
+        // 未付款订单
+        this.$router.push({
+          name: "myDetail",
+          params: {
+            id: order.order_id
+          }
+        });
       }
-      return t;
     },
-    loadData() {
-      this.pageNum = 1;
-      var pageSize = 10;
-      var state = -1;
-      // 调用api获取数据
-      // 接口对接
-      order(state, this.pageNum, pageSize).then(res => {
-        if (res.error_code * 1 === ERR_OK) {
-          this.orderData = res.data;
-        } else {
-        }
-      });
-    },
-
     // 多mescroll的配置,需通过方法获取,保证每个配置是单例
     getMescrollDown(tabIndex) {
       let isAuto = tabIndex === 0; // 第一个mescroll传入true,列表自动加载
@@ -313,12 +231,7 @@ export default {
         noMoreSize: 4, // 如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
         empty: {
           warpId: emptyWarpId, // 父布局的id;
-          icon: 'http://www.mescroll.com/img/mescroll-empty.png', // 图标,默认null
           tip: '暂无相关数据~', // 提示
-          btntext: '去逛逛 >', // 按钮,默认""
-          btnClick: function () { // 点击按钮的回调,默认null
-            alert('点击了按钮,具体逻辑自行实现')
-          }
         },
         toTop: { // 配置回到顶部按钮
           src: 'http://www.mescroll.com/img/mescroll-totop.png' // 图片路径,默认null (建议写成网络图,不必考虑相对路径)
@@ -332,7 +245,6 @@ export default {
     },
     // 切换菜单
     changeTab(tabIndex) {
-      console.log(tabIndex)
       if (this.curIndex === tabIndex) return; // 避免重复调用
       let curTab = this.tabs[this.curIndex];// 当前列表
       let newTab = this.tabs[tabIndex];// 新转换的列表
@@ -371,65 +283,28 @@ export default {
     downCallback(mescroll) {
       // 这里加载你想下拉刷新的数据, 比如刷新tab1的轮播数据
       if (mescroll.tabIndex === 0) {
-        // loadSwiper();
+
       } else if (mescroll.tabIndex === 1) {
-        // ....
+
       } else if (mescroll.tabIndex === 2) {
-        // ....
+
       }
       mescroll.resetUpScroll();// 触发下拉刷新的回调,加载第一页的数据
     },
     /* 上拉加载的回调 page = {num:1, size:10}; num:当前页 从1开始, size:每页数据条数 */
     upCallback(page, mescroll) {
-      console.log(page,mescroll)
-      // if (mescroll.tabType === 0) {
-      //   // 可以单独处理每个tab的请求
-      // }else if (mescroll.tabType === 1) {
-      //   // 可以单独处理每个tab的请求
-      // }
-      this.tabs[mescroll.tabIndex].isListInit = true;// 标记列表已初始化,保证列表只初始化一次
-      this.getListDataFromNet(mescroll.tabIndex, page.num, page.size, (curPageData) => {
-        mescroll.endSuccess(curPageData.length);// 联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+      console.log(mescroll)
+      order(mescroll.tabIndex - 1, page.num).then(res => {
+        mescroll.endSuccess(res.data.length);// 联网成功的回调,隐藏下拉刷新和上拉加载的状态;
         if (page.num === 1) this.tabs[mescroll.tabIndex].list = []; // 如果是第一页需手动制空列表
-        this.tabs[mescroll.tabIndex].list = this.tabs[mescroll.tabIndex].list.concat(curPageData); // 追加新数据
-      }, () => {
-        if (page.num === 1) this.tabs[mescroll.tabIndex].isListInit = false;
-        mescroll.endErr();// 联网失败的回调,隐藏下拉刷新的状态
+        this.tabs[mescroll.tabIndex].list = this.tabs[mescroll.tabIndex].list.concat(res.data); // 追加新数据
+        this.$nextTick(() => {
+			      mescroll.endSuccess(res.data.length);
+			  })
       })
     },
-    getListDataFromNet(tabIndex, pageNum, pageSize, successCallback, errorCallback) {
-      // 延时一秒,模拟联网
-      setTimeout(() => {
-        try {
-          var listData = []
-          if (tabIndex === 0) {
-            // 全部商品 (模拟分页数据)
-            for (var i = (pageNum - 1) * pageSize; i < pageNum * pageSize; i++) {
-              if (i === this.orderData.length) break
-              listData.push(this.orderData[i])
-            }
-          } else {
-            // 模拟关键词搜索
-            var word = this.tabs[tabIndex].name;
-            for (var k = 0; k < this.orderData.length; k++) {
-              if (this.orderData[k].pdName.indexOf(word) !== -1) {
-                listData.push(this.orderData[k])
-              }
-            }
-          }
-          // 回调
-          successCallback && successCallback(listData);
-        } catch (e) {
-          // 联网失败的回调
-          errorCallback && errorCallback();
-        }
-      }, 1000)
-    }
-  },
-  created() {
-    this.loadData();
-  },
 
+  },
   beforeRouteEnter(to, from, next) { // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next(vm => {
       let curMescroll = vm.$refs['mescroll' + vm.curIndex]; // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
@@ -443,7 +318,9 @@ export default {
     curMescroll && curMescroll.beforeRouteLeave() // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
     next()
   },
-
+  ...mapMutations({
+    setOrder: "SET_ORDER"
+  })
 }
 </script>
 
@@ -456,30 +333,11 @@ export default {
   bottom: 0;
   z-index: 156;
   background: #f5f3f4;
-
-  .detail {
-    background: #f5f3f4;
-
-    .van-cell {
-      border: 0;
-      background-color: transparent;
-
-      .itemFinished {
-        -webkit-box-flex: 0;
-        -ms-flex: 0;
-        flex: 0;
-      }
-    }
-  }
-
-  .custom-text {
-    text-align: left;
-  }
 }
 
 /* 模拟的标题 */
 .header {
-  z-index: 9990;
+  z-index: 100;
   position: fixed;
   top: 0;
   left: 0;

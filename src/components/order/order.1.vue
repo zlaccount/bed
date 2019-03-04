@@ -102,22 +102,12 @@
                           医院 :
                           {{ item.hospital_name }}
                         </div>
-                        <!-- <div class="custom-text">
-                                                    病房号 :
-                                                    {{ item.room_number }}
-                                                </div> -->
+
                         <div class="custom-text">
                           科室 :
                           {{ item.department_name }}
                         </div>
-                        <!-- <div class="custom-text">
-                                                    开始时间 :
-                                                    {{ item.start_time }}
-                                                </div>
-                                                <div class="custom-text">
-                                                    结束时间 :
-                                                    {{ item.end_time }}
-                                                </div> -->
+
                         <div class="custom-text">
                           总时长 :
                           {{
@@ -140,9 +130,7 @@
           </up-down>
         </div>
       </slider>
-      <!-- <div class="loading-container" v-show="!orderData.length">
-        <loading></loading>
-      </div> -->
+
       <router-view></router-view>
     </div>
   </transition>
@@ -168,7 +156,6 @@ export default {
       data: [1, 1, 1, 1],
       pulldown: true,
       scrollToEnd: true,
-      pageNum: 1,
       page: 1,
       title: [
         { name: "全部订单" },
@@ -251,30 +238,27 @@ export default {
         });
       }
     },
-    // 分页功能（接口有问题，待对接）
     moreData() {
-      this.page += 1;
-      var pageSize = 10;
-      var state = -1;
-      // 调用api获取数据
-      // 接口对接
-      order(state, this.page, pageSize).then(res => {
-        if (res.error_code * 1 === ERR_OK) {
-          this.orderData = this.orderData.concat(res.data);
-          this.dataDeal(this.orderData);
-        } else {
-        }
-      });
+      console.log(1111)
+      // this.page += 1;
+      // var pageSize = 10;
+      // var state = -1;
+      // // 调用api获取数据
+      // // 接口对接
+      // order(state, this.page, pageSize).then(res => {
+      //   if (res.error_code * 1 === ERR_OK) {
+      //     this.orderData = this.orderData.concat(res.data);
+      //     this.dataDeal(this.orderData);
+      //   } else {
+      //   }
+      // });
     },
     loadData() {
-      this.pageNum = 1;
-      var pageSize = 10;
       var state = -1;
       // 调用api获取数据
       // 接口对接
       if (this.order.type === 1) {
         this.oCurrentPage = 0
-        console.log(this.oCurrentPage)
       } else if (this.order.type === 3) {
         var state = this.order.type - 2;
         this.oCurrentPage = this.order.type - 1;
@@ -282,7 +266,7 @@ export default {
         var state = this.order.type - 3;
         this.oCurrentPage = this.order.type - 2;
       }
-      order(state, this.pageNum, pageSize).then(res => {
+      order(state, this.page).then(res => {
         if (res.error_code * 1 === ERR_OK) {
           this.orderData = res.data;
           this.dataDeal(res.data);
@@ -331,11 +315,10 @@ export default {
     },
     // 获取子组件传过来的当前页码值
     msgFromChild(data) {
+      console.log(data)
       if (data || data === 0) {
         this.oCurrentPage = data;
-        this.pageNum = 1;
-        var pageSize = 10;
-        order(this.oCurrentPage - 1, this.pageNum, pageSize).then(res => {
+        order(this.oCurrentPage - 1, this.page).then(res => {
           if (res.error_code * 1 === ERR_OK) {
             this.orderData = res.data;
             this.dataDeal(res.data);

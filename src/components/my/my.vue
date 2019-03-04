@@ -243,7 +243,7 @@ export default {
     // 未支付订单
     ItemWaitPay() {
       this.setOrder({
-        type: 3
+        type: 2
       });
       this.$router.push({
         name: "myOrder"
@@ -274,7 +274,7 @@ export default {
     order() {
       // 测试
       this.setOrder({
-        type: 2
+        type: 0
       });
       this.$router.push({
         name: "myOrder"

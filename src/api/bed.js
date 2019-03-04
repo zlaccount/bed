@@ -128,14 +128,14 @@ export function weChat_refun() {
     });
 }
 // 9.我的订单接口（写好待测）
-export function order(state, pageNum, pageSize) {
+export function order(payState, page) {
   const url = "/my_order";
   const data = Object.assign({}, {
     user_id: localStorage.getItem("id") ?
       localStorage.getItem("id") : "",
-    pay_state: state,
-    pageNum: pageNum,
-    pageSize: pageSize
+    pay_state: payState,
+    pageNum: page,
+    pageSize: 10
   });
   return axios
     .get(url, {
