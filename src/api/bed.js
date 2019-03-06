@@ -208,7 +208,6 @@ export function geographical(LocationHref) {
 // 获取微信支付code接口
 export function getWxCode(LocationHref) {
   const url = "/getWeixinBackUrl";
-  // const url = "http://59.172.27.186:8888/E2306_service/payPlatform/tenpay/getWeixinBackUrl";
   const data = Object.assign({}, {
     callBackUrl: LocationHref
   });

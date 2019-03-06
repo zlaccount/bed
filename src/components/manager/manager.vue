@@ -113,7 +113,7 @@ export default {
       var user_id = localStorage.getItem("id") ? localStorage.getItem("id") : '';
       if (user_id != '') {
         this.setOrder({
-          type: 1
+          type: 2
         })
         this.$router.push({
           name: 'order'

@@ -340,7 +340,7 @@ export default {
       // 未支付订单
       if (index === 10) {
         vm.setOrder({
-          type: 3
+          type: 1
         });
         vm.$router.push({
           name: "order"

@@ -5,6 +5,7 @@ import Router from "vue-router";
 import Bed from "src/page/bed/bed";
 import Manager from "components/manager/manager";
 import Order from "components/order/order";
+import Wait from "components/order/orderWait";
 import OrderDetail from "components/orderDetail/orderDetail";
 
 import Serial from "components/serial/serial";
@@ -40,7 +41,18 @@ export default new Router({
           path: "/bed/manager",
           name: "manager",
           component: Manager,
-          children: [{
+          children: [
+          //   {
+          //   path: "/bed/manager/wait",
+          //   name: "bedWait",
+          //   component: Wait,
+          //   children: [{
+          //     path: "/bed/manager/wait/detail",
+          //     name: "bedWaitDetail",
+          //     component: OrderDetail
+          //   }]
+          // }, 
+          {
             path: "/bed/manager/order",
             name: "order",
             component: Order,
@@ -77,15 +89,6 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: "/manager/order",
-    //   name: "order",
-    //   component: Order,
-    //   children: [{
-    //     path: ":id",
-    //     component: OrderDetail
-    //   }]
-    // },
     {
       path: "/my",
       name: "my",
@@ -124,7 +127,17 @@ export default new Router({
             name: "myDetail",
             component: OrderDetail
           }]
-        }
+        },
+        // {
+        //   path: "/my/wait",
+        //   name: "myWait",
+        //   component: Wait,
+        //   children: [{
+        //     path: "/my/wait/detail",
+        //     name: "myWaitDetail",
+        //     component: OrderDetail
+        //   }]
+        // }
       ]
     }
   ]

@@ -85,8 +85,8 @@ export default {
 
   },
   created() {
-    // this._getData();
-    this.basic()
+    this._getData();
+    // this.basic()
 
   },
 }

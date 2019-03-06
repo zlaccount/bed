@@ -139,7 +139,7 @@ export default {
       if (this.pulldown) {
         this.scroll.on('touchEnd', (pos) => {
           // 下拉动作
-          if (pos.y > 50) {
+          if (pos.y > 500) {
             this.$emit('pulldown')
             console.log('正在刷新')
           }

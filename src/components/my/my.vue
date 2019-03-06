@@ -240,10 +240,19 @@ export default {
     directions() {
       this.setDirections(true);
     },
+     //  订单管理
+    order() {
+      this.setOrder({
+        type: -2
+      });
+      this.$router.push({
+        name: "myOrder"
+      });
+    },
     // 未支付订单
     ItemWaitPay() {
       this.setOrder({
-        type: 2
+        type: -1
       });
       this.$router.push({
         name: "myOrder"
@@ -270,16 +279,7 @@ export default {
       });
     },
 
-    //  订单管理
-    order() {
-      // 测试
-      this.setOrder({
-        type: 0
-      });
-      this.$router.push({
-        name: "myOrder"
-      });
-    },
+   
 
     // 客服服务
     service() {
