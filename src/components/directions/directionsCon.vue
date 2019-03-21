@@ -38,7 +38,7 @@
 
 <script type="text/ecmascript-6">
 import Loading from 'base/loading/loading'
-import Scroll from 'base/scroll/scroll'
+// import Scroll from 'base/scroll/scroll'
 import { ERR_OK } from 'api/config'
 import { mapGetters, mapMutations } from 'vuex'
 export default {

@@ -3,13 +3,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import VueAwesomeSwiper from 'vue-awesome-swiper'
 import YDUI from 'vue-ydui';
 import 'vue-ydui/dist/ydui.px.css'
 import 'vue-ydui/dist/ydui.base.css';
 
 import fastclick from 'fastclick'
-import VueLazyload from 'vue-lazyload'
 import axios from 'axios'
 
 import { Tabbar,TabbarItem} from 'vant'
@@ -110,7 +108,6 @@ Vue.use(Area)
 Vue.use(Toast)
 Vue.use(Checkbox).use(CheckboxGroup)
 Vue.use(Collapse).use(CollapseItem);
-Vue.use(VueAwesomeSwiper /* { default global options } */ )
 
 //细节处理一：可以给axios的ajax请求设置统一的主机和端口号
 axios.defaults.baseURL = "http://59.172.27.186:8888/app/chaperone_bed/user";
@@ -120,10 +117,6 @@ Vue.prototype.$http = axios;
 import 'common/stylus/index.styl'
 
 fastclick.attach(document.body)
-
-Vue.use(VueLazyload, {
-  loading: require('./common/image/default.png')
-})
 
 /* Vue.config.productionTip = false */
 

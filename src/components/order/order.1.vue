@@ -186,7 +186,7 @@ export default {
     } else if (this.order.type == 2 || this.order.type === 3) {
       console.log(111)
       this.curIndex = 2
-this.changeTab(this.curIndex)
+      this.changeTab(this.curIndex)
 
     }
   },
@@ -298,8 +298,8 @@ this.changeTab(this.curIndex)
         if (page.num === 1) this.tabs[mescroll.tabIndex].list = []; // 如果是第一页需手动制空列表
         this.tabs[mescroll.tabIndex].list = this.tabs[mescroll.tabIndex].list.concat(res.data); // 追加新数据
         this.$nextTick(() => {
-			      mescroll.endSuccess(res.data.length);
-			  })
+          mescroll.endSuccess(res.data.length);
+        })
       })
     },
 

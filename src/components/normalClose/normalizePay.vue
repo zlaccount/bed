@@ -214,7 +214,7 @@ export default {
       }
     },
     jsApiCall(data) {
-      vm=this
+      var vm=this
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest", {
           debug: true,

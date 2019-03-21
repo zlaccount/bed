@@ -15,10 +15,7 @@
       </van-nav-bar>
       <div class="topblank"></div>
       <!-- 上下拉加载更多，刷新数据的组件updown -->
-      <up-down
-        :pulldown="pulldown"
-        @pulldown="loadData"
-      >
+     
         <!-- 此处的ui结构just a demo of test -->
         <div style="width:100%;min-height:100%">
           <div class="cellCon">
@@ -82,7 +79,7 @@
             </div>
           </div>
         </div>
-      </up-down>
+        
       <div class="usedingBlank"></div>
       <div class="question">
         <p>手动将陪护床推进床柜即可关锁</p>
@@ -108,13 +105,11 @@
 </template>
 
 <script>
-import UpDown from "base/scrolltab/UpDown";
 import { busy, normalClose, openLock } from "api/bed";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
-    UpDown
   },
   data() {
     return {
