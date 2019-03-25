@@ -1,6 +1,6 @@
 <!---->
 <template>
-  <transition name="slide">
+  <div>
     <div
       class="resultViewPage"
       v-if="resultType.state==true"
@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>

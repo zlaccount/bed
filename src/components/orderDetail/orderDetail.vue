@@ -1,5 +1,4 @@
 <template>
-  <transition name="slide">
     <div id="detailViewPage">
       <van-nav-bar
         fixed
@@ -115,7 +114,6 @@
         </div>
       </yd-layout>
     </div>
-  </transition>
 </template>
 
 <script>

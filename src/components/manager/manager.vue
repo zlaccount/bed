@@ -1,6 +1,5 @@
 <!--  -->
 <template>
-  <transition name="slide">
     <div class="managerViewPage">
       <van-nav-bar
         fixed
@@ -55,7 +54,6 @@
       <router-view></router-view>
 
     </div>
-  </transition>
 </template>
 
 <script>

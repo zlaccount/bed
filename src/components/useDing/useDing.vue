@@ -1,107 +1,102 @@
 <template>
-  <transition name="slide">
-    <div id="usedingViewPage">
-      <van-nav-bar
-        left-arrow
-        fixed
-        @click-left="onClickLeft"
-        title="共享陪护床"
-      >
-        <!-- <img
+  <div id="usedingViewPage">
+    <van-nav-bar
+      fixed
+      @click-right="manger"
+      title="共享陪护床"
+    >
+      <img
           src="../../../static/img_icon/more.png"
           slot="right"
           class="mangerIcon"
-        /> -->
-      </van-nav-bar>
-      <div class="topblank"></div>
-      <!-- 上下拉加载更多，刷新数据的组件updown -->
-     
-        <!-- 此处的ui结构just a demo of test -->
-        <div style="width:100%;min-height:100%">
-          <div class="cellCon">
-            <div class="gray"></div>
-            <div class="beginUse">
-              <div class="flexItem useTimeTitle">
-                <div class="flex-item">开锁时间</div>
-                <div class="flex-item">使用时间</div>
-              </div>
-              <div class="flexItem dateText">
-                <div class="flex-item">
-                  <div class="times">{{ startDate }}</div>
-                  <div class="date">{{ startTime }}</div>
-                </div>
-                <div class="flex-item leftLine">
-                  <div
-                    class="times"
-                    id="mytime"
-                  >
-                    {{ localTimeLong }}
-                  </div>
-                </div>
-              </div>
-              <div class="beginBlank"></div>
+        />
+    </van-nav-bar>
+    <div class="topblank"></div>
+    <!-- 上下拉加载更多，刷新数据的组件updown -->
+    <yd-layout style="width:100%;">
+      <!-- 此处的ui结构just a demo of test -->
+      <div class="cellCon">
+        <div class="gray"></div>
+        <div class="beginUse">
+          <div class="flexItem useTimeTitle">
+            <div class="flex-item">开锁时间</div>
+            <div class="flex-item">使用时间</div>
+          </div>
+          <div class="flexItem dateText">
+            <div class="flex-item">
+              <div class="times">{{ startDate }}</div>
+              <div class="date">{{ startTime }}</div>
             </div>
-            <div class="useding">
-              <van-cell-group>
-                <van-cell
-                  title="医院"
-                  :value="res.hospital_name"
-                >
-                </van-cell>
-                <van-cell
-                  title="科室"
-                  :value="res.department_name"
-                >
-                </van-cell>
-                <van-cell
-                  title="病房号"
-                  :value="res.room_number"
-                >
-                </van-cell>
-                <van-cell
-                  title="陪护床编号"
-                  :value="res.chaperonage_bed_code"
-                >
-                </van-cell>
-                <van-cell
-                  title="管理员"
-                  :value="res.user_name"
-                />
-                <van-cell
-                  title="联系方式"
-                  :value="res.mobile_phone"
-                />
-                <van-cell
-                  title="预计消费"
-                  :value="cost"
-                />
-              </van-cell-group>
+            <div class="flex-item leftLine">
+              <div
+                class="times"
+                id="mytime"
+              >
+                {{ localTimeLong }}
+              </div>
             </div>
           </div>
+          <div class="beginBlank"></div>
         </div>
-        
-      <div class="usedingBlank"></div>
-      <div class="question">
-        <p>手动将陪护床推进床柜即可关锁</p>
-        <van-button
-          type="default"
-          class="breakdown"
-          @click="breakdownClose"
-        >
-          故障关闭
-        </van-button>
-        <van-button
-          class="normal"
-          type="default"
-          @click="normalClose"
-        >
-          正常关锁
-        </van-button>
+        <div class="useding">
+          <van-cell-group>
+            <van-cell
+              title="医院"
+              :value="res.hospital_name"
+            >
+            </van-cell>
+            <van-cell
+              title="科室"
+              :value="res.department_name"
+            >
+            </van-cell>
+            <van-cell
+              title="病房号"
+              :value="res.room_number"
+            >
+            </van-cell>
+            <van-cell
+              title="陪护床编号"
+              :value="res.chaperonage_bed_code"
+            >
+            </van-cell>
+            <van-cell
+              title="管理员"
+              :value="res.user_name"
+            />
+            <van-cell
+              title="联系方式"
+              :value="res.mobile_phone"
+            />
+            <van-cell
+              title="预计消费"
+              :value="cost"
+            />
+          </van-cell-group>
+        </div>
       </div>
-      <div class="loading-wrapper"></div>
-      <router-view></router-view>
+    </yd-layout>
+    <div class="usedingBlank"></div>
+    <div class="question">
+      <p>手动将陪护床推进床柜即可关锁</p>
+      <van-button
+        type="default"
+        class="breakdown"
+        @click="breakdownClose"
+      >
+        故障关闭
+      </van-button>
+      <!-- <van-button
+        class="normal"
+        type="default"
+        @click="normalClose"
+      >
+        正常关锁
+      </van-button> -->
     </div>
-  </transition>
+    <div class="loading-wrapper"></div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -131,14 +126,13 @@ export default {
       free_time: '',
       str: "",
       mytime: "",
-      costTime: 0,
       chaperonage_bed_code: "",
       localTimeLong: '',
       hourly_rate: '',
     };
   },
   created() {
-    this.loadData();
+    this._openLock();
   },
   computed: {
     ...mapGetters(["usedingState", "orderUseState", "order"])
@@ -153,11 +147,14 @@ export default {
         name: "usedManager"
       });
     },
-    loadData() {
+    _openLock() {
       const vm = this;
       // 调用api获取数据
-
-      openLock(vm.$route.params.id).then(res => {
+      // console.log(vm.usedingState.res.chaperonage_bed_code)
+      if (vm.usedingState.res.chaperonage_bed_code == "") {
+        return false
+      }
+      openLock(vm.usedingState.res.chaperonage_bed_code).then(res => {
         var arr = [];
         for (let i in res) {
           let o = {};
@@ -209,17 +206,6 @@ export default {
       }
       return t;
     },
-    costTimer() {
-      // 半小时 增加费用
-      let vm = this;
-      vm.cost = vm.cost + vm.hourly_rate;
-      // if (vm.timeLong < vm.free_time) {
-      //   vm.cost = 0
-      //   return false
-      // } else {
-      // }
-    },
-
     timer() {
       // 定义计时函数
       let vm = this;
@@ -228,7 +214,17 @@ export default {
         vm.ms = 0;
         vm.timeLong = vm.timeLong + 1
         vm.localTimeLong = vm.sec_to_time(vm.timeLong)
+
         vm.s = vm.s + 1; // 秒
+        // console.log(vm.s, vm.timeLong, vm.free_time)
+        if (vm.timeLong < vm.free_time) {
+          vm.cost = 0
+        } else {
+          if (vm.s >= vm.free_time) {
+            vm.s = 0;
+            this._openLock()
+          }
+        }
       }
 
       if (vm.s >= 60) {
@@ -261,12 +257,12 @@ export default {
 
     start() {
       // 开始
-      this.time = setInterval(this.timer, 60);
+      this.time = setInterval(this.timer, 50);
     },
 
     stop() {
       // 暂停
-      clearInterval(this.costTime);
+      clearInterval(this.time)
     },
 
     toDub(n) {
@@ -288,6 +284,7 @@ export default {
     },
     // 故障反馈关闭
     breakdownClose() {
+      this.stop()
       this.$router.push({
         name: "feedback",
         params: {
@@ -299,6 +296,7 @@ export default {
     normalClose() {
       normalClose(this.res.chaperonage_bed_code).then(res => {
         this.setTabActive(1)
+        this.stop()
         if (res.error_code * 1 === ERR_OK) {
           this.$router.push({
             name: "normalClose"
@@ -334,16 +332,14 @@ export default {
   },
   mounted() {
     this.time = setInterval(this.timer, 60);
-    this.costTime = setInterval(this.costTimer, 30 * 60 * 1000);
   },
-
+  beforeCreate() {
+  }, //生命周期 - 创建之前
   beforeDestroy() {
     if (this.timer) {
       clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
     }
-    if (this.costTimer) {
-      clearInterval(this.costTimer); // 在Vue实例销毁前，清除我们的定时器
-    }
+
   } // 生命周期 - 销毁之前
 };
 </script>
@@ -446,7 +442,7 @@ export default {
     }
 
     .breakdown {
-      width: 50%;
+      width: 100%;
       background: #f39357;
       color: #fff;
       font-size: 14px;

@@ -1,42 +1,39 @@
 <!--  -->
 <template>
-  <transition name="slide">
-    <div class='routerViewPage balance'>
-      <van-nav-bar
-        fixed
-        title="账户充值"
-        left-arrow
-        right-text="消费明细"
-        @click-left="routerBack"
-        @click-right="statement"
-      > </van-nav-bar>
-      <div class="topblank"></div>
-      <div class="AmountOfAccount">
-        <div class="AccountWH">
-          <div class="title">账户金额:(元)</div>
-          <h4>{{msg.balance||'"0'}}</h4>
-          <p>温馨提示 :<br><span>账户金额可用于电话咨询、预约医生、送礼物、购买商品等。</span></p>
-        </div>
-      </div>
-      <van-cell-group>
-        <van-field
-          v-model="value"
-          placeholder="请填写充值金额"
-        />
-      </van-cell-group>
-      <!-- 付款 -->
-      <div class="payway">
-        <div class="payBtn">
-          <van-button
-            type="default"
-            @click="wxpay"
-          >
-            <span>微信充值</span>
-          </van-button>
-        </div>
+  <div class='routerViewPage balance'>
+    <van-nav-bar
+      fixed
+      title="账户充值"
+      left-arrow
+      @click-left="routerBack"
+      @click-right="statement"
+    > </van-nav-bar>
+    <div class="topblank"></div>
+    <div class="AmountOfAccount">
+      <div class="AccountWH">
+        <div class="title">账户金额:(元)</div>
+        <h4>{{msg.balance||'0'}}</h4>
+        <p>温馨提示 :<br><span>账户金额可用于电话咨询、预约医生、送礼物、购买商品等。</span></p>
       </div>
     </div>
-  </transition>
+    <van-cell-group>
+      <van-field
+        v-model="value"
+        placeholder="请填写充值金额"
+      />
+    </van-cell-group>
+    <!-- 付款 -->
+    <div class="payway">
+      <div class="payBtn">
+        <van-button
+          type="default"
+          @click="wxpay"
+        >
+          <span>微信充值</span>
+        </van-button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

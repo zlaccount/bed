@@ -1,11 +1,10 @@
 <template>
   <div class="directionsCon">
-    <scroll
-      ref="scroll"
-      class="directionsCon-content"
-      :data="data"
-    >
-      <div>
+    <yd-layout>
+      <div
+        class="directionsCon-content"
+        :data="data"
+      >
         <div
           v-for="(item, index) in data"
           :key="index"
@@ -26,19 +25,11 @@
         </div>
         <div class="blank"></div>
       </div>
-      <div
-        class="loading-container"
-        v-show="!data.length"
-      >
-        <loading></loading>
-      </div>
-    </scroll>
+    </yd-layout>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Loading from 'base/loading/loading'
-// import Scroll from 'base/scroll/scroll'
 import { ERR_OK } from 'api/config'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
@@ -69,8 +60,6 @@ export default {
     ...mapGetters(['beddirections'])
   },
   components: {
-    Scroll,
-    Loading
   },
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -81,17 +70,21 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import '~common/stylus/variable';
+
 .directionsCon {
   position: fixed;
   width: 100%;
   top: 46px;
   bottom: 0px;
+
   .directionsCon-content {
     height: 100%;
     overflow: hidden;
+
     .center {
       width: 92%;
       margin: 0 auto;
+
       h4 {
         border-bottom: 1px solid #ddd;
         line-height: 37px;
@@ -99,19 +92,23 @@ export default {
         font-size: 16px;
         font-weight: 500;
       }
+
       p {
         line-height: 24px;
         color: #999;
         font-size: 14px;
+
         span {
           color: red;
           font-size: 15px;
         }
       }
     }
+
     .blank {
       height: 10px;
     }
+
     .loading-container {
       position: absolute;
       width: 100%;

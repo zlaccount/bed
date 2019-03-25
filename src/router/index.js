@@ -20,125 +20,119 @@ import Person from "components/person/person";
 
 import Login from "components/login/login";
 import Deposit from "components/deposit/deposit";
-import Refund from 'components/refund/refund'
+import Refund from "components/refund/refund";
 Vue.use(Router);
 
 export default new Router({
-  routes: [{
-      path: "/",
-      redirect: "/bed"
-    },
-    {
-      path: "/bed",
-      name: "bed",
-      component: Bed,
-      children: [{
-          path: "/bed/serial",
-          name: "serial",
-          component: Serial
+    routes: [
+        {
+            path: "/",
+            redirect: "/bed"
         },
         {
-          path: "/bed/manager",
-          name: "manager",
-          component: Manager,
-          children: [
-          //   {
-          //   path: "/bed/manager/wait",
-          //   name: "bedWait",
-          //   component: Wait,
-          //   children: [{
-          //     path: "/bed/manager/wait/detail",
-          //     name: "bedWaitDetail",
-          //     component: OrderDetail
-          //   }]
-          // }, 
-          {
-            path: "/bed/manager/order",
-            name: "order",
-            component: Order,
-            children: [{
-              path: "/bed/manager/order/detail",
-              name: "bedDetail",
-              component: OrderDetail
-            }]
-          }, {
-            path: "/bed/manager/deposit",
-            name: "deposit",
-            component: Deposit
-          }]
+            path: "/bed",
+            name: "bed",
+            component: Bed,
+            children: [
+                {
+                    path: "/bed/serial",
+                    name: "serial",
+                    component: Serial
+                },
+                {
+                    path: "/bed/manager",
+                    name: "manager",
+                    component: Manager,
+                    children: [
+                        {
+                            path: "/order",
+                            name: "order",
+                            component: Order,
+                            children: [
+                                {
+                                    path: "/order/detail",
+                                    name: "bedDetail",
+                                    component: OrderDetail
+                                }
+                            ]
+                        },
+
+                        {
+                            path: "/bed/manager/deposit",
+                            name: "deposit",
+                            component: Deposit
+                        }
+                    ]
+                },
+                {
+                    path: "/bed/useDing",
+                    name: "useDing",
+                    component: UseDing,
+                    children: [
+                        {
+                            path: "/bed/manager",
+                            name: "usedManager",
+                            component: Manager
+                        },
+                        {
+                            path: "/bed/useDing/normalClose",
+                            name: "normalClose",
+                            component: NormalClose
+                        },
+                        {
+                            path: "/bed/useDing/feedback",
+                            name: "feedback",
+                            component: FeedBack
+                        }
+                    ]
+                }
+            ]
         },
         {
-          path: "/bed/useDing",
-          name: "useDing",
-          component: UseDing,
-          children: [{
-              path: "/bed/manager",
-              name: "usedManager",
-              component: Manager
-            }, {
-              path: "/bed/useDing/normalClose",
-              name: "normalClose",
-              component: NormalClose
-            },
-            {
-              path: "/bed/useDing/feedback",
-              name: "feedback",
-              component: FeedBack
-            }
-          ]
+            path: "/my",
+            name: "my",
+            component: My,
+            children: [
+                {
+                    path: "/my/login",
+                    name: "login",
+                    component: Login
+                },
+                {
+                    path: "/my/person",
+                    name: "person",
+                    component: Person
+                },
+                {
+                    path: "/my/balance",
+                    name: "balance",
+                    component: Balance
+                },
+                {
+                    path: "/wait",
+                    name: "wait",
+                    component: Wait,
+                    children: [
+                        {
+                            path: "/Wait/detail",
+                            name: "waitDetail",
+                            component: OrderDetail
+                        }
+                    ]
+                },
+                {
+                    path: "/my/deposit",
+                    name: "myDeposit",
+                    component: Deposit,
+                    children: [
+                        {
+                            path: "/my/deposit/refund",
+                            name: "myRefund",
+                            component: Refund
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    },
-    {
-      path: "/my",
-      name: "my",
-      component: My,
-      children: [{
-          path: "/my/login",
-          name: "login",
-          component: Login
-        },
-        {
-          path: "/my/person",
-          name: "person",
-          component: Person
-        },
-        {
-          path: "/my/balance",
-          name: "balance",
-          component: Balance
-        },
-        {
-          path: "/my/deposit",
-          name: "myDeposit",
-          component: Deposit,
-          children: [{
-            path: "/my/deposit/refund",
-            name: "myRefund",
-            component: Refund
-          }]
-        },
-        {
-          path: "/my/order",
-          name: "myOrder",
-          component: Order,
-          children: [{
-            path: "/my/order/detail",
-            name: "myDetail",
-            component: OrderDetail
-          }]
-        },
-        // {
-        //   path: "/my/wait",
-        //   name: "myWait",
-        //   component: Wait,
-        //   children: [{
-        //     path: "/my/wait/detail",
-        //     name: "myWaitDetail",
-        //     component: OrderDetail
-        //   }]
-        // }
-      ]
-    }
-  ]
+    ]
 });

@@ -1,95 +1,92 @@
 <!--  -->
 <template>
-  <transition name="slide">
-    <div class="routerViewPage">
+  <div class="routerViewPage">
+    <van-nav-bar
+      fixed
+      title="个人资料"
+      left-arrow
+      @click-left="routerBack"
+      @click-right="saveMsg"
+    ></van-nav-bar>
+
+    <div class="topblank"></div>
+    <div class="person">
       <van-nav-bar
-        fixed
-        title="个人资料"
-        left-arrow
-        right-text="保存"
-        @click-left="routerBack"
-        @click-right="saveMsg"
-      ></van-nav-bar>
+        left-text="头像"
+        @click-right="personImg"
+      >
+        <img
+          :src="accountImage || '../../../static/img/invite@3x.png'"
+          slot="right"
+          class="personImg"
+        />
 
-      <div class="topblank"></div>
-      <div class="person">
-        <van-nav-bar
-          left-text="头像"
-          @click-right="personImg"
-        >
-          <img
-            :src="accountImage || '../../../static/img/invite@3x.png'"
-            slot="right"
-            class="personImg"
-          />
-
-          <van-icon
-            name="arrow"
-            slot="right"
-          />
-        </van-nav-bar>
-        <div class="personCon">
-          <van-cell :value="accountUserName">
+        <van-icon
+          name="arrow"
+          slot="right"
+        />
+      </van-nav-bar>
+      <div class="personCon">
+        <van-cell :value="accountUserName">
+          <template slot="title">
+            <span class="custom-text">账号</span>
+          </template>
+        </van-cell>
+        <div class="phone">
+          <van-cell
+            :value="accountMobile"
+            is-link
+          >
             <template slot="title">
-              <span class="custom-text">账号</span>
+              <span class="custom-text">绑定手机号</span>
             </template>
           </van-cell>
-          <div class="phone">
-            <van-cell
-              :value="accountMobile"
-              is-link
-            >
-              <template slot="title">
-                <span class="custom-text">绑定手机号</span>
-              </template>
-            </van-cell>
-          </div>
-          <van-cell
-            title="姓名"
-            :value="accountName"
-          />
-          <van-cell-group>
-            <van-field
-              clearable
-              label="昵称"
-              :value="accountNickname || '新用户注册'"
-              placeholder="请输入昵称"
-            />
-          </van-cell-group>
-
-          <div class="sex">
-            <van-cell title="性别" />
-            <div class="radio">
-              <yd-radio-group
-                v-model="accountSex"
-                size="20"
-              >
-                <yd-radio val="1"><span style="font-size: 24px;">男</span></yd-radio>
-                <yd-radio val="2"><span style="font-size: 24px;">女</span></yd-radio>
-              </yd-radio-group>
-            </div>
-          </div>
-          <van-cell-group>
-            <van-field
-              clearable
-              label="身份证"
-              :value="accountIdCardNo || ''"
-              placeholder="请输入身份证"
-            />
-          </van-cell-group>
-          <van-cell-group>
-            <van-field
-              clearable
-              disabled
-              label="出生日期"
-              :value="birthDate || ''"
-              placeholder="请输入出生日期"
-            />
-          </van-cell-group>
         </div>
+        <van-cell
+          title="姓名"
+          :value="accountName"
+        />
+        <van-cell-group>
+          <van-field
+            clearable
+            label="昵称"
+            :value="accountNickname || '新用户注册'"
+            placeholder="请输入昵称"
+          />
+        </van-cell-group>
+
+        <div class="sex">
+          <van-cell title="性别" />
+          <div class="radio">
+            <yd-radio-group
+              v-model="accountSex"
+              size="20"
+            >
+              <yd-radio val="1"><span style="font-size: 24px;">男</span></yd-radio>
+              <yd-radio val="2"><span style="font-size: 24px;">女</span></yd-radio>
+            </yd-radio-group>
+          </div>
+        </div>
+        <van-cell-group>
+          <van-field
+            clearable
+            label="身份证"
+            :value="accountIdCardNo || ''"
+            placeholder="请输入身份证"
+          />
+        </van-cell-group>
+        <van-cell-group>
+          <van-field
+            clearable
+            disabled
+            label="出生日期"
+            :value="birthDate || ''"
+            placeholder="请输入出生日期"
+          />
+        </van-cell-group>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -235,10 +232,11 @@ export default {
         margin: 12px 0;
         z-index: 1000;
         line-height: 20px;
+
         .yd-radio {
           span {
             font-size: 16px !important;
-            color:#000;
+            color: #000;
           }
         }
       }

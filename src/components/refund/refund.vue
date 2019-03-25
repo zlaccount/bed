@@ -1,6 +1,5 @@
 <!---->
 <template>
-  <transition name="slide">
     <div class="refundViewPage">
       <van-nav-bar
         fixed
@@ -47,7 +46,6 @@
         </div>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>

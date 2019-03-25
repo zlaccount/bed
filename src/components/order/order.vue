@@ -2,128 +2,128 @@
   <div class="orderViewPage">
     <!-- 菜单 -->
     <div class="top-warp">
-        <van-nav-bar
-          fixed
-          left-arrow
-          @click-left="onClickLeft"
-          title="订单管理"
-        >
-        </van-nav-bar>
-        <div class="topblank"></div>
-        <div class="nav">
-          <div
-            :class="{'active':tabType==0}"
-            @click="changeTab(0)"
-          >全部订单</div>
-          <div
-            :class="{'active':tabType==1}"
-            @click="changeTab(1)"
-          >已完成</div>
-          <div
-            :class="{'active':tabType==2}"
-            @click="changeTab(2)"
-          >未支付</div>
-          <div
-            :class="{'active':tabType==3}"
-            @click="changeTab(3)"
-          >待审核</div>
+      <van-nav-bar
+        fixed
+        left-arrow
+        @click-left="onClickLeft"
+        title="订单管理"
+      >
+      </van-nav-bar>
+      <div class="topblank"></div>
+      <div class="nav">
+        <div
+          :class="{'active':tabType==0}"
+          @click="changeTab(0)"
+        >全部订单</div>
+        <div
+          :class="{'active':tabType==1}"
+          @click="changeTab(1)"
+        >已完成</div>
+        <div
+          :class="{'active':tabType==2}"
+          @click="changeTab(2)"
+        >未支付</div>
+        <div
+          :class="{'active':tabType==3}"
+          @click="changeTab(3)"
+        >待审核</div>
       </div>
-
-      <!--全部订单-->
-      <mescroll-vue
-        ref="mescroll0"
-        v-show="tabType==0"
-        :down="getMescrollDown(0)"
-        :up="getMescrollUp(0)"
-        @init="mescrollInit0"
-      >
-        <yd-layout>
-          <ul id="dataList0">
-            <li
-              class="data-li"
-              v-for="pd in tab0.list"
-              :key="pd.id"
-            >
-              <order-list
-                @select="selectItem"
-                :item="pd"
-              ></order-list>
-            </li>
-          </ul>
-        </yd-layout>
-      </mescroll-vue>
-
-      <!-- 已完成 可不配down-->
-      <mescroll-vue
-        ref="mescroll1"
-        v-show="tabType==1"
-        :up="getMescrollUp(1)"
-        @init="mescrollInit1"
-      >
-        <yd-layout>
-          <ul id="dataList1">
-            <li
-              class="data-li"
-              v-for="pd in tab1.list"
-              :key="pd.id"
-            >
-              <order-list
-                @select="selectItem"
-                :item="pd"
-              ></order-list>
-            </li>
-          </ul>
-        </yd-layout>
-      </mescroll-vue>
-
-      <!-- 未支付 -->
-      <mescroll-vue
-        ref="mescroll2"
-        v-show="tabType==2"
-        :up="getMescrollUp(2)"
-        @init="mescrollInit2"
-      >
-        <yd-layout>
-          <ul id="dataList2">
-            <li
-              class="data-li"
-              v-for="pd in tab2.list"
-              :key="pd.id"
-            >
-              <order-list
-                @select="selectItem"
-                :item="pd"
-              ></order-list>
-            </li>
-          </ul>
-        </yd-layout>
-      </mescroll-vue>
-
-      <!-- 待审核 -->
-      <mescroll-vue
-        ref="mescroll3"
-        v-show="tabType==3"
-        :up="getMescrollUp(3)"
-        @init="mescrollInit3"
-      >
-
-        <yd-layout>
-          <ul id="dataList3">
-            <li
-              class="data-li"
-              v-for="pd in tab3.list"
-              :key="pd.id"
-            >
-              <order-list
-                @select="selectItem"
-                :item="pd"
-              ></order-list>
-            </li>
-          </ul>
-        </yd-layout>
-      </mescroll-vue>
     </div>
-      <router-view></router-view>
+
+    <!--全部订单-->
+    <mescroll-vue
+      ref="mescroll0"
+      v-show="tabType==0"
+      :down="getMescrollDown(0)"
+      :up="getMescrollUp(0)"
+      @init="mescrollInit0"
+    >
+      <yd-layout>
+        <ul id="dataList0">
+          <li
+            class="data-li"
+            v-for="pd in tab0.list"
+            :key="pd.id"
+          >
+            <order-list
+              @select="selectItem"
+              :item="pd"
+            ></order-list>
+          </li>
+        </ul>
+      </yd-layout>
+    </mescroll-vue>
+
+    <!-- 已完成 可不配down-->
+    <mescroll-vue
+      ref="mescroll1"
+      v-show="tabType==1"
+      :up="getMescrollUp(1)"
+      @init="mescrollInit1"
+    >
+      <yd-layout>
+        <ul id="dataList1">
+          <li
+            class="data-li"
+            v-for="pd in tab1.list"
+            :key="pd.id"
+          >
+            <order-list
+              @select="selectItem"
+              :item="pd"
+            ></order-list>
+          </li>
+        </ul>
+      </yd-layout>
+    </mescroll-vue>
+
+    <!-- 未支付 -->
+    <mescroll-vue
+      ref="mescroll2"
+      v-show="tabType==2"
+      :up="getMescrollUp(2)"
+      @init="mescrollInit2"
+    >
+      <yd-layout>
+        <ul id="dataList2">
+          <li
+            class="data-li"
+            v-for="pd in tab2.list"
+            :key="pd.id"
+          >
+            <order-list
+              @select="selectItem"
+              :item="pd"
+            ></order-list>
+          </li>
+        </ul>
+      </yd-layout>
+    </mescroll-vue>
+
+    <!-- 待审核 -->
+    <mescroll-vue
+      ref="mescroll3"
+      v-show="tabType==3"
+      :up="getMescrollUp(3)"
+      @init="mescrollInit3"
+    >
+
+      <yd-layout>
+        <ul id="dataList3">
+          <li
+            class="data-li"
+            v-for="pd in tab3.list"
+            :key="pd.id"
+          >
+            <order-list
+              @select="selectItem"
+              :item="pd"
+            ></order-list>
+          </li>
+        </ul>
+      </yd-layout>
+    </mescroll-vue>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -196,12 +196,8 @@ export default {
         noMoreSize: 4, // 如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
         empty: {
           warpId: emptyWarpId, // 父布局的id;
-          icon: 'http://www.mescroll.com/img/mescroll-empty.png', // 图标,默认null
           tip: '暂无相关数据~', // 提示
-          btntext: '去逛逛 >', // 按钮,默认""
-          btnClick: function () { // 点击按钮的回调,默认null
-            alert('点击了按钮,具体逻辑自行实现')
-          }
+
         },
         toTop: { // 配置回到顶部按钮
           src: 'http://www.mescroll.com/img/mescroll-totop.png' // 图片路径,默认null (建议写成网络图,不必考虑相对路径)
@@ -359,7 +355,7 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  bottom: 0;
+  bottom: 0px;
   z-index: 156;
   background: #f5f3f4;
 }

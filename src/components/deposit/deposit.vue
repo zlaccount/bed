@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <transition name="slide">
+  <div>
     <!-- 退还押金 -->
     <div
       class="depositViewPage"
@@ -69,7 +69,7 @@
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>

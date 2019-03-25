@@ -1,61 +1,59 @@
 <!---->
 <template>
-  <transition name="slide">
-    <div class="routerViewPage">
-      <van-nav-bar
-        fixed
-        title="登录"
-        left-arrow
-        @click-left="loginBack"
-      >
-      </van-nav-bar>
-      <div class="topblank"></div>
-      <div class="loginImport">
-        <div class="loginBg">
-          <img
-            src="../../../static/img/background-login.png"
-            slot="right"
+  <div class="routerViewPage">
+    <van-nav-bar
+      fixed
+      title="登录"
+      left-arrow
+      @click-left="loginBack"
+    >
+    </van-nav-bar>
+    <div class="topblank"></div>
+    <div class="loginImport">
+      <div class="loginBg">
+        <img
+          src="../../../static/img/background-login.png"
+          slot="right"
+        />
+      </div>
+      <div class="loginCon">
+        <van-cell-group>
+          <van-field
+            v-model="phone"
+            required
+            clearable
+            icon="contact"
+            label="手机号"
+            placeholder="请输入手机号"
+            @click-icon="$toast('question')"
           />
-        </div>
-        <div class="loginCon">
-          <van-cell-group>
-            <van-field
-              v-model="phone"
-              required
-              clearable
-              icon="contact"
-              label="手机号"
-              placeholder="请输入手机号"
-              @click-icon="$toast('question')"
-            />
-            <van-field
-              v-model="sms"
-              required
-              center
-              clearable
-              label="验证码"
-              placeholder="请输入短信验证码"
-            >
-              <van-button
-                slot="button"
-                size="small"
-                type="primary"
-                :class="{ disabled: !this.canClick }"
-                @click="countDown"
-              >
-                {{ content }}</van-button>
-            </van-field>
-          </van-cell-group>
-          <div class="confirmLogin">
+          <van-field
+            v-model="sms"
+            required
+            center
+            clearable
+            label="验证码"
+            placeholder="请输入短信验证码"
+          >
             <van-button
-              size="normal"
-              @click="login"
-            >登录</van-button>
-          </div>
+              slot="button"
+              size="small"
+              type="primary"
+              :class="{ disabled: !this.canClick }"
+              @click="countDown"
+            >
+              {{ content }}</van-button>
+          </van-field>
+        </van-cell-group>
+        <div class="confirmLogin">
+          <van-button
+            size="normal"
+            @click="login"
+          >登录</van-button>
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -128,7 +126,7 @@ export default {
     login() {
       let phone = this.phone;
       let sms = this.sms;
-       if (sms.length != 6) {
+      if (sms.length != 6) {
         this.$toast("请填写正确的验证码");
         return false
       }
@@ -145,7 +143,7 @@ export default {
           localStorage.setItem("nickName", res.t.user.nickName);
           localStorage.setItem("sex", res.t.user.sex);
           common.$emit('msg', res);
-            this.setMsg({
+          this.setMsg({
             balance: res.t.user.balance
           })
           // 是否缴纳押金
@@ -155,7 +153,9 @@ export default {
               money: (response.cash_pledge_money) * 1
             })
           });
-          this.$router.go(-1);
+          this.$router.push({
+            name: 'my',
+          })
           this.phone = '';
           this.sms = '';
         });

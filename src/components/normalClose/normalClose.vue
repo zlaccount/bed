@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <transition name="slide">
+  <div>
     <div
       class="normalViewPage"
       v-if="normalState.state == true"
@@ -125,7 +125,7 @@
       </yd-layout>
 
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>

@@ -167,6 +167,7 @@
       </div>
     </div>
     <router-view></router-view>
+  
   </div>
 </template>
 
@@ -224,21 +225,6 @@ export default {
             jsApiList: ["scanQRCode", "openLocation", "getLocation"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           wx.ready(function () {
-            // wx.getLocation({
-            //     type: "gcj02", // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-            //     success: function(res) {
-            //         alert("地理位置", res);
-            //         //使用微信内置地图查看位置接口
-            //         wx.openLocation({
-            //             latitude: res.latitude, // 纬度，浮点数，范围为90 ~ -90
-            //             longitude: res.longitude, // 经度，浮点数，范围为180 ~ -180。
-            //             name: "我的位置", // 位置名
-            //             address: "329创业者社区", // 地址详情说明
-            //             scale: 28 // 地图缩放级别,整形值,范围从1~28。默认为最大
-            //             // infoUrl: "http://www.gongjuji.net" // 在查看位置界面底部显示的超链接,可点击跳转（测试好像不可用）
-            //         });
-            //     }
-            // });
             wx.scanQRCode({
               needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果
               scanType: ["qrCode"],
@@ -339,11 +325,8 @@ export default {
       });
       // 未支付订单
       if (index === 10) {
-        vm.setOrder({
-          type: 1
-        });
         vm.$router.push({
-          name: "order"
+          name: "wait"
         });
       } else if (index === 9) {
         // 未缴纳押金

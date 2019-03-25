@@ -1,45 +1,43 @@
 <template>
-  <transition name="slide">
-    <div class="routerViewPage">
-      <div class="keyBoradImport ">
-        <van-nav-bar
-          fixed
-          title="输入编号"
-          left-arrow
-          @click-left="onClickLeft"
-        >
-        </van-nav-bar>
-        <div class="topblank"></div>
-        <!-- 数字框 -->
-        <div class="inputNumber">
-          <van-row>
-            <van-col
-              span="4"
-              v-for="(item, index) in keyLis"
-              :key="index"
-            >
-              <div class="textNumber"></div>
-            </van-col>
-          </van-row>
-          <van-row>
-            <van-col
-              span="4"
-              v-for="(item, index) in curVal"
-              :key="index"
-            >
-              <div class="textNumber">{{ item }}</div>
-            </van-col>
-          </van-row>
-        </div>
-        <!-- 数字键盘 -->
-        <van-number-keyboard
-          :show="showKeyboard"
-          @input="onInput"
-          @delete="onDelete"
-        />
+  <div class="routerViewPage">
+    <div class="keyBoradImport ">
+      <van-nav-bar
+        fixed
+        title="输入编号"
+        left-arrow
+        @click-left="onClickLeft"
+      >
+      </van-nav-bar>
+      <div class="topblank"></div>
+      <!-- 数字框 -->
+      <div class="inputNumber">
+        <van-row>
+          <van-col
+            span="4"
+            v-for="(item, index) in keyLis"
+            :key="index"
+          >
+            <div class="textNumber"></div>
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col
+            span="4"
+            v-for="(item, index) in curVal"
+            :key="index"
+          >
+            <div class="textNumber">{{ item }}</div>
+          </van-col>
+        </van-row>
       </div>
+      <!-- 数字键盘 -->
+      <van-number-keyboard
+        :show="showKeyboard"
+        @input="onInput"
+        @delete="onDelete"
+      />
     </div>
-  </transition>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -68,10 +66,6 @@ export default {
         common.$emit('handresult', val)
         this.$router.go(-1)
         this._setTimer()
-        // // 先判断是否缴纳押金
-        // this._deposit()
-        // // 开锁
-        // this._openLock(val)
       }
     }
   },
@@ -89,35 +83,16 @@ export default {
     onDelete() {
       this.keyValue = this.keyValue.slice(0, this.keyValue.length - 1)
     },
-    // _deposit() {
-    //   // 接口对接
-    //     deposit().then(res => {
-    //       if ((res.error_code) * 1 === ERR_OK) {
-    //         console.log('已经缴纳押金',res)
-    //       } else {
-    //         console.log('未缴纳押金',res)
-    //         // common.$emit('handresult', (res.error_code) * 1 + 1)
-    //         return false
-    //       }
-    //     })
-    // },
-    // _openLock(val) {
-    //   // 接口对接
-    //   openLock(val).then(res => {
-    //     common.$emit('handresult', (res.error_code) * 1,(res.data)*1)
-    //     this.$router.go(-1)
-    //     this._setTimer()
-    //   })
-    // },
+
     _setTimer() {
-      this.timer = setInterval(() => {
+      setTimeout(() => {
         this.keyValue = []
-      }, 1500)
+      }, 1000)
     },
   },
   created() { },
-  mounted() { clearInterval(this.timer) },
-  distroyed() { clearInterval(this.timer) }
+  mounted() { },
+  distroyed() { }
 }
 </script>
 

@@ -1,6 +1,5 @@
 <!--  -->
 <template>
-  <transition name="slide">
     <div class="feedbackViewPage">
       <van-nav-bar
         fixed
@@ -166,7 +165,6 @@
         </van-popup>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>
@@ -232,9 +230,16 @@ export default {
       ImagePreview([this.$refs.uploadImg.src]);
     },
     _getData() {
-      console.log("feedback", this.feedback);
     },
     submitQues() {
+      if(this.resultRadio==''){
+        this.$toast("您还未选择反馈的问题")
+        return false
+      }
+       if(this.fileName==''){
+        this.$toast("图片必传")
+        return false
+      }
       var user_id = localStorage.getItem("id")
         ? localStorage.getItem("id")
         : "";
@@ -257,7 +262,7 @@ export default {
             this.type = res.data.error_code * 1;
       this.setTabActive(1)
             this.setUsedingState({
-              state: false,
+              usedoing: false,
               res: ''
             });
             this.setWayisshow({
