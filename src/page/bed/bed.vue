@@ -166,8 +166,9 @@
         </div>
       </div>
     </div>
+
     <router-view></router-view>
-  
+
   </div>
 </template>
 
@@ -236,7 +237,10 @@ export default {
           });
         });
       } else {
-        this.$toast("您还未登录");
+        // this.$toast("您还未登录");
+        this.$router.push({
+          name: 'login',
+        })
       }
     },
     handinput() {
@@ -245,7 +249,10 @@ export default {
           name: "serial"
         });
       } else {
-        this.$toast("您还未登录");
+        // this.$toast("您还未登录");
+        this.$router.push({
+          name: 'login',
+        })
       }
     },
     _getData() {

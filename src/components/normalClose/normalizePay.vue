@@ -214,7 +214,7 @@ export default {
       }
     },
     jsApiCall(data) {
-      var vm=this
+      var vm = this
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest", {
           debug: true,
@@ -265,9 +265,9 @@ export default {
                 type: response.error_code
               })
               // 查询余额
-              seeBalance().then(res => {
+              seeBalance().then(balanceRes => {
                 this.setMsg({
-                  balance: res.balance
+                  balance: balanceRes.balance
                 })
               })
               this.balancePayPop = false;

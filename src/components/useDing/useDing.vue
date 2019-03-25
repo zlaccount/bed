@@ -6,10 +6,10 @@
       title="共享陪护床"
     >
       <img
-          src="../../../static/img_icon/more.png"
-          slot="right"
-          class="mangerIcon"
-        />
+        src="../../../static/img_icon/more.png"
+        slot="right"
+        class="mangerIcon"
+      />
     </van-nav-bar>
     <div class="topblank"></div>
     <!-- 上下拉加载更多，刷新数据的组件updown -->
@@ -86,16 +86,19 @@
       >
         故障关闭
       </van-button>
-      <!-- <van-button
+      <van-button
         class="normal"
         type="default"
         @click="normalClose"
       >
         正常关锁
-      </van-button> -->
+      </van-button>
     </div>
     <div class="loading-wrapper"></div>
+     <keep-alive>
     <router-view></router-view>
+
+    </keep-alive>
   </div>
 </template>
 
@@ -442,7 +445,7 @@ export default {
     }
 
     .breakdown {
-      width: 100%;
+      width: 50%;
       background: #f39357;
       color: #fff;
       font-size: 14px;

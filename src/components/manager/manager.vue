@@ -1,59 +1,59 @@
 <!--  -->
 <template>
-    <div class="managerViewPage">
-      <van-nav-bar
-        fixed
-        left-arrow
-        class="TabNavActive"
-        @click-left="onClickLeft"
-        title="信息管理"
+  <div class="managerViewPage">
+    <van-nav-bar
+      fixed
+      left-arrow
+      class="TabNavActive"
+      @click-left="onClickLeft"
+      title="信息管理"
+    >
+    </van-nav-bar>
+    <div class="topblank"></div>
+    <div class="manger">
+      <van-cell
+        is-link
+        @click="depositManager"
       >
-      </van-nav-bar>
-      <div class="topblank"></div>
-      <div class="manger">
-        <van-cell
-          is-link
-          @click="depositManager"
-        >
-          <template slot="title">
-            <img
-              :src="icon.Thedeposit"
-              slot="right"
-              class="leftIcon"
-            />
-            <span class="custom-text">押金管理</span>
-          </template>
-        </van-cell>
-        <van-cell
-          is-link
-          @click="order"
-        >
-          <template slot="title">
-            <img
-              :src="icon.report"
-              slot="right"
-              class="leftIcon"
-            />
-            <span class="custom-text">我的订单</span>
-          </template>
-        </van-cell>
-        <van-cell
-          is-link
-          @click="directionsManager"
-        >
-          <template slot="title">
-            <img
-              :src="icon.using"
-              slot="right"
-              class="leftIcon"
-            />
-            <span class="custom-text">使用说明</span>
-          </template>
-        </van-cell>
-      </div>
-      <router-view></router-view>
-
+        <template slot="title">
+          <img
+            :src="icon.Thedeposit"
+            slot="right"
+            class="leftIcon"
+          />
+          <span class="custom-text">押金管理</span>
+        </template>
+      </van-cell>
+      <van-cell
+        is-link
+        @click="order"
+      >
+        <template slot="title">
+          <img
+            :src="icon.report"
+            slot="right"
+            class="leftIcon"
+          />
+          <span class="custom-text">我的订单</span>
+        </template>
+      </van-cell>
+      <van-cell
+        is-link
+        @click="directionsManager"
+      >
+        <template slot="title">
+          <img
+            :src="icon.using"
+            slot="right"
+            class="leftIcon"
+          />
+          <span class="custom-text">使用说明</span>
+        </template>
+      </van-cell>
     </div>
+    <router-view></router-view>
+
+  </div>
 </template>
 
 <script>
@@ -103,7 +103,10 @@ export default {
           name: 'deposit',
         })
       } else {
-        this.$toast('您还未登录')
+        // this.$toast('您还未登录')
+        this.$router.push({
+          name: 'login',
+        })
       }
     },
     // 订单管理
@@ -117,7 +120,10 @@ export default {
           name: 'order'
         })
       } else {
-        this.$toast('您还未登录')
+        // this.$toast('您还未登录')
+        this.$router.push({
+          name: 'login',
+        })
       }
     },
     // 使用说明

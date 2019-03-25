@@ -247,7 +247,7 @@ export default {
     //  订单管理
     order() {
       this.$router.push({
-        name: "order"
+        name: "myorder"
       });
     },
     // 未支付订单

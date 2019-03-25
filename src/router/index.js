@@ -24,115 +24,111 @@ import Refund from "components/refund/refund";
 Vue.use(Router);
 
 export default new Router({
-    routes: [
-        {
-            path: "/",
-            redirect: "/bed"
+  routes: [{
+      path: "/",
+      redirect: "/bed"
+    },
+    {
+      path: "/bed",
+      name: "bed",
+      component: Bed,
+      children: [{
+          path: "/bed/serial",
+          name: "serial",
+          component: Serial
         },
         {
-            path: "/bed",
-            name: "bed",
-            component: Bed,
-            children: [
-                {
-                    path: "/bed/serial",
-                    name: "serial",
-                    component: Serial
-                },
-                {
-                    path: "/bed/manager",
-                    name: "manager",
-                    component: Manager,
-                    children: [
-                        {
-                            path: "/order",
-                            name: "order",
-                            component: Order,
-                            children: [
-                                {
-                                    path: "/order/detail",
-                                    name: "bedDetail",
-                                    component: OrderDetail
-                                }
-                            ]
-                        },
+          path: "/bed/manager",
+          name: "manager",
+          component: Manager,
+          children: [{
+              path: "/order",
+              name: "order",
+              component: Order,
+              children: [{
+                path: ":id",
+                component: OrderDetail
+              }]
+            },
 
-                        {
-                            path: "/bed/manager/deposit",
-                            name: "deposit",
-                            component: Deposit
-                        }
-                    ]
-                },
-                {
-                    path: "/bed/useDing",
-                    name: "useDing",
-                    component: UseDing,
-                    children: [
-                        {
-                            path: "/bed/manager",
-                            name: "usedManager",
-                            component: Manager
-                        },
-                        {
-                            path: "/bed/useDing/normalClose",
-                            name: "normalClose",
-                            component: NormalClose
-                        },
-                        {
-                            path: "/bed/useDing/feedback",
-                            name: "feedback",
-                            component: FeedBack
-                        }
-                    ]
-                }
-            ]
+            {
+              path: "/bed/manager/deposit",
+              name: "deposit",
+              component: Deposit
+            }
+          ]
         },
         {
-            path: "/my",
-            name: "my",
-            component: My,
-            children: [
-                {
-                    path: "/my/login",
-                    name: "login",
-                    component: Login
-                },
-                {
-                    path: "/my/person",
-                    name: "person",
-                    component: Person
-                },
-                {
-                    path: "/my/balance",
-                    name: "balance",
-                    component: Balance
-                },
-                {
-                    path: "/wait",
-                    name: "wait",
-                    component: Wait,
-                    children: [
-                        {
-                            path: "/Wait/detail",
-                            name: "waitDetail",
-                            component: OrderDetail
-                        }
-                    ]
-                },
-                {
-                    path: "/my/deposit",
-                    name: "myDeposit",
-                    component: Deposit,
-                    children: [
-                        {
-                            path: "/my/deposit/refund",
-                            name: "myRefund",
-                            component: Refund
-                        }
-                    ]
-                }
-            ]
+          path: "/bed/useDing",
+          name: "useDing",
+          component: UseDing,
+          children: [{
+              path: "/bed/manager",
+              name: "usedManager",
+              component: Manager
+            },
+            {
+              path: "/bed/useDing/normalClose",
+              name: "normalClose",
+              component: NormalClose
+            },
+            {
+              path: "/bed/useDing/feedback",
+              name: "feedback",
+              component: FeedBack
+            }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: Login
+    },
+    {
+      path: "/my",
+      name: "my",
+      component: My,
+      children: [{
+          path: "/my/person",
+          name: "person",
+          component: Person
+        },
+        {
+          path: "/my/balance",
+          name: "balance",
+          component: Balance
+        },
+        {
+          path: "/order",
+          name: "myorder",
+          component: Order,
+          children: [{
+            path: ":id",
+            component: OrderDetail
+          }]
+        },
+        {
+          path: "/wait",
+          name: "wait",
+          component: Wait,
+          children: [{
+            path: ":id",
+            component: OrderDetail
+          }]
+        },
+        {
+          path: "/my/deposit",
+          name: "myDeposit",
+          component: Deposit,
+          children: [{
+            path: "/my/deposit/refund",
+            name: "myRefund",
+            component: Refund
+          }]
+        }
+      ]
+    }
+  ]
 });

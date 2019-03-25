@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-      <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <router-view></router-view>
     <result></result>
     <demo></demo>
     <directions></directions>
@@ -66,9 +64,8 @@ export default {
           })
         });
 
-
       } else {
-        this.$toast("您还未登录");
+        // this.$toast("您还未登录");
       }
     },
     ...mapMutations({
@@ -85,8 +82,8 @@ export default {
 
   },
   created() {
-    // this._getData();
-    this.basic()
+    this._getData();
+    // this.basic()
 
   },
 }

@@ -157,10 +157,7 @@ export default {
     selectItem(order) {
       // 全部订单
       this.$router.push({
-        name: "bedDetail",
-        params: {
-          id: order.order_id
-        }
+        path: `/order/${order.order_id}`
       });
     },
     // mescroll组件初始化的回调,可获取到mescroll对象

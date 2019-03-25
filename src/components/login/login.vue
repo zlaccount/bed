@@ -133,31 +133,38 @@ export default {
       // 校验验证码登录
       if (phone != "" && sms != "") {
         checkcode(phone, sms).then(res => {
-          localStorage.setItem("id", res.t.user.id);
-          localStorage.setItem("image", res.t.user.image);
-          localStorage.setItem("name", res.t.user.name);
-          localStorage.setItem("balance", res.t.user.balance);
-          localStorage.setItem("mobileNo", res.t.user.mobileNo);
-          localStorage.setItem("pwd", res.t.user.passWord);
-          localStorage.setItem("idCardNo", res.t.user.idCardNo);
-          localStorage.setItem("nickName", res.t.user.nickName);
-          localStorage.setItem("sex", res.t.user.sex);
-          common.$emit('msg', res);
-          this.setMsg({
-            balance: res.t.user.balance
-          })
-          // 是否缴纳押金
-          deposit().then(response => {
-            this.setDepositType({
-              type: (response.error_code) * 1,
-              money: (response.cash_pledge_money) * 1
+          if (res.t.pass == "true") {
+            this.$dialog.toast({
+              mes: "登录成功",
+              icon: "success",
+              timeout: 1500
+            });
+            localStorage.setItem("id", res.t.user.id);
+            localStorage.setItem("image", res.t.user.image);
+            localStorage.setItem("name", res.t.user.name);
+            localStorage.setItem("balance", res.t.user.balance);
+            localStorage.setItem("mobileNo", res.t.user.mobileNo);
+            localStorage.setItem("pwd", res.t.user.passWord);
+            localStorage.setItem("idCardNo", res.t.user.idCardNo);
+            localStorage.setItem("nickName", res.t.user.nickName);
+            localStorage.setItem("sex", res.t.user.sex);
+            common.$emit('msg', res);
+            this.setMsg({
+              balance: res.t.user.balance
             })
-          });
-          this.$router.push({
-            name: 'my',
-          })
-          this.phone = '';
-          this.sms = '';
+            // 是否缴纳押金
+            deposit().then(response => {
+              this.setDepositType({
+                type: (response.error_code) * 1,
+                money: (response.cash_pledge_money) * 1
+              })
+            });
+            this.$router.push({
+              name: 'my',
+            })
+            this.phone = '';
+            this.sms = '';
+          }
         });
       } else {
         this.$toast("手机号码或验证码有误，请重填");
