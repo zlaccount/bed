@@ -96,6 +96,37 @@ export function waitPay(order_id, state) {
       return Promise.resolve(res.data);
     });
 }
+// 余额获取短信验证码
+export function getBedCode(phone) {
+  const url = "http://59.172.27.186:8888/E2306_service/app/payment";
+  const data = Object.assign({}, {
+    sid: 123,
+    mobileNo: phone
+  });
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      return Promise.resolve(res.data);
+    });
+}
+// 校验余额支付验证码
+export function checkBedCode(phone,sms) {
+  const url = "http://59.172.27.186:8888/E2306_service/app/verifyCode";
+  const data = Object.assign({}, {
+    sid: 123,
+    mobileNo: phone,
+    Code:sms
+  });
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      return Promise.resolve(res.data);
+    });
+}
 // 订单微信支付
 export function weChatOrderPay(openId, order_id) {
   const url = "/weChatOrderPay";

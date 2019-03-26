@@ -90,10 +90,7 @@ import wx from "../../../static/img_icon/wx.png";
 import yue from "../../../static/img_icon/yue.png";
 import { ERR_OK } from "api/config";
 import { mapGetters, mapMutations } from "vuex";
-import { waitPay, weChatOrderPay, seeBalance } from "api/bed";
-
-import { getcode, checkcode } from "api/islogin";
-
+import { getBedCode, checkBedCode, waitPay, weChatOrderPay, seeBalance } from "api/bed";
 export default {
   // import引入的组件需要注入到对象中才能使用
   components: {},
@@ -150,7 +147,7 @@ export default {
         }
       }, 1000);
       // 获取验证码
-      getcode(localStorage.getItem("mobileNo")).then(res => {
+      getBedCode(localStorage.getItem("mobileNo")).then(res => {
         if (res.returns === "success") {
           that.$toast("验证码已发至您手机，请查收");
         }
@@ -250,29 +247,31 @@ export default {
     },
     //余额支付
     confirPay() {
-      if (this.phone != "" && this.sms != "") {
-        checkcode(this.phone, this.sms).then(checkcodeRes => {
-          if (checkcodeRes.t.errorCode === null) {
-            waitPay(this.orderId, this.radio).then(waitPayRes => {
-              this.setResult({
-                state: true,
-                type: waitPayRes.error_code
-              })
-              // 查询余额
-              seeBalance().then(balanceRes => {
-                this.setMsg({
-                  balance: balanceRes.balance
-                })
-              })
-              this.balancePayPop = false;
-              this.sms = "";
-            })
-          } else {
-            this.$toast("验证码有误")
-          }
-
-        })
+      if (this.sms == "") {
+        this.$toast("请输入验证码")
+        return false
       }
+      checkBedCode(localStorage.getItem("mobileNo"), this.sms).then(checkBedCodeRes => {
+        if (checkBedCodeRes.returns === "success") {
+          waitPay(this.orderId, this.radio).then(waitPayRes => {
+            this.setResult({
+              state: true,
+              type: waitPayRes.error_code
+            })
+            // 查询余额
+            seeBalance().then(balanceRes => {
+              this.setMsg({
+                balance: balanceRes.balance
+              })
+            })
+            this.balancePayPop = false;
+            this.sms = "";
+          })
+        } else {
+          this.$toast("验证码有误")
+        }
+
+      })
     },
     payresultBack() {
     },
